@@ -1,0 +1,114 @@
+<script type="module">
+    /*<import librarys>*/ 
+    
+        import DataTableV   from '../ModulePugins/Pluginjs/DataTable.var.main.js';
+
+        import functionShow             from './js/function/Function.Show.main.js';
+        import functionCreate           from './js/function/Function.Create.main.js';           
+        import functionUpdate           from './js/function/Function.Update.main.js';
+        import functionDelete           from './js/function/Function.Delete.main.js';
+        
+        import functionSelectFullAPI    from './js/API/API.SelectFull.main.js';
+
+        import functionSelectFullAPIZona    from '../ModuleCatalogsZonas/js/API/API.SelectFull.main.js';
+
+
+    /*<import librarys>*/ 
+    
+    
+
+
+    $(document).ready(() =>{  
+
+        setTimeout(() => {
+            /*<CARGAR HIDE>*/
+                $('#id-main').removeClass('opacidad');
+                $('#body-main-div').removeClass('body-main');
+                $('#body-main-div').hide();
+            /*</CARGAR HIDE>*/
+        }, 1500);
+        
+        /*<Main Module Roles>*/       
+            /*<functionSelectFullAPIZona>*/ 
+                const functionSFAz = functionSelectFullAPIZona().
+                then( (result) => {  console.log(result);
+                    if(result){                                                                    
+                        if(result.message == 'Good'){
+                            /*<Consulta exitosa>*/
+                                let Arrays = [];
+                                Arrays = result.information;   
+                                
+                                let Campos = '';
+                                for(let i = 0; i< Arrays.length; i++){
+                                    Campos += '<option value="'+Arrays[i].idZona+'">'+Arrays[i].nombre+'</option>';
+                                }
+                                $('#create-zona-door2door').html(Campos);
+                                localStorage.setItem('JSON_ZONAS', JSON.stringify(Arrays));
+
+                            /*<Consulta exitosa>*/                        
+                        }else{
+                           /*<Error de query>*/ 
+                                $('#message-error-door2door').html("");
+                                $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
+                                $('#modal-message-error-door2door').modal('show');
+                            /*</Error de query>*/  
+                        }       
+                    }                           
+                }).catch( (err) => { 
+                    /*<Error de query>*/ 
+                        $('#message-error-door2door').html("");
+                        $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
+                        $('#modal-message-error-door2door').modal('show');
+                    /*</Error de query>*/  
+                });
+            /*</functionSelectFullAPIZona>*/ 
+
+            /*<Consultar toda la iformacion>*/ 
+                const functionSFA = functionSelectFullAPI().
+                then( (result) => {     
+                    if(result){                                                                    
+                        if(result.message == 'Good'){
+                            /*<Consulta exitosa>*/
+                                let ArraysRoles = [];
+                                ArraysRoles = result.information;                                                
+                                const functionS =  functionShow(ArraysRoles);  
+                              
+                            /*<Consulta exitosa>*/                        
+                        }else{
+                           /*<Error de query>*/ 
+                                $('#message-error-door2door').html("");
+                                $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
+                                $('#modal-message-error-door2door').modal('show');
+                            /*</Error de query>*/  
+                        }       
+                    }                           
+                }).catch( (err) => { 
+                    /*<Error de query>*/ 
+                        $('#message-error-door2door').html("");
+                        $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
+                        $('#modal-message-error-door2door').modal('show');
+                    /*</Error de query>*/  
+                });
+            /*<Consultar toda la iformacion>*/ 
+
+            /*<Consultar toda la iformacion>*/ 
+            
+            /*<Consultar toda la iformacion>*/ 
+
+            /*<Evento creacion de un nuevo>*/
+                $('#button-create-door2door').on('click', () =>{ const Funresult = functionCreate(); }); 
+            /*</Evento creacion de un nuevo>*/
+
+            /*<Evento actualizacion>*/              
+                $('#button-update-door2door').on('click', () =>{ const Funresult = functionUpdate();  });
+            /*<Evento actualizacion>*/ 
+
+            /*<Evento eliminacion>*/  
+                $('#button-delete-door2door').on('click', ()=> { const Funresult = functionDelete();  });
+            /*</Evento eliminacion>*/ 
+            
+            
+            
+        /*</Main Module Roles>*/                                 
+    });
+</script>

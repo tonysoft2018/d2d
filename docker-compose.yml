@@ -1,0 +1,69 @@
+version: "3.7"
+
+services:
+  webserver:
+    privileged: true
+    build: 
+      context: docker/2box_php/
+      dockerfile: Dockerfile
+    ports: 
+      - 81:80
+    container_name: 2box
+    restart: always
+    volumes:
+      - /run
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - ./src/:/var/www/html/
+      - ./log/:/var/log/httpd/
+    networks:
+      udg_network:
+        aliases: 
+          - 2box_host
+        ipv4_address: 172.20.0.5
+
+  mysql:
+    image: mariadb:10
+    container_name: 2boxdb
+    ports: 
+      - 3308:3306
+    volumes: 
+      - ./mysql-data:/var/lib/mysql
+    environment: 
+      - MYSQL_ROOT_PASSWORD=Kb.204.h3      
+    networks:
+      udg_network:
+        aliases: 
+          - 2box_db
+        ipv4_address: 172.20.0.4
+  phpmysadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: 2box_phpmyadmin   
+    links: 
+        - mysql:mysql
+    ports:
+        - 8081:80
+    environment:     
+      - PMA_HOST=mysql
+      - PMA_PORT=3306
+      - PMA_USER=root
+      - PMA_PASSWORD=Kb.204.h3
+          
+
+    networks:
+      udg_network:
+        aliases: 
+          - phpmyadmin_db
+        ipv4_address: 172.20.0.6
+
+volumes:
+  html: {}
+  mysql: {}
+
+networks:
+  udg_network:
+    name: 2boxv2
+    driver: bridge
+    ipam:
+      driver: default 
+      config:
+        - subnet: 172.20.0.0/24
