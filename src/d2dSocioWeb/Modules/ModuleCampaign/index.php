@@ -119,6 +119,13 @@
                     <?php include_once('ModalUpdate.php');                ?> 
                     <?php include_once('ModalCreate.php');                ?> 
                     <?php include_once('ModalContactos.php');             ?> 
+                    <?php include_once('ModalContactosCrear.php');        ?> 
+                    <?php include_once('ModalContactosActualizar.php');   ?> 
+                    <?php include_once('ModalContactosDetalles.php');     ?>  
+                    <?php include_once('ModalContactosVisita.php');       ?>  
+                    <?php include_once('ModalContactosVisitaDetalle.php');?>  
+
+                    <?php include_once('ModalAbrir.php');                 ?> 
                     <?php include_once('ModalPausar.php');                ?> 
                     <?php include_once('ModalReanudar.php');              ?> 
                     <?php include_once('ModalCerrar.php');                ?> 

@@ -26,9 +26,9 @@ namespace  door2door\Modules\ModuleCampaign\Model\Contactos;
                     $JSON_RESULT['error']           = '';
                 /*</Variables> */
                 /*<Query> */
-                    $querySelect = 'SELECT * FROM contacto WHERE idCampana = '.$idCampana.' AND bstate = 1';
+                    $querySelect = 'SELECT * FROM contacto WHERE idCampana = '.$idCampana.' AND bstate = 1 ORDER BY nombre ASC ';
                 /*</Query> */
-                
+                $JSON_RESULT['querySelect']     = $querySelect;
                 $this->open();            
                     if ($resultQuery = mysqli_query($this->Connection, $querySelect)) {
                         if ($resultQuery->num_rows > 0) {
@@ -45,8 +45,7 @@ namespace  door2door\Modules\ModuleCampaign\Model\Contactos;
                         /*</Respuesta>*/
                     } else {
                         /*<Respuesta>*/
-                            $JSON_RESULT['message']         = "Bad";
-                            $JSON_RESULT['querySelect']     = $querySelect;
+                            $JSON_RESULT['message']         = "Bad";                            
                             $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
                         /*</Respuesta>*/
                     }        
@@ -57,23 +56,37 @@ namespace  door2door\Modules\ModuleCampaign\Model\Contactos;
 
         /*<Method selectOne>*/
             public function selectOne($tabla, $columna, $idColumna, $busqueda){
+                
                 /*<Variables> */
                     $JSON_RESULT                    = [];
-                    $JSON_RESULT['id']              = [];
+                    $JSON_RESULT['id']              = 0;
                     $JSON_RESULT['message']         = '';
                     $JSON_RESULT['error']           = '';
                 /*</Variables> */
+
                 /*<Query> */
-                    $querySelect = 'SELECT * FROM '.$tabla.' WHERE '.$columna.' like "%'.$busqueda.'%" AND bstate = 1';
+                    $querySelect = 'SELECT * FROM '.$tabla.' WHERE  bstate = 1';
                 /*</Query> */
                 
                 $JSON_RESULT['querySelect']     = $querySelect;
+
                 $this->open();            
                     if ($resultQuery = mysqli_query($this->Connection, $querySelect)) {
                         if ($resultQuery->num_rows > 0) {
                             /*<Captura>*/
                                 while ($R = $resultQuery->fetch_array(MYSQLI_ASSOC)) {
-                                    $JSON_RESULT['id'] = $R[$idColumna];
+
+                                    
+                                    $NOMBE_COLUMNA_AC      = $this->eliminar_acentos($R[$columna]);
+                                    $BUSQUEDA_COLUMNA_AC   = $this->eliminar_acentos($busqueda);
+
+                                    $NOMBE_COLUMNA      = strtolower($NOMBE_COLUMNA_AC);
+                                    $BUSQUEDA_COLUMNA   = strtolower($BUSQUEDA_COLUMNA_AC);
+
+                                    if( $NOMBE_COLUMNA == $BUSQUEDA_COLUMNA )
+                                    {
+                                        $JSON_RESULT['id'] = $R[$idColumna];
+                                    }
                                 }
                             /*</Captura>*/
                         }else{
@@ -84,11 +97,13 @@ namespace  door2door\Modules\ModuleCampaign\Model\Contactos;
                         /*</Respuesta>*/
                     } else {
                         /*<Respuesta>*/
+                            $JSON_RESULT['id'] = 0;
                             $JSON_RESULT['message']         = "Bad";
                             $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
                         /*</Respuesta>*/
                     }        
                 $this->closet();
+
                 return $JSON_RESULT;
             }
         /*<Method selectOne>*/
@@ -173,7 +188,6 @@ namespace  door2door\Modules\ModuleCampaign\Model\Contactos;
             public function create( 
                                         $nombre,    
                                         $calle,
-                                        $telefono,
                                         $noExterior,
                                         $noInterior,
                                         $codigoPostal,
@@ -181,9 +195,137 @@ namespace  door2door\Modules\ModuleCampaign\Model\Contactos;
                                         $idPais,
                                         $idEstado,
                                         $idMunicipio,
-                                        $deuda,
-                                        $idCampana,
+                                        $entreCalle,
+                                        $instrucciones,
+                                        $telefono,
                                         $email,
+                                        $idCampana,
+                                        $latitud,   
+                                        $longitud                            
+                                    ){
+                /*<Variables> */
+                    /*</datos>*/
+                        session_start();
+                        $DATE                       = date('Y-m-d h:i:s');
+                        $idUser                     = $_SESSION["idUser-door2door"];                       
+                    /*<datos>*/
+                    $JSON_RESULT                    = [];
+                    $JSON_RESULT['RESPUESTA_GEOLOCALIZACION_UNO']     = $RESPUESTA_GEOLOCALIZACION_UNO;
+                    $JSON_RESULT['message']         = '';
+                    $JSON_RESULT['error']           = '';
+                    $RESPUESTA_VALIDACION           = [];
+                /*</Variables> */
+                /*<VALIDACION>*/
+                    $RESPUESTA_VALIDACION                   = $this->RESPUESTA_VALIDAR_NOMBRE_CONTACTO_UNO( $nombre, $telefono, $idCampana, 0);
+                    $JSON_RESULT['RESPUESTA_VALIDACION']    = $RESPUESTA_VALIDACION;
+                /*</VALIDACION>*/
+
+                if( $RESPUESTA_VALIDACION['message']    == 'Good' && 
+                    $RESPUESTA_VALIDACION['total']      == 0){
+                    if( 
+                        ($latitud < 0   || $latitud > 0)    &&
+                        ($longitud < 0  || $longitud > 0)
+                    ){
+                        /*<Query>*/
+                            $queryInsert = 'INSERT INTO contacto ( 
+                                                    idCampana,
+                                                    idUsuario,                                               
+                                                    nombre,  
+                                                    calle,                                                                                                          
+                                                    noExterior,
+                                                    noInterior, 
+                                                    codigoPostal,
+                                                    colonia,
+                                                    idPais,
+                                                    idEstado,
+                                                    idMunicipio,
+                                                    entreCalle,
+                                                    latitud,
+                                                    longitud,
+                                                
+                                                    instrucciones,
+                                                    telefono,
+                                                    email,
+                                                    estatus,
+
+                                                    fechaCierre,
+                                                    fechaCancelacion,
+                                                    comentarios,
+
+                                                    fechaCreacion, 
+                                                    fechaModificacion,
+                                                    observacion,
+                                                    bstate
+                                                    ) VALUES( 
+                                                        "'.$idCampana.'",
+                                                        "'.$idUser.'", 
+                                                        "'.$nombre.'", 
+                                                        "'.$calle.'", 
+                                                        "'.$noExterior.'", 
+                                                        "'.$noInterior.'", 
+                                                        "'.$codigoPostal.'", 
+                                                        "'.$colonia.'", 
+                                                        '.$idPais.', 
+                                                        '.$idEstado.', 
+                                                        '.$idMunicipio.', 
+                                                        "'.$entreCalle.'", 
+                                                        "'.$latitud.'", 
+                                                        "'.$longitud.'",   
+
+                                                        "'.$instrucciones.'", 
+                                                        "'.$telefono.'", 
+                                                        "'.$email.'",                                                   
+                                                        "PENDIENTE", 
+
+                                                        "0000-00-00 00:00:00",
+                                                        "0000-00-00 00:00:00",
+                                                        "SIN COMENTARIOS",
+
+                                                        "'.$DATE.'",
+                                                        "'.$DATE.'",
+                                                        " [ INSERT '.$DATE.' ], [ idUser '.$idUser.' ] ",
+                                                        1
+                                                    );';
+                        /*</Query>*/
+                        
+                        $JSON_RESULT['queryInsert'] = $queryInsert;
+
+                        $this->open();        
+                            if ( mysqli_query( $this->Connection, $queryInsert)) {
+                                $JSON_RESULT['message']     = "Good";
+                            } else {
+                                $JSON_RESULT['message']     = "Bad";                            
+                                $JSON_RESULT['error']       = "Error: <br>" . mysqli_error($this->Connection);
+                            }        
+                        $this->closet();
+                    }else{
+                        $JSON_RESULT['message']     = "No hay latitud ni logitud";  
+                    }
+                }else{
+                    $JSON_RESULT['message']         = "Contacto Repetido";  
+                }
+
+                    return $JSON_RESULT;    
+            }
+        /*</Method Create>*/
+
+        /*<Method Update>*/
+            public function Update( 
+                                        $idContacto,
+                                        $nombre,    
+                                        $calle,
+                                        $noExterior,
+                                        $noInterior,
+                                        $codigoPostal,
+                                        $colonia,
+                                        $idPais,
+                                        $idEstado,
+                                        $idMunicipio,
+                                        $entreCalle,
+                                        $instrucciones,
+                                        $telefono,
+                                        $email,
+                                       
                                         $latitud,   
                                         $longitud                            
                                     ){
@@ -193,82 +335,108 @@ namespace  door2door\Modules\ModuleCampaign\Model\Contactos;
                         session_start();
                         $DATE                       = date('Y-m-d h:i:s');
                         $idUser                     = $_SESSION["idUser-door2door"];
-                       
                     /*<datos>*/
                     $JSON_RESULT                    = [];
-                    $JSON_RESULT['RESPUESTA_GEOLOCALIZACION_UNO']     = $RESPUESTA_GEOLOCALIZACION_UNO;
-                    $JSON_RESULT['message']         = '';
-                    $JSON_RESULT['error'] = '';
+                  
+                    $JSON_RESULT['message']                         = '';
+                    $JSON_RESULT['error']           = '';
+                    $JSON_RESULT['error']           = '';
                 /*</Variables> */
-              
-                    /*<Query>*/
-                        $queryInsert = 'INSERT INTO contacto ( 
-                                                idUsuario,
-                                                idCampana, 
-                                                nombre,  
-                                                calle,  
-                                                telefono,                                                  
-                                                email,   
-                                                noInterior,                                                   
-                                                noExterior,
-                                                codigoPostal,
-                                                colonia,
-                                                idPais,
-                                                idEstado,
-                                                idMunicipio,
-                                                deuda,
-                                                latitud,
-                                                longitud,
-                                                estatus,
 
-                                                fechaCreacion, 
-                                                fechaModificacion,
-                                                observacion,
-                                                bstate
-                                                ) VALUES( 
-                                                    "'.$idUser.'",
-                                                    "'.$idCampana.'", 
-                                                    "'.$nombre.'", 
-                                                    "'.$calle.'", 
-                                                    "'.$telefono.'", 
-                                                    "'.$email.'", 
-                                                    "'.$noInterior.'", 
-                                                    "'.$noExterior.'", 
-                                                    "'.$codigoPostal.'", 
-                                                    "'.$colonia.'", 
-                                                     '.$idPais.', 
-                                                     '.$idEstado.', 
-                                                     '.$idMunicipio.', 
-                                                     '.$deuda.', 
-                                                     "'.$latitud.'", 
-                                                     "'.$longitud.'",   
-                                                     "PENDIENTE", 
+                $RESPUESTA_VALIDACION = $this->RESPUESTA_VALIDAR_NOMBRE_CONTACTO_UNO( $nombre, $telefono, 0, $idContacto);
 
-                                                    "'.$DATE.'",
-                                                    "'.$DATE.'",
-                                                    " [ INSERT '.$DATE.' ], [ idUser '.$idUser.' ] ",
-                                                    1
-                                                );';
-                    /*</Query>*/
-                    
-                    $JSON_RESULT['queryInsert'] = $queryInsert;
-                    $this->open();        
-                        if ( mysqli_query( $this->Connection, $queryInsert)) {
-                            $JSON_RESULT['message']     = "Good";
-                        } else {
-                            $JSON_RESULT['message']     = "Bad";                            
-                            $JSON_RESULT['error']       = "Error: <br>" . mysqli_error($this->Connection);
-                        }        
-                    $this->closet();
-                    return $JSON_RESULT;    
+
+                $JSON_RESULT['idContacto'] = $idContacto;
+
+                $NOMBRE_MUNICIPIO           = '';
+                $NOMBRE_ESTADO              = '';
+
+                $NOMBRE_MUNICIPIO           = $this->selectIdMunicipio( $idMunicipio);                
+                $NOMBRE_ESTADO              = $this->selectIdEstado( $idEstado );
+
+                /*<VALIDACION DE FUNCION NOMBRE_MUNICIPIO>*/
+                    if($NOMBRE_MUNICIPIO['message'] != 'Good'){
+                        $NOMBRE_MUNICIPIO = '';
+                    }else{
+                        $NOMBRE_MUNICIPIO = $NOMBRE_MUNICIPIO['nombre'];
+                        
+                    }
+                /*</VALIDACION DE FUNCION NOMBRE_MUNICIPIO>*/
+
+                /*<VALIDACION DE FUNCION NOMBRE_ESTADO>*/
+                    if($NOMBRE_ESTADO['message'] != 'Good'){
+                        $NOMBRE_ESTADO = '';
+                    }else{
+                        $NOMBRE_ESTADO = $NOMBRE_ESTADO['nombre'];
+                    }
+                /*</VALIDACION DE FUNCION NOMBRE_ESTADO>*/
+                //getGeocodeData($nExterior, $calle, $municipio, $estado, $codigoPostal, $colonia )    
+                $RESPUESTA_GEOLOCALIZACION_UNO = $this->getGeocodeData(
+                    $noExterior,
+                    $calle,
+                    $NOMBRE_MUNICIPIO,
+                    $NOMBRE_ESTADO,
+                    $codigoPostal,
+                    $colonia
+                );
+
+                $latitud     = $RESPUESTA_GEOLOCALIZACION_UNO['lat'];
+                $longitud    = $RESPUESTA_GEOLOCALIZACION_UNO['lng'];
+
+                if($RESPUESTA_VALIDACION['message'] == 'Good' && $RESPUESTA_VALIDACION['total']  == 0){
+                    if( 
+                        ($latitud < 0   || $latitud > 0)    &&
+                        ($longitud < 0  || $longitud > 0)
+                    ){
+                        /*<Query>*/
+                            $queryUpdate = 'UPDATE contacto SET                                             
+                                                    nombre              =  "'.$nombre.'",  
+                                                    calle               =  "'.$calle.'",                                                                                                          
+                                                    noExterior          =  "'.$noExterior.'",
+                                                    noInterior          =  "'.$noInterior.'", 
+                                                    codigoPostal        =  "'.$codigoPostal.'",
+                                                    colonia             =  "'.$colonia.'",
+                                                    idPais              =  '.$idPais.',
+                                                    idEstado            =  '.$idEstado.',
+                                                    idMunicipio         =  '.$idMunicipio.',
+                                                    entreCalle          =  "'.$entreCalle.'",
+                                                    latitud             =  "'.$latitud.'",
+                                                    longitud            =  "'.$longitud.'",
+                                                
+                                                    instrucciones       =  "'.$instrucciones.'",
+                                                    telefono            =  "'.$telefono.'",
+                                                    email               =  "'.$email.'",                                                 
+
+                                                    fechaModificacion   =  "'.$DATE.'",
+                                                    observacion         =  " [ INSERT '.$DATE.' ], [ idUser '.$idUser.' ] " 
+                                            
+                                                    WHERE  idContacto  = '.$idContacto;
+                        /*</Query>*/
+                        
+                        $JSON_RESULT['queryUpdate'] = $queryUpdate;
+                        
+                        $this->open();        
+                            if ( mysqli_query( $this->Connection, $queryUpdate)) {
+                                $JSON_RESULT['message']     = "Good";
+                            } else {
+                                $JSON_RESULT['message']     = "Bad";                            
+                                $JSON_RESULT['error']       = "Error: <br>" . mysqli_error($this->Connection);
+                            }        
+                        $this->closet();
+                    }else{
+                        $JSON_RESULT['message']     = "No hay latitud ni logitud";  
+                    }
+                }else{
+                    $JSON_RESULT['message']         = "Contacto Repetido";  
+                }
+                return $JSON_RESULT;    
             }
-        /*</Method Create>*/
+        /*</Method Update>*/
 
         /*<Method createMasiva>*/
             public function createMasiva( 
                                         $nombre,    
-                                        $calle,
-                                        $telefono,
+                                        $calle,                                       
                                         $noExterior,
                                         $noInterior,
                                         $codigoPostal,
@@ -276,11 +444,18 @@ namespace  door2door\Modules\ModuleCampaign\Model\Contactos;
                                         $idPais,
                                         $idEstado,
                                         $idMunicipio,
-                                        $deuda,
-                                        $idCampana,
+                                        $entreCalle,
+                                        $instrucciones,                                       
+                                        $telefono,
                                         $email,   
+
+                                        $idCampana,
                                         $latitud,       
-                                        $longitud                              
+                                        $longitud,
+                                        $contador,
+                                        $ARREGLO_PAIS_2,
+                                        $ARREGLO_ESTADO_2,
+                                        $ARREGLO_MUNICIPIO_2                                 
                                     ){
                 /*<Variables> */
 
@@ -294,92 +469,149 @@ namespace  door2door\Modules\ModuleCampaign\Model\Contactos;
                     $JSON_RESULT                    = [];
                    
                     $JSON_RESULT['message']         = '';
-                    $JSON_RESULT['error'] = '';
                 /*</Variables> */
 
                 /*<resultIdPais> */
                     $resultIdPais                   = $this->selectOne('paises', 'nombre', 'idPais', $idPais);  
-                    $JSON_RESULT['resultIdPais']    = $resultIdPais; 
-                    if($resultIdPais['message'] != 'Good'){  $JSON_RESULT['message'] = 'Bad'; return $JSON_RESULT; }    
-                    
+                    if($resultIdPais['message'] != 'Good'){    $idPais = 0; }                        
                     $idPais = $resultIdPais['id'];
                 /*</resultIdPais> */
 
                 /*<resultIdEstado> */
                     $resultIdMunicipio                  = $this->selectOne('Municipios', 'nombre', 'idMunicipio', $idMunicipio);  
-                    $JSON_RESULT['resultIdMunicipio']   = $resultIdMunicipio; 
-                    if($resultIdMunicipio['message'] != 'Good'){  $JSON_RESULT['message'] = 'Bad'; return $JSON_RESULT; }
-                    
+                    if($resultIdMunicipio['message'] != 'Good'){  $idMunicipio = 0; }                    
                     $idMunicipio                        = $resultIdMunicipio['id'];
                 /*</resultIdEstado> */
 
                 /*<resultIdPais> */
                     $resultIdEstado                   = $this->selectOne('Estados', 'nombre','idEstado', $idEstado);  
-                    $JSON_RESULT['resultIdPais']      = $resultIdEstado; 
-                    if($resultIdEstado['message'] != 'Good'){  $JSON_RESULT['message'] = 'Bad'; return $JSON_RESULT; }     
-
+                    if($resultIdEstado['message'] != 'Good'){  $idEstado = 0; }    
                     $idEstado                         = $resultIdEstado['id'];
                 /*</resultIdPais> */
-              
-                    /*<Query>*/
-                        $queryInsert = 'INSERT INTO contacto ( 
-                                                idUsuario,
-                                                idCampana, 
-                                                nombre,  
-                                                calle,  
-                                                telefono,                                                  
-                                                email,   
-                                                noInterior,                                                   
-                                                noExterior,
-                                                codigoPostal,
-                                                colonia,
-                                                idPais,
-                                                idEstado,
-                                                idMunicipio,
-                                                deuda,
-                                                latitud,
-                                                longitud,
-                                                estatus,
-                                                fechaCreacion, 
-                                                fechaModificacion,
-                                                observacion,
-                                                bstate
-                                                ) VALUES( 
-                                                    "'.$idUser.'",
-                                                    "'.$idCampana.'", 
-                                                    "'.$nombre.'", 
-                                                    "'.$calle.'", 
-                                                    "'.$telefono.'", 
-                                                    "'.$email.'", 
-                                                    "'.$noInterior.'", 
-                                                    "'.$noExterior.'", 
-                                                    "'.$codigoPostal.'", 
-                                                    "'.$colonia.'", 
-                                                     '.$idPais.', 
-                                                     '.$idEstado.', 
-                                                     '.$idMunicipio.', 
-                                                     '.$deuda.',
-                                                     "'.$latitud.'", 
-                                                     "'.$longitud.'",
-                                                     "PENDIENTE", 
-
-                                                    "'.$DATE.'",
-                                                    "'.$DATE.'",
-                                                    " [ INSERT '.$DATE.' ], [ idUser '.$idUser.' ] ",
-                                                    1
-                                                );';
-                    /*</Query>*/
+                    if(
+                        $idPais         > 0 &&
+                        $idEstado       > 0 &&
+                        $idMunicipio    > 0 
+                    ){       
+                        if(
+                            $nombre         != '' &&
+                            $calle          != '' &&
+                            $noExterior     != '' &&
+                            $codigoPostal   != '' &&
+                            $colonia        != '' &&
+                            $telefono       != ''
+                        ){  
+                            /*<PROCESO DE INSERCION>*/                     
                     
-                    $JSON_RESULT['queryInsert'] = $queryInsert;
-                    $this->open();        
-                        if ( mysqli_query( $this->Connection, $queryInsert)) {
-                            $JSON_RESULT['message']     = "Good";
-                        } else {
-                            $JSON_RESULT['message']     = "Bad";                            
-                            $JSON_RESULT['error']       = "Error: <br>" . mysqli_error($this->Connection);
-                        }        
-                    $this->closet();
-                    return $JSON_RESULT;               
+                                /*<Query>*/
+                                    $queryInsert = 'INSERT INTO contacto ( 
+                                                            idUsuario,
+                                                            idCampana, 
+                                                            nombre,  
+                                                            calle,                                                                                                   
+                                                            noExterior,
+                                                            noInterior,
+                                                            codigoPostal,
+                                                            colonia,
+                                                            idPais,
+                                                            idEstado,
+                                                            idMunicipio,
+                                                            entreCalle,
+                                                            instrucciones,
+                                                            telefono,  
+                                                            email,                                             
+                                                            latitud,
+                                                            longitud,
+                                                            estatus,
+                                                            fechaCreacion, 
+                                                            fechaModificacion,
+                                                            observacion,
+                                                            bstate
+                                                            ) VALUES( 
+                                                                "'.$idUser.'",
+                                                                "'.$idCampana.'", 
+                                                                "'.$nombre.'", 
+                                                                "'.$calle.'",  
+                                                                "'.$noExterior.'", 
+                                                                "'.$noInterior.'", 
+                                                                "'.$codigoPostal.'", 
+                                                                "'.$colonia.'", 
+                                                                '.$idPais.', 
+                                                                '.$idEstado.', 
+                                                                '.$idMunicipio.', 
+                                                                "'.$entreCalle.'",
+                                                                "'.$instrucciones.'", 
+                                                                "'.$telefono.'", 
+                                                                "'.$email.'", 
+                                                                "'.$latitud.'", 
+                                                                "'.$longitud.'",
+                                                                "PENDIENTE", 
+
+                                                                "'.$DATE.'",
+                                                                "'.$DATE.'",
+                                                                " [ INSERT '.$DATE.' ], [ idUser '.$idUser.' ] ",
+                                                                1
+                                                            );';
+                                /*</Query>*/
+                                
+                                //$JSON_RESULT['queryInsert'] = $queryInsert;
+                                $this->open();        
+                                    if ( mysqli_query( $this->Connection, $queryInsert)) {
+                                        $JSON_RESULT['message']     = "Good";
+                                    } else {
+                                        //$JSON_RESULT['message']     = "Bad";                            
+                                        //$JSON_RESULT['error']       = "Error: <br>" . mysqli_error($this->Connection);
+                                        $JSON_RESULT['message']                  = "Error de Query";   
+                                        $JSON_RESULT['ARREGLO_NOMBRE']           = $nombre;
+                                        $JSON_RESULT['ARREGLO_CALLE']            = $calle;
+                                        $JSON_RESULT['ARREGLO_NOEXTERIOR']       = $noExterior;
+                                        $JSON_RESULT['ARREGLO_NOINTERIOR']       = $noInterior;
+                                        $JSON_RESULT['ARREGLO_CODIGOPOSTAL']     = $codigoPostal;
+                                        $JSON_RESULT['ARREGLO_COLONIA']          = $colonia;
+                                        $JSON_RESULT['ARREGLO_PAIS']             = $ARREGLO_PAIS_2;
+                                        $JSON_RESULT['ARREGLO_ESTADO']           = $ARREGLO_ESTADO_2;
+                                        $JSON_RESULT['ARREGLO_MUNICIPIO']        = $ARREGLO_MUNICIPIO_2;
+                                        $JSON_RESULT['ARREGLO_ENTRE_CALLE']      = $entreCalle;
+                                        $JSON_RESULT['ARREGLO_INSTRUCCCIONES']   = $instrucciones;
+                                        $JSON_RESULT['ARREGLO_TELEFONO']         = $telefono;
+                                        $JSON_RESULT['ARREGLO_EMAIL']            = $email;
+                                        $JSON_RESULT['queryInsert']              = $queryInsert;
+                                    }        
+                                $this->closet();
+                            /*</PROCESO DE INSERCION>*/  
+                        }else{
+                            $JSON_RESULT['message']                  = "FALTAN DATOS";   
+                            $JSON_RESULT['ARREGLO_NOMBRE']           = $nombre;
+                            $JSON_RESULT['ARREGLO_CALLE']            = $calle;
+                            $JSON_RESULT['ARREGLO_NOEXTERIOR']       = $noExterior;
+                            $JSON_RESULT['ARREGLO_NOINTERIOR']       = $noInterior;
+                            $JSON_RESULT['ARREGLO_CODIGOPOSTAL']     = $codigoPostal;
+                            $JSON_RESULT['ARREGLO_COLONIA']          = $colonia;
+                            $JSON_RESULT['ARREGLO_PAIS']             = $ARREGLO_PAIS_2;
+                            $JSON_RESULT['ARREGLO_ESTADO']           = $ARREGLO_ESTADO_2;
+                            $JSON_RESULT['ARREGLO_MUNICIPIO']        = $ARREGLO_MUNICIPIO_2;
+                            $JSON_RESULT['ARREGLO_ENTRE_CALLE']      = $entreCalle;
+                            $JSON_RESULT['ARREGLO_INSTRUCCCIONES']   = $instrucciones;
+                            $JSON_RESULT['ARREGLO_TELEFONO']         = $telefono;
+                            $JSON_RESULT['ARREGLO_EMAIL']            = $email;
+                        }
+                    }else{
+                        $JSON_RESULT['message']                  = "PAIS-ESTADO-MUNICIOPIO NO LOCALIZADO";                        
+                        $JSON_RESULT['ARREGLO_NOMBRE']           = $nombre;
+                        $JSON_RESULT['ARREGLO_CALLE']            = $calle;
+                        $JSON_RESULT['ARREGLO_NOEXTERIOR']       = $noExterior;
+                        $JSON_RESULT['ARREGLO_NOINTERIOR']       = $noInterior;
+                        $JSON_RESULT['ARREGLO_CODIGOPOSTAL']     = $codigoPostal;
+                        $JSON_RESULT['ARREGLO_COLONIA']          = $colonia;
+                        $JSON_RESULT['ARREGLO_PAIS']             = $ARREGLO_PAIS_2;
+                        $JSON_RESULT['ARREGLO_ESTADO']           = $ARREGLO_ESTADO_2;
+                        $JSON_RESULT['ARREGLO_MUNICIPIO']        = $ARREGLO_MUNICIPIO_2;
+                        $JSON_RESULT['ARREGLO_ENTRE_CALLE']      = $entreCalle;
+                        $JSON_RESULT['ARREGLO_INSTRUCCCIONES']   = $instrucciones;
+                        $JSON_RESULT['ARREGLO_TELEFONO']         = $telefono;
+                        $JSON_RESULT['ARREGLO_EMAIL']            = $email;
+                    }
+                         
               
                 return $JSON_RESULT;
             }
@@ -432,17 +664,18 @@ namespace  door2door\Modules\ModuleCampaign\Model\Contactos;
                     $Matris                         = []; 
                     $JSON_RESULT['NOMBRE_ARCHIVO']  = $NOMBRE_ARCHIVO;
                     $JSON_RESULT['message']         = '';
-                    $JSON_RESULT['test'] ;
+                    $JSON_RESULT['test'] = '';
                     $fp = fopen("./Documentos/".$NOMBRE_ARCHIVO, "r");
                 /*</VARIABLES>*/
 
-                if ( fgetcsv ($fp, 1000, ";")  !== NULL) 
+                if ( fgetcsv ($fp, 10000, "\n")  !== NULL) 
                 {
-                    while( $Dato = fgetcsv ($fp, 1000, ";")) 
+                    while( $Dato = fgetcsv ($fp, 1000, "\n")) 
                     {    
                         $Arreglo    = explode( ',' , $Dato[0]);     
                         array_push($Matris,  $Arreglo);
                     }
+                    $JSON_RESULT['Dato']          = $Dato;   
 
                     $JSON_RESULT['Matris']          = $Matris;   
                     $JSON_RESULT['message']         = 'Good';
@@ -460,14 +693,14 @@ namespace  door2door\Modules\ModuleCampaign\Model\Contactos;
         /*</RESPUESTA_CARGAR_ARREGLO>*/
 
         /*<Geolocalizacion>*/
-            public function getGeocodeData($nExterior, $calle, $municipio, $estado ){
+            public function getGeocodeData($nExterior, $calle, $municipio, $estado, $codigoPostal, $colonia ){
 
                 /*<VARIABLES>*/
                     $JSON_RESULT = [];
                     $JSON_RESULT['message'] = '';
                     $JSON_RESULT['lat']     = 0;
                     $JSON_RESULT['lng']     = 0;
-                    $address                = urlencode($nExterior.' '.$calle.' '.$municipio.' '.$estado);
+                    $address                = urlencode($calle.' '.$nExterior .' '.$colonia.' '.$municipio.' '.$estado.' ');
                     $googleMapUrl           = "https://maps.googleapis.com/maps/api/geocode/json?address=$address&key=AIzaSyDwQClTGJJEBxBdoDdpvZqj410LlfAb8FM&callback=initMap&";
                 /*</VARIABLES>*/
 
@@ -507,6 +740,199 @@ namespace  door2door\Modules\ModuleCampaign\Model\Contactos;
             }
         /*</Geolocalizacion>*/
 
+
+        /*<RESPUESTA_VALIDAR_NOMBRE_CONTACTO_UNO>*/
+            public function RESPUESTA_VALIDAR_NOMBRE_CONTACTO_UNO( $nombre, $telefono, $idCampana, $idContacto){
+
+                /*<Variables> */
+                    $JSON_RESULT                    = [];
+                    $JSON_RESULT['information']     = [];
+                    $JSON_RESULT['message']         = '';
+                    $JSON_RESULT['total']           = 0;
+                    $JSON_RESULT['error']           = '';
+                /*</Variables> */
+
+                /*<Query> */
+                    if($idCampana > 0){
+                        $ContactosQuery = 'SELECT  count(idContacto) AS total
+                                                FROM contacto 
+                                            WHERE 
+                                                idCampana   = '.$idCampana.'    AND 
+                                                bstate      = 1                 AND
+                                                nombre      like "%'.$nombre.'%"  
+                                            ';
+                    }else{
+                        $ContactosQuery = 'SELECT  count(con1.idContacto) AS total
+                                                FROM contacto con1
+                                            WHERE 
+                                                            con1.idCampana   = (
+                                                                                SELECT con2.idCampana 
+                                                                                    FROM contacto con2 
+                                                                                    WHERE 
+                                                                                        con2.idContacto = '.$idContacto.'
+                                                                            )    AND 
+                                                            con1.bstate         = 1                         AND
+                                                            nombre              like "%'.$nombre.'%"        AND
+                                                            con1.idContacto     != '.$idContacto.'
+                                            ';
+                    }                  
+                /*</Query> */
+
+                $JSON_RESULT['ContactosQuery']      = $ContactosQuery;
+
+                $this->open();            
+                    if ($resultQuery = mysqli_query($this->Connection, $ContactosQuery)) {
+                        $JSON_RESULT['message'] = "Good";   
+                        if ($resultQuery->num_rows > 0) {                            
+                            while ($Rol = $resultQuery->fetch_array(MYSQLI_ASSOC)) {
+                                $JSON_RESULT['total'] = $Rol['total'];
+                            }                            
+                        }
+                    } else {
+                        /*<Respuesta>*/
+                            $JSON_RESULT['message']         = "Bad";                            
+                            $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
+                        /*</Respuesta>*/
+                    }        
+                $this->closet();
+                
+                return $JSON_RESULT;                                                   
+
+            }
+        /*</RESPUESTA_VALIDAR_NOMBRE_CONTACTO_UNO>*/
+
+
+        /*<RECALCULO>*/
+            public function recalculo($idCampana){
+
+                /*</CONSULTA>*/
+                return $JSON_RESULT;
+            }
+        /*</RECALCULO>*/
+
+        /*<ELIMINAR CAVENTOS Y CARACTERES>*/
+            public function eliminarAcentosYCaracteres($cadena){
+                    
+                //Reemplazamos la A y a
+                $cadena = str_replace(
+                    array('Á', 'À', 'Â', 'Ä', 'á', 'à', 'ä', 'â', 'ª'),
+                    array('A', 'A', 'A', 'A', 'a', 'a', 'a', 'a', 'a'),
+                    $cadena
+                );
+
+                //Reemplazamos la E y e
+                $cadena = str_replace(
+                    array('É', 'È', 'Ê', 'Ë', 'é', 'è', 'ë', 'ê'),
+                    array('E', 'E', 'E', 'E', 'e', 'e', 'e', 'e'),
+                    $cadena );
+
+                //Reemplazamos la I y i
+                $cadena = str_replace(
+                array('Í', 'Ì', 'Ï', 'Î', 'í', 'ì', 'ï', 'î'),
+                array('I', 'I', 'I', 'I', 'i', 'i', 'i', 'i'),
+                $cadena );
+
+                //Reemplazamos la O y o
+                $cadena = str_replace(
+                array('Ó', 'Ò', 'Ö', 'Ô', 'ó', 'ò', 'ö', 'ô'),
+                array('O', 'O', 'O', 'O', 'o', 'o', 'o', 'o'),
+                $cadena );
+
+                //Reemplazamos la U y u
+                $cadena = str_replace(
+                array('Ú', 'Ù', 'Û', 'Ü', 'ú', 'ù', 'ü', 'û'),
+                array('U', 'U', 'U', 'U', 'u', 'u', 'u', 'u'),
+                $cadena );
+
+                //Reemplazamos la N, n, C y c
+                $cadena = str_replace(
+                array('Ñ', 'ñ', 'Ç', 'ç'),
+                array('N', 'n', 'C', 'c'),
+                $cadena
+                );
+                
+                return $cadena;
+            }
+        /*</ELIMINAR CAVENTOS Y CARACTERES>*/
+
+        /*<UPDATE CONTACTOS>*/
+            private function updateContactos($idContacto, $estatus, $observacionDireccion){
+                /*<datos>*/
+                    session_start();
+                    $DATE                       = date('Y-m-d h:i:s');
+                    $idUser                     = $_SESSION["idUser-door2door"];
+                /*</datos>*/
+                $JSON_RESULT                    = [];
+                
+                $JSON_RESULT['message']         = '';
+                $JSON_RESULT['error']           = '';
+                $JSON_RESULT['error']           = '';
+                /*<Query>*/
+                    $queryUpdate = 'UPDATE contacto SET                                             
+                                            estatus                 =  "'.$estatus.'",   
+                                            observacionDireccion    =  "'.$observacionDireccion.'",   
+                                            fechaModificacion       =  "'.$DATE.'",
+                                            observacion             =  " [ UPDATE '.$DATE.' ], [ idUser '.$idUser.' ] " 
+                                    
+                                            WHERE  idContacto  = '.$idContacto;
+                /*</Query>*/
+                
+                $JSON_RESULT['queryUpdate'] = $queryUpdate;
+                
+                $this->open();        
+                    if ( mysqli_query( $this->Connection, $queryUpdate)) {
+                        $JSON_RESULT['message']     = "Good";
+                    } else {
+                        $JSON_RESULT['message']     = "Bad";                            
+                        $JSON_RESULT['error']       = "Error: <br>" . mysqli_error($this->Connection);
+                    }        
+                $this->closet();
+                return $JSON_RESULT;    
+            }
+        /*</UPDATE CONTACTOS>*/
+        public function eliminar_acentos($cadena){
+                
+            //Reemplazamos la A y a
+            $cadena = str_replace(
+                array('Á', 'À', 'Â', 'Ä', 'á', 'à', 'ä', 'â', 'ª'),
+                array('A', 'A', 'A', 'A', 'a', 'a', 'a', 'a', 'a'),
+                $cadena
+            );
+
+            //Reemplazamos la E y e
+            $cadena = str_replace(
+                array('É', 'È', 'Ê', 'Ë', 'é', 'è', 'ë', 'ê'),
+                array('E', 'E', 'E', 'E', 'e', 'e', 'e', 'e'),
+                $cadena );
+
+            //Reemplazamos la I y i
+            $cadena = str_replace(
+            array('Í', 'Ì', 'Ï', 'Î', 'í', 'ì', 'ï', 'î'),
+            array('I', 'I', 'I', 'I', 'i', 'i', 'i', 'i'),
+            $cadena );
+
+            //Reemplazamos la O y o
+            $cadena = str_replace(
+            array('Ó', 'Ò', 'Ö', 'Ô', 'ó', 'ò', 'ö', 'ô'),
+            array('O', 'O', 'O', 'O', 'o', 'o', 'o', 'o'),
+            $cadena );
+
+            //Reemplazamos la U y u
+            $cadena = str_replace(
+            array('Ú', 'Ù', 'Û', 'Ü', 'ú', 'ù', 'ü', 'û'),
+            array('U', 'U', 'U', 'U', 'u', 'u', 'u', 'u'),
+            $cadena );
+
+            //Reemplazamos la N, n, C y c
+            $cadena = str_replace(
+            array('Ñ', 'ñ', 'Ç', 'ç',' ',',','.','_','-'),
+            array('N', 'n', 'C', 'c','', '' ,'' ,'' ,'' ),
+            $cadena
+            );
+            
+            return $cadena;
+        }
+
     }
 
-    
+    /**/

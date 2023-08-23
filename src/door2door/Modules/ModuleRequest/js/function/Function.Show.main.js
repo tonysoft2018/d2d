@@ -65,31 +65,49 @@
                                 <td style="width:250px;vertical-align:middle;" class="text-justify">${ await  Formato(FECHA[0])}</td>
                                 <td style="width:200px;vertical-align:middle;" class="text-justify">${Information[i].nombres}</td>   
                                 <td style="width:200px;vertical-align:middle;" class="text-justify">${Information[i].apellidos}</td>    
+                                <td style="width:200px;vertical-align:middle;" class="text-justify">${Information[i].email}</td>  
                                 <td style="width:200px;vertical-align:middle;" class="text-justify">${Information[i].tipoPerfil}</td>     
                                 <td style="width:200px;vertical-align:middle;${style}" class="text-justify"><strong>${Information[i].estatus}</strong></td>      
                                 <td style="width:220px;vertical-align:middle;">
                                     <center>
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <img    class="cursor mostrar-imagenes"  
+                                                <img    class="cnuevo-evento-domicilio cursor mostrar-imagenes evento-mostra-mapa-sugerencias"  
                                                         title="Mostrar" 
                                                         id=""
                                                         onclick="ButtonUpdate(
-                                                                     ${Information[i].idUsuario},
-                                                                     ${Information[i].idSolicitud},
-                                                                     ${Information[i].folio},
+                                                                     
+                                                                    '${Information[i].idSolicitud}',
+                                                                    '${Information[i].folio}',
                                                                     '${Information[i].fecha}',
-                                                                    '${Information[i].nombres}',
-                                                                    '${Information[i].apellidos}',
-                                                                    '${Information[i].tipoPerfil}',                                                            
                                                                     '${Information[i].estatus}',
+                                                                    '${Information[i].idUsuario}',
                                                                     '${Information[i].usuario}',
                                                                     '${Information[i].imagen}',
-                                                                    '${Information[i].TipoDeVehiculo}',
-                                                                    '${Information[i].numeroCuenta}',
+                                                                    '${Information[i].nombres}',                                                            
+                                                                    '${Information[i].apellidos}',
+                                                                    '${Information[i].tipoPerfil}',
+                                                                    '${Information[i].email}',
 
-                                                                    
-                                                                    
+
+                                                                    '${Information[i].colonia}',
+                                                                    '${Information[i].calle}',
+                                                                    '${Information[i].noExterior}',
+                                                                    '${Information[i].noInterior}',
+                                                                    '${Information[i].codigoPostal}',
+                                                                    '${Information[i].Municipio}',
+                                                                    '${Information[i].Estado}',
+                                                                    '${Information[i].Pais}',
+
+                                                                    '${Information[i].banco}',
+                                                                    '${Information[i].numeroCuenta}',
+                                                                    '${Information[i].nombres} ${Information[i].apellidos}',
+
+
+                                                                    '${Information[i].TipoDeVehiculo}',
+                                                                     ${Information[i].latitud},
+                                                                     ${Information[i].longitud}
+
                                                                 );" 
                                                         src="/door2door/Modules/ModulesImage/mostrar.png"    
                                                         style="width:30px;height:30px" >
@@ -103,11 +121,9 @@
                                 </td>
                             </tr> `;  
                     TableBody +=  record;
-                }
-         
+                }         
                 
                 $('#table-main-door2door-informacion').html(TableBody);
-
 
                 $('.mostrar-imagenes').on('click', () => {
                     setTimeout( () => {

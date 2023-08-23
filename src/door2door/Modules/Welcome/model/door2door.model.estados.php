@@ -40,7 +40,6 @@ namespace   door2door\Modules\ModuleCatalogsEstados\Model\Estados;
                                                 con.noExterior,
                                                 con.codigoPostal,
                                                 con.colonia,
-                                                con.comentario,
                                                 con.entreCalle,
                                                 con.latitud,
                                                 con.longitud,
@@ -72,15 +71,12 @@ namespace   door2door\Modules\ModuleCatalogsEstados\Model\Estados;
                                                                 ), "No esta asignado"
                                                     )
                                                 )AS Municipio
-
-
-
-                                                FROM contacto con, campana cam 
+                                            FROM contacto con, campana cam 
                                                     WHERE  
-                                                        con.idCampana = cam.idCampana AND   
-                                                        con.idUsuario   = '.$idUser.' AND 
-                                                        cam.estatus = "ABIERTA"       AND
-                                                        con. bstate      = 1 ; ';
+                                                        con.idCampana       = cam.idCampana AND  
+                                                        con.estatus         = "PENDIENTE"   AND   
+                                                        cam.estatus         = "ABIERTA"     AND
+                                                        con. bstate         = 1 ; ';
                 /*</Query> */
                 
                 $this->open();            

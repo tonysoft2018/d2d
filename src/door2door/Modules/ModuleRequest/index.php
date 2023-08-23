@@ -24,7 +24,24 @@
     <!-- -->
         <head>
             <title> door2door | Solicitudes </title>
-            <?= include_once('../../head.php'); ?>     
+            <?= include_once('../../head.php'); ?>   
+            <style>
+                    /* Start: Google Maps Responsive */
+                    .map-responsive {
+                        overflow:hidden;
+                        padding-bottom:100%; /*Reduce este valor si el mapa fuera muy alto, por ejemplo 250px, puedes usar porcentajes, 50%*/
+                        position:relative;
+                       
+                    }
+                    .map-responsive iframe{
+                        left:0;
+                        top:0;
+                        height:100%;
+                        width: 90%;
+                        position:absolute;
+                    }
+                    /* End: Google Maps Responsive */
+                </style>   
         </head>
     <!-- -->
     <body class="hold-transition sidebar-mini layout-fixed">
@@ -95,6 +112,7 @@
                                                 <th>Fecha</th>
                                                 <th>Nombre</th>    
                                                 <th>Apellidos</th>     
+                                                <th>Correo</th>     
                                                 <th>Tipo</th>   
                                                 <th>Estatus</th>                                            
                                                 <th></th>
@@ -115,15 +133,20 @@
             </div>
 
             <!-- Modales -->
-                <?= include_once('ModalUpdate.php');        ?>  
-                <?= include_once('ModalImagen.php');        ?> 
-                <?= include_once('ModalAceptar.php');       ?>
-                <?= include_once('ModalContrato.php');      ?>
-                <?= include_once('ModalDelete.php');        ?>
-                <?= include_once('ModalRechazar.php');      ?>
-                <?= include_once('ModalIncompleto.php');    ?>
-                <?= include_once('ModalActiva.php');        ?>
-                <?= include_once('ModalInactivo.php');      ?>
+                <?= include_once('ModalDatosPersonales.php');           ?>  
+                <?= include_once('ModalDatosDomicilio.php');            ?>  
+                <?= include_once('ModalDatosINE.php');                  ?>  
+                <?= include_once('ModalDatosTarjetaCirculaccion.php');  ?>  
+                <?= include_once('ModalDatosBancaria.php');             ?> 
+                <?= include_once('ModalDatosCuestionario.php');         ?>  
+                <?= include_once('ModalImagen.php');                    ?> 
+                <?= include_once('ModalAceptar.php');                   ?>
+                <?= include_once('ModalContrato.php');                  ?>
+                <?= include_once('ModalDelete.php');                    ?>
+                <?= include_once('ModalRechazar.php');                  ?>
+                <?= include_once('ModalIncompleto.php');                ?>
+                <?= include_once('ModalActiva.php');                    ?>
+                <?= include_once('ModalInactivo.php');                  ?>
 
             <!-- Modales -->
             

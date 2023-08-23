@@ -21,7 +21,7 @@ namespace  d2dVisitador\Login\Model\Login;
                  /*<Variables> */
                     $JSON_RESULT                    = [];
                     $JSON_RESULT['message']         = '';
-                    $JSON_RESULT['error']           = '';
+                    //$JSON_RESULT['error']           = '';
                 /*</Variables> */
                 /*<Query> */
                     $QuerySelect = '  SELECT 
@@ -45,7 +45,7 @@ namespace  d2dVisitador\Login\Model\Login;
                                                     usu.tipoPerfil  = "SOCIO VISITADOR" AND
                                                     sol.estatus     != "INACTIVO"
                                                     LIMIT 1; ';
-                    $JSON_RESULT['$QuerySelect'] = $QuerySelect;
+                    //$JSON_RESULT['$QuerySelect'] = $QuerySelect;
                 /*</Query> */
                 $this::open();            
                     if ($resultQuery = mysqli_query($this->Connection, $QuerySelect)) {

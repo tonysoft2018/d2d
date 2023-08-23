@@ -25,57 +25,109 @@ namespace  door2door\Modules\ModuleRequest\Model\Solicitudes;
                     $JSON_RESULT['message']         = '';
                     $JSON_RESULT['error']           = '';
                 /*</Variables> */
-                /*<Query> */
-                    $querySelect = '     SELECT 
-                                            usu.idUsuario,
-                                            usu.usuario,
-                                            usu.imagen,
-                                            usu.nombres,
-                                            usu.apellidos,
-                                            usu.idUsuario,
-                                            usu.tipoPerfil,
-                                            usu.numeroCuenta,
-                                            sol.idSolicitud,
-                                            sol.folio,
-                                            sol.fecha,
-                                            sol.estatus,
-                                            (
-                                                IFNULL( 
-                                                        (SELECT tv.nombre FROM tipoVehiculo tv WHERE tv.idTVehiculo = usu.IdTVehiculo),"NINGUNO" 
-                                                    )
-                                            )AS TipoDeVehiculo
-                                        FROM   usuarios usu,  solicitud sol
-                                            WHERE 
-                                                usu.idUsuario   =  sol.idUsuario 	AND 
-                                                usu.tipoUsuario = "SOCIO" 		    AND
-                                                usu.bstate      = 1 
-                                            GROUP BY sol.fecha     
-                                            ORDER BY sol.fecha   DESC ; ';
-                    $JSON_RESULT['querySelect'] = $querySelect;
-                /*</Query> */
+
+                /*<USUARIO>*/
+                    /*<Query> */
+                        $querySelect = '     SELECT 
+                                                usu.idUsuario,
+                                                usu.usuario,                                                
+                                                usu.imagen,
+                                                usu.nombres,
+                                                usu.apellidos,
+                                                usu.tipoPerfil,
+                                                usu.email,
+
+                                                usu.latitud ,
+                                                usu.longitud ,
+                                                usu.colonia,
+                                                usu.calle,
+                                                usu.noExterior,
+                                                usu.noInterior,
+                                                usu.codigoPostal,
+                                                usu.ciudad,
+                                                (
+                                                    IFNULL( 
+                                                            (
+                                                                    SELECT mun.nombre 
+                                                                        FROM Municipios mun 
+                                                                        WHERE mun.idMunicipio  = usu.idMunicipio 
+                                                            ),"NINGUNO" 
+                                                        )
+                                                )AS Municipio,
+                                                (
+                                                    IFNULL( 
+                                                            (
+                                                                    SELECT es.nombre 
+                                                                        FROM Estados es 
+                                                                        WHERE es.idEstado   = usu.idEstados  
+                                                            ),"NINGUNO" 
+                                                        )
+                                                )AS Estado,                                                
+                                                (
+                                                    IFNULL( 
+                                                            (
+                                                                    SELECT pa.nombre 
+                                                                        FROM paises pa 
+                                                                        WHERE pa.idPais    = usu.idPaises   
+                                                            ),"NINGUNO" 
+                                                        )
+                                                )AS Pais,
+
+                                                usu.banco,
+                                                usu.numeroCuenta,
+
+                                                (
+                                                    IFNULL( 
+                                                            (   
+                                                                SELECT tv.nombre 
+                                                                FROM tipoVehiculo tv 
+                                                                WHERE tv.idTVehiculo = usu.IdTVehiculo
+                                                                ),"NINGUNO" 
+                                                        )
+                                                )AS TipoDeVehiculo,
+                                               
+
+                                                sol.idSolicitud,
+                                                sol.folio,
+                                                sol.fecha,
+                                                sol.estatus
+                                               
+                                            FROM   usuarios usu,  solicitud sol
+                                                WHERE 
+                                                    usu.idUsuario   =  sol.idUsuario 	AND 
+                                                    usu.tipoUsuario = "SOCIO" 		    AND
+                                                    usu.bstate      = 1 
+                                                GROUP BY sol.fecha     
+                                                ORDER BY sol.fecha   DESC ; ';
+                        $JSON_RESULT['querySelect'] = $querySelect;
+                    /*</Query> */
+                    
+                    $this->open();            
+                        if ($resultQuery = mysqli_query($this->Connection, $querySelect)) {
+                            if ($resultQuery->num_rows > 0) {
+                                /*<Captura>*/
+                                    while ($Rol = $resultQuery->fetch_array(MYSQLI_ASSOC)) {
+                                        array_push($JSON_RESULT['information'], $Rol);
+                                    }
+                                /*</Captura>*/
+                            }else{
+                                $JSON_RESULT['information']     = [];
+                            }
+                            /*<Respuesta>*/
+                                $JSON_RESULT['message'] = "Good";   
+                            /*</Respuesta>*/
+                        } else {
+                            /*<Respuesta>*/
+                                $JSON_RESULT['message']         = "Bad";
+                                $JSON_RESULT['querySelect']     = $querySelect;
+                                $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
+                            /*</Respuesta>*/
+                        }        
+                    $this->closet();
+                /*</USUARIO>*/
+
+
                 
-                $this->open();            
-                    if ($resultQuery = mysqli_query($this->Connection, $querySelect)) {
-                        if ($resultQuery->num_rows > 0) {
-                            /*<Captura>*/
-                                while ($Rol = $resultQuery->fetch_array(MYSQLI_ASSOC)) {
-                                    array_push($JSON_RESULT['information'], $Rol);
-                                }
-                            /*</Captura>*/
-                        }else{
-                            $JSON_RESULT['information']     = [];
-                        }
-                        /*<Respuesta>*/
-                            $JSON_RESULT['message'] = "Good";   
-                        /*</Respuesta>*/
-                    } else {
-                        /*<Respuesta>*/
-                            $JSON_RESULT['message']         = "Bad";
-                            $JSON_RESULT['querySelect']     = $querySelect;
-                            $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
-                        /*</Respuesta>*/
-                    }        
-                $this->closet();
                 return $JSON_RESULT;
             }
         /*<Method SelectFull>*/
@@ -207,123 +259,181 @@ namespace  door2door\Modules\ModuleRequest\Model\Solicitudes;
         /*</Method Update>*/ 
 
         /*<Method selectFullFile>*/
-            public function selectFullFile($folio,$idSolicitud){
+            public function selectFullFile( $folio, $idSolicitud, $idUsuario, $tipoSocio ){
                
                 /*<Variables> */
                     $JSON_RESULT                                = [];
                     $JSON_RESULT['information']                 = [];
-                    $JSON_RESULT['informationComentarios']      = [];
-                    $JSON_RESULT['informationCuesntionarios']      = [];
+                    $JSON_RESULT['information_CUESNTIONARIOS']  = [];
                     $JSON_RESULT['message']         = '';
                     $JSON_RESULT['error']           = '';
                 /*</Variables> */
                 if($folio > 0){
-                    /*<Query> */
-                        $querySelect = 'SELECT   
-                                            axs.tipoArchivo,
-                                            axs.archivo
-                                        FROM 
-                                            archivosxsolicitud axs, solicitud sol 
-                                        WHERE 
-                                            axs.idSolicitud = sol.idSolicitud	AND 
-                                            sol.folio		= '.$folio.';';
-                    /*</Query> */                    
-                    $this::open();            
-                        if ($resultQuery = mysqli_query($this->Connection, $querySelect)) {
-                            $JSON_RESULT['message'] = "Good";  
-                            $JSON_RESULT['querySelect'] = $querySelect;  
-                            if ($resultQuery->num_rows > 0) {
-                                /*<Captura>*/
-                                    while ($Ses = $resultQuery->fetch_array(MYSQLI_ASSOC)) {
-                                        array_push($JSON_RESULT['information'], $Ses);
-                                    }
-                                  
-                                /*</Captura>*/
-                            }else{
-                                $JSON_RESULT['information']     = [];
-                              
-                            }
-                            /*<Respuesta>*/                               
-                              
-                            /*</Respuesta>*/
-                        } else {
-                            /*<Respuesta>*/
-                                $JSON_RESULT['message']         = "Bad";
-                                $JSON_RESULT['querySelect']     = $querySelect;
-                                $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
-                               
-                            /*</Respuesta>*/
-                        }        
-                    $this::closet();
-
-                    /*<Query> */
-                        $querysolicitudComentarios = 'SELECT  *  FROM  solicitudComentarios sol   WHERE   sol.idSolicitud = '.$idSolicitud.';';
-                    /*</Query> */
-                    $JSON_RESULT['querysolicitudComentarios']     = $querysolicitudComentarios;
-                    $this::open();            
-                        if ($resultQuery = mysqli_query($this->Connection, $querysolicitudComentarios)) {
-                            $JSON_RESULT['message'] = "Good";  
-                            if ($resultQuery->num_rows > 0) {
-                                /*<Captura>*/
-                                    while ($Ses = $resultQuery->fetch_array(MYSQLI_ASSOC)) {
-                                        array_push($JSON_RESULT['informationComentarios'], $Ses);
-                                    }
-                                  
-                                /*</Captura>*/
-                            }else{
-                                $JSON_RESULT['informationComentarios']     = [];
-                              
-                            }
-                            /*<Respuesta>*/                               
+                    /*<USUARIOS>*/
+                        /*<Query> */
+                            $querySelect = 'SELECT   
+                                                axs.tipoArchivo,
+                                                axs.archivo
+                                            FROM 
+                                                archivosxsolicitud axs, solicitud sol 
+                                            WHERE 
+                                                axs.idSolicitud = sol.idSolicitud	AND 
+                                                sol.folio		= '.$folio.'        AND
+                                                axs.bstate      = 1 ;';
+                        /*</Query> */    
+                        $JSON_RESULT['querySelect'] = $querySelect;  
+                        $JSON_RESULT['idUsuario'] = $idUsuario;  
+                        $this::open();            
+                            if ($resultQuery = mysqli_query($this->Connection, $querySelect)) {
+                                $JSON_RESULT['message'] = "Good";  
                                 
-                            /*</Respuesta>*/
-                        } else {
-                            /*<Respuesta>*/
-                                $JSON_RESULT['message']         = "Bad";
-                               
-                                $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
-                              
-                            /*</Respuesta>*/
-                        }        
-                    $this::closet();
-
-                    /*<Query> */
-                        $querysolicitudRespuesta = 'SELECT  
-                                                                res.respuesta,  
-                                                                (
-                                                                    SELECT pxc.pregunta FROM  preguntasxcuesntionario pxc
-                                                                                    WHERE 	pxc.idPxC = res.idPxC
-                                                                )AS Pregunta
-                                                            FROM  respuestasxcuesntionario res   
-                                                        WHERE   res.idSolicitud  = '.$idSolicitud.';';
-                    /*</Query> */
-                    $JSON_RESULT['informationCuesntionarios']     = $querysolicitudComentarios;
-                    $this::open();            
-                        if ($resultQuery = mysqli_query($this->Connection, $querysolicitudRespuesta)) {
-                            $JSON_RESULT['message'] = "Good";  
-                            if ($resultQuery->num_rows > 0) {
-                                /*<Captura>*/
-                                    while ($Ses = $resultQuery->fetch_array(MYSQLI_ASSOC)) {
-                                        array_push($JSON_RESULT['informationCuesntionarios'], $Ses);
-                                    }
+                                if ($resultQuery->num_rows > 0) {
+                                    /*<Captura>*/
+                                        while ($Ses = $resultQuery->fetch_array(MYSQLI_ASSOC)) {
+                                            array_push($JSON_RESULT['information'], $Ses);
+                                        }
                                     
-                                /*</Captura>*/
-                            }else{
-                                $JSON_RESULT['informationCuesntionarios']     = [];
+                                    /*</Captura>*/
+                                }else{
+                                    $JSON_RESULT['information']     = [];
                                 
-                            }
-                            /*<Respuesta>*/                               
-                              
-                            /*</Respuesta>*/
-                        } else {
-                            /*<Respuesta>*/
-                                $JSON_RESULT['message']         = "Bad";
-                               
-                                $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
-                              
-                            /*</Respuesta>*/
-                        }        
-                    $this::closet();
+                                }
+                                /*<Respuesta>*/                               
+                                
+                                /*</Respuesta>*/
+                            } else {
+                                /*<Respuesta>*/
+                                    $JSON_RESULT['message']         = "Bad";
+                                    $JSON_RESULT['querySelect']     = $querySelect;
+                                    $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
+                                
+                                /*</Respuesta>*/
+                            }        
+                        $this::closet();
+                    /*</USUARIOS>*/
+
+                    /*<CUESTIONARIO>*/
+                        if($tipoSocio == 'SOCIO VISITADOR'){                        
+                            /*<Query> */
+                                $querySelectCuesntionario = 'SELECT 
+                                                                    cue.nombre,
+                                                                    cue.tipoCuestionario,
+                                                                    cue.idCuestionario
+                                                                    FROM 	cuestionarios  cue
+                                                                            WHERE  cue.idCuestionario  = (
+                                                                                                          IFNULL(
+                                                                                                                    (
+                                                                                                                        SELECT aj.idCuestionariosVisitante  
+                                                                                                                            FROM ajusteCuestionario aj
+                                                                                                                            ORDER BY  aj.idACuestionarios                                                                                                                             
+                                                                                                                            DESC LIMIT 1
+                                                                                                                    ),0                                                
+                                                                                                                )
+                                                                                                        )';
+                            /*</Query>*/        
+                        }else{
+                            /*<Query> */
+                                $querySelectCuesntionario = 'SELECT 
+                                                                cue.nombre,
+                                                                cue.tipoCuestionario,
+                                                                cue.idCuestionario
+                                                                FROM 	cuestionarios  cue
+                                                                        WHERE  cue.idCuestionario  = (
+                                                                                                    IFNULL(
+                                                                                                                (
+                                                                                                                    SELECT aj.idCuestionariosCliente  
+                                                                                                                        FROM ajusteCuestionario aj
+                                                                                                                        ORDER BY  aj.idACuestionarios                                                                                             
+                                                                                                                        DESC LIMIT 1
+                                                                                                                ),0                                                
+                                                                                                            )
+                                                                        )';
+                             $JSON_RESULT['tipoSocio']     = $tipoSocio; 
+                            /*</Query>*/  
+                        }            
+                        $JSON_RESULT['querySelectCuesntionario']     = $querySelectCuesntionario;  
+                        $this::open();            
+                            if ($resultQuery = mysqli_query($this->Connection, $querySelectCuesntionario)) 
+                            {
+                                if ($resultQuery->num_rows > 0) 
+                                {                             
+                                        while ($R = $resultQuery->fetch_array(MYSQLI_ASSOC)) 
+                                        {
+
+                                            $R['PREGUNTAS']     = [];
+
+                                            /*<CONSLTAR PREGUNTA>*/
+                                                $queryPreguntas = ' SELECT 
+                                                                            pxc.idPxC,
+                                                                            pxc.idCuestionario,
+                                                                            pxc.pregunta,
+                                                                            pxc.tipoPregunta
+                                                                        FROM    preguntasxcuesntionario pxc 
+                                                                        WHERE   pxc.idCuestionario = '.$R['idCuestionario'].' ';
+
+                                                //$JSON_RESULT['queryPreguntas']     = $queryPreguntas;  
+
+                                                if($resultQueryPreguntas = mysqli_query($this->Connection, $queryPreguntas) ) 
+                                                {
+                                                    if($resultQueryPreguntas->num_rows > 0) 
+                                                    {                             
+                                                        while ($P = $resultQueryPreguntas->fetch_array(MYSQLI_ASSOC)) 
+                                                        {
+                                                            
+                                                            /*<CONSLTAR RESPUESTA>*/
+                                                                $queryRespuesta = ' SELECT * 
+                                                                                        FROM usuario_respuesta ur 
+                                                                                        WHERE   
+                                                                                                ur.idPregunta = '.$P['idPxC'].' AND
+                                                                                                ur.idUsuario  = '.$JSON_RESULT['idUsuario'].'
+                                                                                        ';  
+
+                                                                $JSON_RESULT['queryRespuesta']     = $queryRespuesta;   
+
+                                                                if($resultQueryRespuesta = mysqli_query($this->Connection, $queryRespuesta) )
+                                                                {
+                                                                    if($resultQueryRespuesta->num_rows > 0) 
+                                                                    {                             
+                                                                        while ($Res = $resultQueryRespuesta->fetch_array(MYSQLI_ASSOC))
+                                                                        {
+                                                                            $P['respuesta']             = $Res['respuesta'];
+                                                                            $P['idUsuario_Respuesta']   = $Res['idUsuario_Respuesta'];
+                                                                        }
+                                                                    }else{
+                                                                        $P['respuesta']             = "";
+                                                                        $P['idUsuario_Respuesta']   = 0;
+                                                                    }
+                                                                }
+                                                            /*</CONSLTAR RESPUESTA>*/
+
+                                                            /*<INSERTAR RESPUESTA>*/
+                                                                array_push( $R['PREGUNTAS'], $P );
+                                                            /*</INSERTAR RESPUESTA>*/
+                                                        }
+                                                    }else{
+                                                        $R['PREGUNTAS'] = [];
+                                                    }
+                                                } else {                           
+                                                    $R['PREGUNTAS']      =   "Bad". "Error: <br>" . mysqli_error($this->Connection).' ---> '.$queryPreguntas;                            
+                                                }
+                                            /*</CONSLTAR PREGUNTA>*/
+
+                                            /*<INSERTAR INFORMACION PREGUNTA>*/
+                                                array_push($JSON_RESULT['information_CUESNTIONARIOS'], $R);
+                                            /*</INSERTAR INFORMACION PREGUNTA>*/
+                                        }                               
+                                }else{
+                                    $JSON_RESULT['information_CUESNTIONARIOS']     = [];
+                                }
+                                $JSON_RESULT['message']             = "Good";                             
+                            } else {
+                            
+                                    $JSON_RESULT['message']         = "Bad";                               
+                                    $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
+                                
+                            }        
+                        $this::closet();
+                    /*</CUESTIONARIO>*/
                     return $JSON_RESULT;
                 }else{
                     $JSON_RESULT['message']         = "no variables";

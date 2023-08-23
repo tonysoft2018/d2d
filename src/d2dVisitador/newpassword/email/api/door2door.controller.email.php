@@ -34,14 +34,14 @@
                 /*</Proceso>*/  
 
                     /*<VALOR>*/
-                        $JSON_RESULT                = [];  
-                        $RESPUESTA_VALIDAR_CORREO   = [];
-                        $RESPUESTA_CREAR_TOCKEN     = [];
-                        $RESPUESTA_ENVIAR_CORREO    = [];
+                        $JSON_RESULT                    = [];  
+                        $RESPUESTA_VALIDAR_CORREO       = [];
+                        $RESPUESTA_CAMBIAR_CONTRASNA   = [];
+                        $RESPUESTA_ENVIAR_CORREO        = [];
 
                         $ID_USUARIO                 = 0;
                         $EMAIL                      = $_POST['email'];
-                        $TOCKEN                     = '';
+                        $PASSWORD                   = '';
                     /*</VALOR>*/     
 
                     /*<RESPUESTA_VALIDAR_CORREO>*/
@@ -59,28 +59,28 @@
                         }
                     /*</RESPUESTA_VALIDAR_CORREO>*/ 
 
-                    /*<RESPUESTA_CREAR_TOCKEN>*/
-                        /*<RESPUESTA_CREAR_TOCKEN>*/
-                            $RESPUESTA_CREAR_TOCKEN = $Object->RESPUESTA_CREAR_TOCKEN( 
+                    /*<RESPUESTA_CAMBIAR_CONTRASNA>*/
+                        /*<RESPUESTA_CAMBIAR_CONTRASNA>*/
+                            $RESPUESTA_CAMBIAR_CONTRASNA = $Object->RESPUESTA_CAMBIAR_CONTRASNA( 
                                 $ID_USUARIO,
                                 $EMAIL,
                              );
-                        /*</RESPUESTA_CREAR_TOCKEN>*/
+                        /*</RESPUESTA_CAMBIAR_CONTRASNA>*/
                         if($RESPUESTA_CREAR_TOCKEN['message'] != 'Good'){
-                            $JSON_RESULT['message']                  = 'RESPUESTA_CREAR_TOCKEN';
-                            $JSON_RESULT['RESPUESTA_CREAR_TOCKEN']   = $RESPUESTA_CREAR_TOCKEN;
+                            $JSON_RESULT['message']                          = 'RESPUESTA_CAMBIAR_CONTRASNA';
+                            $JSON_RESULT['RESPUESTA_CAMBIAR_CONTRASNA']      = $RESPUESTA_CAMBIAR_CONTRASNA;
                             echo json_encode($JSON_RESULT);                
                             return false;
                         }else{
-                            $TOCKEN                                = $RESPUESTA_CREAR_TOCKEN['TOCKEN'];
-                            $JSON_RESULT['RESPUESTA_CREAR_TOCKEN'] = $RESPUESTA_CREAR_TOCKEN;
+                            $PASSWORD                                   = $RESPUESTA_CAMBIAR_CONTRASNA['CONTRASENA'];
+                            $JSON_RESULT['RESPUESTA_CAMBIAR_CONTRASNA'] = $RESPUESTA_CAMBIAR_CONTRASNA;
                         }
-                    /*</RESPUESTA_CREAR_TOCKEN>*/
+                    /*</RESPUESTA_CAMBIAR_CONTRASNA>*/
 
                     /*<RESPUESTA_ENVIAR_CORREO>*/
                         /*<RESPUESTA_ENVIAR_CORREO>*/
                             $RESPUESTA_ENVIAR_CORREO = $Object->RESPUESTA_ENVIAR_CORREO( 
-                                $TOCKEN,
+                                $PASSWORD,
                                 $EMAIL 
                             );
                         /*</RESPUESTA_ENVIAR_CORREO>*/

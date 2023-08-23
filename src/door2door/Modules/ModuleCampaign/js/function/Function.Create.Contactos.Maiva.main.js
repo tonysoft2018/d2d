@@ -39,20 +39,100 @@
                 /*</INFORMACION>*/
                 console.log("=>")
                 const ResultCreateAPI= CreateMasivaAPI( PlataformaForm ).
-                then((result) => {    console.log(result)          
+                then((result) => {   console.log("=[") ; console.log(result)          
                     if(result.message == 'Good'){ 
+                        
                         /*<CARGAR HIDE>*/
                             $('#id-main').removeClass('opacidad');
                             $('#body-main-div').removeClass('body-main');
                             $('#body-main-div').hide();
                         /*</CARGAR HIDE>*/
+                        let respuestaContactos = result.RESPUESTA_INSERTAR_TODOS;
+                        let record = '';
+                        console.log(respuestaContactos);
+                        
+                        if(respuestaContactos.length > 0){
+                            record = '<button class="btn btn-secondary btn-block descargar-contactos-malos" >DATOS INVALIDOS</button>';
+                           
+                            
+                                const eventoRes = setTimeout(() => {
+                                    $('.descargar-contactos-malos').on('click',  () => {
+                                        //comprobamos compatibilidad
+                                        let ar = respuestaContactos;
+                                        if(window.Blob && (window.URL || window.webkitURL)){
+                                            var contenido = "",
+                                                d = new Date(),
+                                                blob,
+                                                reader,
+                                                save,
+                                                clicEvent;
+                                            //creamos contenido del archivo
+                                            for (var i = 0; i < ar.length; i++) {
+                                                //construimos cabecera del csv
+                                                if(
+                                                        respuestaContactos[i].message == 'GEOLOCALIZACION'      ||
+                                                        respuestaContactos[i].message == 'CONTACTO REPETIDO'    ||
+                                                        respuestaContactos[i].message == 'FALTAN DATOS'         ||
+                                                        respuestaContactos[i].message == 'PAIS-ESTADO-MUNICIOPIO NO LOCALIZADO'      
+                                                    ){
+                                                        if (i == 0)
+                                                            contenido += Object.keys(ar[i]).join(";") + "\n";
+                                                        //resto del contenido
+                                                        contenido += Object.keys(ar[i]).map(function(key){
+                                                                        return ar[i][key];
+                                                                }).join(";") + "\n";
+                                                }
+                                            }
+                                            //creamos el blob
+                                            blob =  new Blob(["\ufeff", contenido], {type: 'text/csv'});
+                                            //creamos el reader
+                                            var reader = new FileReader();
+                                            reader.onload = function (event) {
+                                                //escuchamos su evento load y creamos un enlace en dom
+                                                save = document.createElement('a');
+                                                save.href = event.target.result;
+                                                save.target = '_blank';
+                                                //aquí le damos nombre al archivo
+                                                save.download = "DATOS_INVALIDOS.csv";
+                                                try {
+                                                    //creamos un evento click
+                                                    clicEvent = new MouseEvent('click', {
+                                                        'view': window,
+                                                        'bubbles': true,
+                                                        'cancelable': true
+                                                    });
+                                                } catch (e) {
+                                                    //si llega aquí es que probablemente implemente la forma antigua de crear un enlace
+                                                    clicEvent = document.createEvent("MouseEvent");
+                                                    clicEvent.initEvent('click', true, true);
+                                                }
+                                                //disparamos el evento
+                                                save.dispatchEvent(clicEvent);
+                                                //liberamos el objeto window.URL
+                                                (window.URL || window.webkitURL).revokeObjectURL(save.href);
+                                            }
+                                            //leemos como url
+                                            reader.readAsDataURL(blob);
+                                        }else {
+                                            //el navegador no admite esta opción
+                                            alert("Su navegador no permite esta acción");
+                                        }
+                                    });
+                                },500)   
+                            
+                             
+                        }
                         /*<Respuesta>*/
                             $('#message-succes-door2door').html("");
-                            $('#message-succes-door2door').html('CREACIÓN EXITOSA');
-                            $('#modal-message-succes-door2door').modal('show'); 
-                            
+                            $('#message-succes-door2door').html(
+                                'CREACIÓN EXITOSA<br>'+record
+                               );
+                            $('#modal-message-succes-door2door').modal('show');                             
                             $('#modal-cargar-contactos-door2door').modal('hide'); 
                         /*</Respuesta>*/   
+
+                        
+                        console.log("################");
 
                         /*<Consultar toda la iformacion>*/ 
                             let idCampana = $('#update-id-door2door').val();
@@ -74,18 +154,34 @@
                                             $('#create-contactos-colonia-door2door').val('');
                                             $('#create-contactos-deuda-door2door').val('');
                                         /*<Consulta exitosa>*/                        
-                                    }else{
                                         /*<CARGAR HIDE>*/
                                             $('#id-main').removeClass('opacidad');
                                             $('#body-main-div').removeClass('body-main');
                                             $('#body-main-div').hide();
                                         /*</CARGAR HIDE>*/
-                                        /*<Error de query>*/ 
-                                            $('#message-error-door2door').html("");
-                                            $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-                                            $('#modal-message-error-door2door').modal('show');
-                                        /*</Error de query>*/   
-                                    }       
+                                    }else if(result.message == 'MAS DE 500 REGUISTROS'){ 
+                                        /*<CARGAR HIDE>*/
+                                            $('#id-main').removeClass('opacidad');
+                                            $('#body-main-div').removeClass('body-main');
+                                            $('#body-main-div').hide();
+                                        /*</CARGAR HIDE>*/
+                                        /*<Respuesta>*/
+                                            $('#message-warning-door2door').html('');
+                                            $('#message-warning-door2door').html('¡EL ARCHIVO TIENE MAS DE 500 REGISTROS!');
+                                            $('#modal-message-warning-door2door').modal('show');
+                                        /*</Respuesta>*/
+                                    }else{ 
+                                        /*<CARGAR HIDE>*/
+                                            $('#id-main').removeClass('opacidad');
+                                            $('#body-main-div').removeClass('body-main');
+                                            $('#body-main-div').hide();
+                                        /*</CARGAR HIDE>*/
+                                        /*<Respuesta>*/
+                                            $('#message-warning-door2door').html('');
+                                            $('#message-warning-door2door').html('¡INTÉNTELO MÁS TARDE!');
+                                            $('#modal-message-warning-door2door').modal('show');
+                                        /*</Respuesta>*/
+                                    }   
                                 }                           
                             }).catch( (err) => {   
                                 /*<CARGAR HIDE>*/
@@ -93,11 +189,11 @@
                                     $('#body-main-div').removeClass('body-main');
                                     $('#body-main-div').hide();
                                 /*</CARGAR HIDE>*/                                      
-                                /*<Error desconocido>*/
-                                    $('#message-error-door2door').html("");
-                                    $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-                                    $('#modal-message-error-door2door').modal('show');
-                                /*<Error desconocido>*/
+                                /*<warning desconocido>*/
+                                    $('#message-warning-door2door').html("");
+                                    $('#message-warning-door2door').html('¡warning AL RECARGAR LA PAGUINA!');
+                                    $('#modal-message-warning-door2door').modal('show');
+                                /*<warning desconocido>*/
                             });
                         /*<Consultar toda la iformacion>*/                                                            
                     }else{ 
@@ -107,9 +203,9 @@
                             $('#body-main-div').hide();
                         /*</CARGAR HIDE>*/
                         /*<Respuesta>*/
-                            $('#message-error-door2door').html('');
-                            $('#message-error-door2door').html('¡INTÉNTELO MÁS TARDE! ERROR AL CREAR.');
-                            $('#modal-message-error-door2door').modal('show');
+                            $('#message-warning-door2door').html('');
+                            $('#message-warning-door2door').html('¡INTÉNTELO MÁS TARDE!');
+                            $('#modal-message-warning-door2door').modal('show');
                         /*</Respuesta>*/
                     }                           
                 }).catch( (err) => { 
@@ -119,9 +215,9 @@
                         $('#body-main-div').hide();
                     /*</CARGAR HIDE>*/
                     /*<Respuesta>*/
-                        $('#message-error-door2door').html('');
-                        $('#message-error-door2door').html('¡INTÉNTELO MÁS TARDE! ERROR AL CREAR.');
-                        $('#modal-message-error-door2door').modal('show');
+                        $('#message-warning-door2door').html('');
+                        $('#message-warning-door2door').html('¡INTÉNTELO MÁS TARDE! warning AL CREAR.');
+                        $('#modal-message-warning-door2door').modal('show');
                     /*</Respuesta>*/
                 });   
 
@@ -132,12 +228,16 @@
                 $('#body-main-div').removeClass('body-main');
                 $('#body-main-div').hide();
             /*</CARGAR HIDE>*/
-            $('#message-error-door2door').html("");
-            $('#message-error-door2door').html('¡SOLO SE ADMITEN ARCHIVOS CSV!');
-            $('#modal-message-error-door2door').modal('show');
+            $('#message-warning-door2door').html("");
+            $('#message-warning-door2door').html('¡SOLO SE ADMITEN ARCHIVOS CSV!');
+            $('#modal-message-warning-door2door').modal('show');
         }
     }
     /*<export>*/
+
+ 
+  
+    
         export default Create;
     /*</export>*/
 /*</Create>*/  

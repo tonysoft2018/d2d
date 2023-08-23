@@ -40,7 +40,6 @@ namespace   d2dSocioWeb\Modules\ModuleCatalogsEstados\Model\Estados;
                                                 con.noExterior,
                                                 con.codigoPostal,
                                                 con.colonia,
-                                                con.comentario,
                                                 con.entreCalle,
                                                 con.latitud,
                                                 con.longitud,

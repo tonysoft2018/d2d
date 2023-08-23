@@ -30,8 +30,7 @@
                 <?php include_once('../../head.php'); ?>     
             </head>
         <!-- -->
-        <body class=" sidebar-mini layout-fixed">
-            
+        <body class=" sidebar-mini layout-fixed">            
                 <?php include_once('../../NavSuperior.php');?>
                 <!-- Menu -->
                 <?php include_once('../../Menu.php');?>
@@ -48,7 +47,7 @@
                         .map-responsive iframe{
                             left:0;
                             top:0;
-                            height:200%;
+                            height:150%;
                             width:100%;
                             position:absolute;
                         }
@@ -61,7 +60,17 @@
                         </div>
                     </div>
                     <div id="id-main" > 
-                                    
+                        <div class="row" style="margin:5px;" style="margin:5px;">
+                            <div class="col-12">
+                                <button  style="margin:5px;"
+                                            type="button" 
+                                            id="button-Registrar" 
+                                            class="btn btn-success btn-block btn-sm" >
+                                    Indicaciones y registro
+                                </button>
+                            </div>
+                        </div>
+                        
                         <div class="">
                             <div class="row">  
                                 <div class="col-12" id="" >     
@@ -72,15 +81,10 @@
                                     <div id="map" class="map-responsive" style="margin:5px;border-radius: 15px;" ></div>
                                 </div> 
                             </div> <hr>
-                            <div class="row" style="margin:5px;" style="margin:5px;">
-                                <div class="col-12">
-                                    <button  type="button" id="button-indicaciones" class="btn btn-info btn-block btn-sm"  >
-                                        Indicaciones
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="row" style="margin:5px;">
-                                <div class="col-4">
+                           
+                            <div class="row" style="margin:5px;">                          
+                                <div class="col-6">
+                                      <!--
                                     <a  type="button" 
                                         style="margin:5px;"
                                         href="/d2dVisitador/Modules/Welcome/"
@@ -88,24 +92,18 @@
                                         >
                                     Regresar
                                     </a>
-                                </div>
-                                <div class="col-4">
-                                    <button  style="margin:5px;"
+                                     <button  style="margin:5px;"
                                             type="button" 
                                             id="button-Cancelar" 
                                             class="btn btn-danger btn-block btn-sm" >
                                         Cancelar
                                     </button>
+                                        -->
                                 </div>
-                                <div class="col-4">
-                                    <button  
-                                    style="margin:5px;"
-                                    type="button" 
-                                    id="button-Registrar" 
-                                    class="btn btn-success btn-block btn-sm" >
-                                        Registrar
-                                    </button>
+                                <div class="col-6">
+                                   
                                 </div>
+                               
                             </div>
                         </div>    
                     </div>                 
@@ -124,7 +122,8 @@
                     <?php include_once('ModalVisitado.php');                              ?>  
                     <?php include_once('ModalCancelacionesSucces.php');                   ?>     
                     <?php include_once('ModalComentarios.php');                           ?>       
-                    <?php include_once('ModalEsperar.php');                               ?>   
+                    <?php include_once('ModalEvidenciaDetalle.php');                      ?>   
+                    <?php include_once('ModalAgendar.php');                               ?>   
                      
                   
                 <!-- Modales -->

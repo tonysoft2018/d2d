@@ -23,6 +23,7 @@
             url: "/d2dSocioWeb/Modules/ModuleCampaign/api/door2door.controller.create.contactos.masiva.php",
             type: 'post',
             async: false,
+            timeout: 1800000,
             data: PlataformaForm,        
             dataType:"json",
             contentType:false,

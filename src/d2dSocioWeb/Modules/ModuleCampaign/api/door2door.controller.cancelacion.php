@@ -23,7 +23,9 @@
     if(isset($_POST['TockenOfdoor2doordoor2door']) && (
                                                     $_POST['TockenOfdoor2doordoor2door'] == $URLtocken  ||
                                                     $ObjectToken->validadorTocken($URLtocken) 
-                                                )){      
+                                                )){     
+       
+
         /*<Controlador>*/
             try{
                 /*<Instaciacion de objetos>*/                

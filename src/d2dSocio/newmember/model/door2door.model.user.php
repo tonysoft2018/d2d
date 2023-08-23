@@ -80,7 +80,12 @@ namespace  d2dSocio\NewMember\Model\NewMember;
                         $DATE                       = date('Y-m-d h:i:s');                 
                         $newPassword = password_hash($contrasena, PASSWORD_DEFAULT);
                     /*<datos>*/
-                    $JSON_RESULT['contrasena'] =$contrasena;
+                        $JSON_RESULT['nombre']      =  $nombre;
+                        $JSON_RESULT['apellidos']   =  $apellidos;
+                        $JSON_RESULT['email']       =  $email;
+                        $JSON_RESULT['usuario']     =  $usuario;
+                        $JSON_RESULT['contrasena']  =  $contrasena;
+                        $JSON_RESULT['tipoUsuario'] =  $tipoUsuario;
                     /*<Query>*/
                     $queryInsert = 'INSERT INTO usuarios ( 
                         folioSolicitud,

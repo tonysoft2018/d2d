@@ -11,9 +11,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" style="color:#000;">Mensaje</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -30,12 +28,28 @@
                         </center>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="exampleFormControlTextarea1">Comentario</label>
+                            <textarea disabled class="form-control" id="show-comentario-rechazado-door2door" name="show-comentario-rechazado-door2door" placeholder="Descripción" rows="4"></textarea>
+                        </div>
+                    </div>
+                </div> 
+                <div class="row">
+                    <div class="col-12">
+                        <a type="button" 
+                                class="btn btn-primary btn-block"  
+                                href="/d2dVisitador/closeSession/controller/closeSession.php"
+                                
+                                >Salir</a>  
+
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <center>
-                    <button type="button" class="btn btn-secondary" style="width:200px" data-dismiss="modal">
-                        Regresar
-                    </button>
+                    
                 </center>
             </div>
         </div>

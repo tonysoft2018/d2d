@@ -93,100 +93,58 @@
                         if($_SESSION["estatus-door2door"] == "ACTIVO"){ 
                       ?>
                           <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="/d2dSocio/Modules/ModuleDashboard/" class="nav-link">
                                 <img  title="Editar registro"   src="/d2dSocio/Modules/ModulesImage/sugerencias.png" style="width:30px;height:30px">
                                 <p style="font-size:19;color:#fff;">
                                   Dashboard
                                 </p>
                                 <i class="right fas fa-angle-left"></i> 
-                            </a>
-                            <ul class="nav nav-treeview">
-                              <li class="nav-item">
-                                <a href="/d2dSocio/Modules/ModuleDashboard/" class="nav-link">
-                                  <p style="font-size:16;color:#fff;">Dashboard</p>
-                                </a>
-                              </li>                      
-                            </ul>
+                            </a>                            
                           </li>
                           <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="/d2dSocio/Modules/ModuleCampaign/" class="nav-link">
                                 <img  title="Editar registro"   src="/d2dSocio/Modules/ModulesImage/capañas.png" style="width:30px;height:30px">
                                 <p style="font-size:19;color:#fff;">
                                   Campañas
                                 </p>
                                 <i class="right fas fa-angle-left"></i> 
-                            </a>
-                            <ul class="nav nav-treeview">
-                              <li class="nav-item">
-                                <a href="/d2dSocio/Modules/ModuleCampaign/" class="nav-link">
-                                  <p style="font-size:16;color:#fff;">Campañas</p>
-                                </a>
-                              </li>                      
-                            </ul>
+                            </a>                            
                           </li>
                           <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="/d2dSocio/Modules/ModuleClientSeguimientos/" class="nav-link">
                                 <img  title="Editar registro"   src="/d2dSocio/Modules/ModulesImage/Seguimientos.png" style="width:30px;height:30px">
                                 <p style="font-size:19;color:#fff;">
                                 Seguimientos
                                 </p>
                                 <i class="right fas fa-angle-left"></i> 
-                            </a>
-                            <ul class="nav nav-treeview">
-                              <li class="nav-item">
-                                <a href="/d2dSocio/Modules/ModuleClientSeguimientos/" class="nav-link">
-                                  <p style="font-size:16;color:#fff;">Seguimientos</p>
-                                </a>
-                              </li>                      
-                            </ul>
+                            </a>                            
                           </li>                      
                           <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="/d2dSocio/Modules/ModuleClientMessageChat/" class="nav-link">
                                 <img  title="Editar registro"   src="/d2dSocio/Modules/ModulesImage/sms.png" style="width:30px;height:30px">
                                 <p style="font-size:19;color:#fff;">
                                   Chat
                                 </p>
                                 <i class="right fas fa-angle-left"></i> 
-                            </a>
-                            <ul class="nav nav-treeview">
-                              <li class="nav-item">
-                                <a href="/d2dSocio/Modules/ModuleClientMessageChat/" class="nav-link">
-                                  <p style="font-size:16;color:#fff;">Chat</p>
-                                </a>
-                              </li>                      
-                            </ul>
+                            </a>                            
                           </li>
                           <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="/d2dSocio/Modules/ModuleClientNotifications/" class="nav-link">
                                 <img  title="Editar registro"   src="/d2dSocio/Modules/ModulesImage/notificaciones.png" style="width:30px;height:30px">
                                 <p style="font-size:19;color:#fff;">
                                 Notificaciones
                                 </p>
                                 <i class="right fas fa-angle-left"></i> 
-                            </a>
-                            <ul class="nav nav-treeview">
-                              <li class="nav-item">
-                                <a href="/d2dSocio/Modules/ModuleClientNotifications/" class="nav-link">
-                                  <p style="font-size:16;color:#fff;">Notificaciones</p>
-                                </a>
-                              </li>                      
-                            </ul>
+                            </a>                           
                           </li>                      
                           <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="/d2dSocio/Modules/ModuleClientSoporte/" class="nav-link">
                                 <img  title="Editar registro"   src="/d2dSocio/Modules/ModulesImage/soporte.png" style="width:30px;height:30px">
                                 <p style="font-size:19;color:#fff;">
                                 Soporte
                                 </p>
                                 <i class="right fas fa-angle-left"></i> 
-                            </a>
-                            <ul class="nav nav-treeview">
-                              <li class="nav-item">
-                                <a href="/d2dSocio/Modules/ModuleClientSoporte/" class="nav-link">
-                                  <p style="font-size:16;color:#fff;">Soporte</p>
-                                </a>
-                              </li>                      
-                            </ul>
+                            </a>                            
                           </li>
                       <?php }?>
                       

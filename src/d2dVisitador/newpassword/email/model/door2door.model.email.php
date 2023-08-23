@@ -64,14 +64,15 @@
                         /*</Respuesta>*/
                     }
                 $this::closet();
+                
                 return $JSON_RESULT;
             }
         /*</RESPUESTA_VALIDAR_CORREO>*/
       
 
  
-        /*<RESPUESTA_CREAR_TOCKEN>*/
-            public function RESPUESTA_CREAR_TOCKEN(
+        /*<RESPUESTA_CAMBIAR_CONTRASNA>*/
+            public function RESPUESTA_CAMBIAR_CONTRASNA(
                     $ID_USUARIO,
                     $EMAIL
                 ){
@@ -79,47 +80,37 @@
                     /*</datos>*/
                         $DATE                       = date('Y-m-d h:i:s');                
                         $DATE_TOCKEN                = date('Ymdhis');   
-                        $TOCKEN                     = $EMAIL.$DATE_TOCKEN.$ID_USUARIO.'DOOR2DOOR';         
-                        $TOCKEN                     = password_hash($TOCKEN, PASSWORD_DEFAULT);   
-                        $TOCKEN                     = base64_encode($TOCKEN);
                     /*<datos>*/
                     $JSON_RESULT                    = [];
-                    $JSON_RESULT['information']     = [];
                     $JSON_RESULT['message']         = '';
                     $JSON_RESULT['error']           = '';
-                    $JSON_RESULT['TOCKEN']          = $TOCKEN;
                     
                 /*</Variables> */
 
               
+                    /*<GENERAR_CONTRASENA>*/
+                        /*<VARIBLES>*/
+                            $CONTRASENA             = '';
+                            $CONTRASENA_ENCRIPTADA  = '';
+                        /*<VARIBLES>*/
+                        $CONTRASENA                          = date('Ymdhis').date('Ymdhis')."door2door".date('Ymdhis'); 
+                        $CONTRASENA_ENCRIPTADA               = password_hash($CONTRASENA, PASSWORD_DEFAULT);
+                        $JSON_RESULT['CONTRASENA']           = $CONTRASENA;
+                    /*<GENERAR_CONTRASENA>*/
+                    
                     /*<Query>*/
-                        $queryInsert = 'INSERT INTO tockenRecuperacion ( 
-                                                idUsuario, 
-                                                fechaPeticion,  
-                                                email,
-                                                tocken,
-                                                status,
-                                                fechaCreacion, 
-                                                fechaModificacion,
-                                                observacion,
-                                                bstate
-                                                ) VALUES( 
-                                                    "'.$ID_USUARIO.'", 
-                                                    "'.$DATE.'",
-                                                    "'.$EMAIL.'",    
-                                                    "'.$TOCKEN.'",                                        
-                                                    "PENDIENTE",
-                                                    "'.$DATE.'",
-                                                    "'.$DATE.'",
-                                                    " [ INSERT '.$DATE.' ], [ idUser '.$ID_USUARIO.' ] ",
-                                                    1
-                                                );';
+                        $queryUpdate = $QueryUpdate =    ' UPDATE  usuarios
+                                                            SET     password                = "'.$CONTRASENA_ENCRIPTADA.'",                                                                                            
+                                                                    fechaModificacion       = "'.$Date.'",
+                                                                    observacion             = " [ UPFATE '.$Date.' ], [ idUser '.$ID_USUARIO.' ] "
+                                                                WHERE idUsuario             = '.$ID_USUARIO.';';
                     /*</Query>*/
 
-                    $JSON_RESULT['queryInsert'] = $queryInsert;
+
+                    $JSON_RESULT['queryUpdate'] = $queryUpdate;
 
                     $this->open();        
-                        if ( mysqli_query( $this->Connection, $queryInsert)) {
+                        if ( mysqli_query( $this->Connection, $queryUpdate)) {
                             $JSON_RESULT['message']     = "Good";                           
                         } else {
                             $JSON_RESULT['message']     = "Bad";                            
@@ -129,11 +120,11 @@
                 
                 return $JSON_RESULT;
             }
-        /*</RESPUESTA_CREAR_TOCKEN>*/
+        /*</RESPUESTA_CAMBIAR_CONTRASNA>*/
 
         /*<RESPUESTA_ENVIAR_CORREO>*/
             public function RESPUESTA_ENVIAR_CORREO(
-                                $TOCKEN,
+                                $PASSWORD_USER,
                                 $EMAIL 
                             ){
 
@@ -203,8 +194,7 @@
                         $URL  = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]"; 
 
                         $mail->Subject = 'Recuperacion de contraseña';  
-                        $mail->Body    = '¡Use este enlace en las próximas 24 horas para recuperar la contraseña!  </b>'.
-                                        $URL.'/d2dSocio/newpassword/tocken/index.php?tocken='.$TOCKEN;  
+                        $mail->Body    = '¡NUEVA CONTRASEÑA !  </b> '.$PASSWORD_USER;  
                     /*</CONTRUIR CORRO>*/                   
 
                     /*<ENVIAR INFORMACION>*/

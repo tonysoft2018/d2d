@@ -43,8 +43,7 @@ namespace  d2dSocio\Login\Model\Login;
                                                     usu.idUsuario   = sol.idUsuario     AND
                                                     usu.bstate      = 1                 AND                                
                                                     usu.usuario     = "'.$user.'"       AND 
-                                                    usu.tipoPerfil  = "SOCIO CLIENTE"   AND
-                                                    sol.estatus     = "ACTIVO"
+                                                    usu.tipoPerfil  = "SOCIO CLIENTE"   
                                                     LIMIT 1;  ';
 
                 /*</Query> */

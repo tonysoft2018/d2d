@@ -1,0 +1,120 @@
+ /*<ARREGLO>*/
+                        for($i = 1; $i < count($JSON_CONTACTOS); $i++){
+                            
+                            /*<VARIABLES>*/
+                                /*<JSON_AUXILIAR>*/
+                                    $JSON_AUXILIAR      = $JSON_CONTACTOS[$i];
+                                /*</JSON_AUXILIAR>*/
+                                $ARREGLO_NOMBRE         = '';
+                                $ARREGLO_CALLE          = '';
+                                $ARREGLO_TELEFONO       = '';           
+                                $ARREGLO_NOEXTERIOR     = '';                            
+                                $ARREGLO_NOINTERIOR     = '';           
+                                $ARREGLO_CODIGOPOSTAL   = '';           
+                                $ARREGLO_COLONIA        = '';           
+                                $ARREGLO_PAIS           = '';           
+                                $ARREGLO_ESTADO         = '';           
+                                $ARREGLO_MUNICIPIO      = '';   
+                                $ARREGLO_ENTRE_CALLE    = '';  
+                                $ARREGLO_INSTRUCCCIONES = '';  
+                                $ARREGLO_TELEFONO       = ''; 
+                                $ARREGLO_EMAIL          = '';                
+                            /*</VARIABLES>*/  
+
+                            /*<PROPIEDADES DEL ARREGLO>*/
+                                for($j = 0; $j < count($JSON_AUXILIAR); $j++){
+                                    switch($j){
+                                        case 0:     { $ARREGLO_NOMBRE           = $JSON_AUXILIAR[$j]; break; }
+                                        case 1:     { $ARREGLO_CALLE            = $JSON_AUXILIAR[$j]; break; }                                        
+                                        case 2:     { $ARREGLO_NOEXTERIOR       = $JSON_AUXILIAR[$j]; break; }
+                                        case 3:     { $ARREGLO_NOINTERIOR       = $JSON_AUXILIAR[$j]; break; }
+                                        case 4:     { $ARREGLO_CODIGOPOSTAL     = $JSON_AUXILIAR[$j]; break; }
+                                        case 5:     { $ARREGLO_COLONIA          = $JSON_AUXILIAR[$j]; break; }
+                                        case 6:     { $ARREGLO_PAIS             = $JSON_AUXILIAR[$j]; break; }
+                                        case 7:     { $ARREGLO_ESTADO           = $JSON_AUXILIAR[$j]; break; }
+                                        case 8:     { $ARREGLO_MUNICIPIO        = $JSON_AUXILIAR[$j]; break; }
+                                        case 9:     { $ARREGLO_ENTRE_CALLE      = $JSON_AUXILIAR[$j]; break; }
+                                        case 10:    { $ARREGLO_INSTRUCCCIONES   = $JSON_AUXILIAR[$j]; break; }
+                                        case 11:    { $ARREGLO_TELEFONO         = $JSON_AUXILIAR[$j]; break; }
+                                        case 12:    { $ARREGLO_EMAIL            = $JSON_AUXILIAR[$j]; break; }
+                                    }                                    
+                                }
+                            /*<PROPIEDADES DEL ARREGLO>*/
+
+                            /*<GEOLOCALIZACION>*/
+
+                                /*<VARIABLE>*/
+                                    $ARREGLO_LAT = 0;
+                                    $ARREGLO_LGN = 0;
+                                /*</VARIABLE>*/
+                                $RESPUESTA_GEOLOCALIZACION_UNO = $Object->getGeocodeData(
+                                    $ARREGLO_NOEXTERIOR,
+                                    $ARREGLO_CALLE,
+                                    $ARREGLO_MUNICIPIO,
+                                    $ARREGLO_ESTADO
+                                );
+
+                                $ARREGLO_LAT    = $RESPUESTA_GEOLOCALIZACION_UNO['lat'];
+                                $ARREGLO_LGN    = $RESPUESTA_GEOLOCALIZACION_UNO['lng'];
+
+                            /*</GEOLOCALIZACION>*/
+
+                            if( 
+                                    (   
+                                        $ARREGLO_LAT > 0 || 
+                                        $ARREGLO_LAT < 0
+                                    )  
+                                        && 
+                                    (
+                                        $ARREGLO_LGN > 0 ||
+                                        $ARREGLO_LGN < 0  
+                                    )
+                                ){
+
+                                    /*<RESPUESTA_CARGAR_ARREGLO>*/
+
+                                        /*<RESPUESTA_CARGAR_ARREGLO>*/
+                                            $RESPUESTA_INSERTAR_UNO = $Object->createMasiva(    
+                                                                                        $ARREGLO_NOMBRE,
+                                                                                        $ARREGLO_CALLE,                                                                                       
+                                                                                        $ARREGLO_NOEXTERIOR,
+                                                                                        $ARREGLO_NOINTERIOR,
+                                                                                        $ARREGLO_CODIGOPOSTAL,
+                                                                                        $ARREGLO_COLONIA,
+                                                                                        $ARREGLO_PAIS,
+                                                                                        $ARREGLO_ESTADO,
+                                                                                        $ARREGLO_MUNICIPIO,
+                                                                                        $ARREGLO_ENTRE_CALLE,
+                                                                                        $ARREGLO_INSTRUCCCIONES,
+                                                                                        $ARREGLO_TELEFONO,
+                                                                                        $ARREGLO_EMAIL,
+                                                                                        $ID_CAMPANA,
+                                                                                        $ARREGLO_LAT,
+                                                                                        $ARREGLO_LGN 
+                                                                                    );
+                                        /*</RESPUESTA_CARGAR_ARREGLO>*/
+
+                                        if($RESPUESTA_INSERTAR_UNO['message'] != 'Good'){
+                                            array_push($RESPUESTA_INSERTAR_TODOS, $RESPUESTA_INSERTAR_UNO);
+                                            $RESPUESTA_FINAL['RESPUESTA_INSERTAR_TODOS']    = [];
+                                            $RESPUESTA_FINAL['RESPUESTA_INSERTAR_TODOS']    = $RESPUESTA_INSERTAR_TODOS;
+                                            $RESPUESTA_FINAL['message']                     = 'RESPUESTA_INSERTAR_TODOS;';
+                                            echo json_encode($RESPUESTA_FINAL);
+                                            return false;
+                                        }else{
+                                            $RESPUESTA_INSERTAR_UNO['RESPUESTA_GEOLOCALIZACION_UNO'] = $RESPUESTA_GEOLOCALIZACION_UNO; 
+                                            array_push($RESPUESTA_INSERTAR_TODOS, $RESPUESTA_INSERTAR_UNO);                                    
+                                        }
+                                    /*</RESPUESTA_CARGAR_ARREGLO>*/       
+                            }else{
+                                $RESPUESTA_INSERTAR_UNO['RESPUESTA_GEOLOCALIZACION_UNO']    = $RESPUESTA_GEOLOCALIZACION_UNO; 
+                                $RESPUESTA_INSERTAR_UNO['ARREGLO_LGN']                      = $ARREGLO_LGN;
+                                $RESPUESTA_INSERTAR_UNO['ARREGLO_LAT']                      = $ARREGLO_LAT;
+                                array_push($RESPUESTA_INSERTAR_TODOS, $RESPUESTA_INSERTAR_UNO);                                   
+                            }
+                        }  
+                        /*<CAPTURA>*/
+                            $RESPUESTA_FINAL['RESPUESTA_INSERTAR_TODOS']    = [];
+                            $RESPUESTA_FINAL['RESPUESTA_INSERTAR_TODOS']    = $RESPUESTA_INSERTAR_TODOS;
+                        /*</CAPTURA>*/
+                    /*</ARREGLO>*/

@@ -26,7 +26,7 @@ import DataTableV       from '../../../ModulePugins/Pluginjs/DataTable.var.main.
                 $('#body-main-div').hide();
             /*</CARGAR HIDE>*/
             $('#modal-message-cancelacion-door2door').modal('show');
-            $('#message-cancelacion-door2door').html('CANCELACION EXITOSA');
+            $('#message-cancelacion-door2door').html('CANCELACION ÉXITOSA');
         }else{
             /*<CARGAR>*/
                 $('#id-main').removeClass('opacidad');

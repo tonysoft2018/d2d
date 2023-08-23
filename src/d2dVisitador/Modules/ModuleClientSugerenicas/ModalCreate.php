@@ -28,7 +28,9 @@
                 <div class="col-sm-12">
                   <div class="form-group">
                     <label for="exampleFormControlTextarea1">Descripción</label>
+                    
                     <textarea class="form-control" id="create-descripcion-door2door" name="create-descripcion-door2door" placeholder="Descripción" rows="4"></textarea>
+                    
                   </div>
                 </div>
               </div>

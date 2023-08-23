@@ -2,7 +2,11 @@ import CrearAPI       from '../API/API.Create.main.js';
 
 // ActualizarUsuarioAPI Usuario            
 const Crear = async(informationForm) => { 
-
+    /*<CARGAR HIDE>*/
+        $('#id-main').addClass('opacidad');
+        $('#body-main-div').addClass('body-main');
+        $('#body-main-div').show();
+    /*</CARGAR HIDE>*/  
     
     const FuCrear = await CrearAPI( informationForm ).
     then( (result) => {  console.log("############");  console.log(result)     
@@ -54,20 +58,32 @@ const Crear = async(informationForm) => {
                 }
                 
                 
-                $('#message-succes-door2door').html("");
-                $('#message-succes-door2door').html('OPERACION EXITOSA');
-                $('#modal-message-succes-door2door').modal('show');   
+                /*<CARGAR HIDE>*/
+                    $('#id-main').removeClass('opacidad');
+                    $('#body-main-div').removeClass('body-main');
+                    $('#body-main-div').hide();
+                /*</CARGAR HIDE>*/   
             
                  return  'Good';
                 
             }else{
 
+                /*<CARGAR HIDE>*/
+                    $('#id-main').removeClass('opacidad');
+                    $('#body-main-div').removeClass('body-main');
+                    $('#body-main-div').hide();
+                /*</CARGAR HIDE>*/  
                 $('#message-error-door2door').html("");
                 $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
                 $('#modal-message-error-door2door').modal('show');
                 return  'bad';
             }
         }else{
+            /*<CARGAR HIDE>*/
+                $('#id-main').removeClass('opacidad');
+                $('#body-main-div').removeClass('body-main');
+                $('#body-main-div').hide();
+            /*</CARGAR HIDE>*/  
 
             $('#message-error-door2door').html("");
             $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
@@ -76,7 +92,11 @@ const Crear = async(informationForm) => {
             
         }                           
     }).catch( (err) => { 
-
+        /*<CARGAR HIDE>*/
+            $('#id-main').removeClass('opacidad');
+            $('#body-main-div').removeClass('body-main');
+            $('#body-main-div').hide();
+        /*</CARGAR HIDE>*/  
         $('#message-error-door2door').html("");
         $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
         $('#modal-message-error-door2door').modal('show');

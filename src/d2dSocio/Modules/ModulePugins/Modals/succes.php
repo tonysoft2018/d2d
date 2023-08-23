@@ -34,7 +34,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <button type="button" class="btn btn-secondary btn-block"  data-dismiss="modal">
-                            Regresar
+                            Continuar
                         </button>
                     </div>
                 </div><br>

@@ -77,82 +77,96 @@ namespace  d2dSocioWeb\Modules\ModuleCampaign\Model\Campanas;
     
 
         /*<Method selectFullVisitas>*/
-            public function selectFullVisitas($idCampana){
+            public function selectFullVisitas($idContactos){
                 /*<Variables> */
                     $JSON_RESULT                    = [];
                     $JSON_RESULT['information']     = [];
                     $JSON_RESULT['message']         = '';
                     $JSON_RESULT['error']           = '';
+                    /*<EVIDENCIAS>*/
+                        $JSON_EVIDENCIAS = [];
+                    /*</EVIDENCIAS>*/
                 /*</Variables> */
 
                 /*<Query> */
                     $querySelect = 'SELECT 
-                                                con.nombre,
-                                                con.telefono,
-                                                con.calle,
-                                                con.email,
-                                                con.noInterior,
-                                                con.noExterior,
-                                                con.codigoPostal,
-                                                con.colonia,
-                                                con.deuda,
-                                                (
-                                                    IFNULL( 
-                                                        (
-                                                            SELECT vis.estatus FROM visitas vis
-                                                                    WHERE vis.idContacto = con.idContacto  
-                                                                        ORDER BY vis.idVisita DESC limit 1
-                                                        ), "PENDIENTE"
-                                                    )
-                                                )AS estatus,
-                                                (
-                                                    IFNULL( 
-                                                        (
-                                                            SELECT vis.fecha FROM visitas vis
-                                                                    WHERE vis.idContacto = con.idContacto 
-                                                                        ORDER BY vis.idVisita DESC limit 1
-                                                        ), "00-00-0000 00:00:00"
-                                                    )
-                                                )AS fecha,
-                                                (
-                                                    IFNULL( 
-                                                        (
-                                                            SELECT (
-                                                                SELECT usu.nombres FROM usuarios usu WHERE usu.idUsuario = vis.idUsuarioSV
-                                                            ) FROM visitas vis
-                                                                    WHERE vis.idContacto = con.idContacto 
-                                                                        ORDER BY vis.idVisita DESC limit 1
-                                                        ), "NO TIENE"
-                                                    )
-                                                )AS SocioVisitador
-                                            FROM contacto con  
-                                            WHERE 
-                                                con.idCampana = '.$idCampana.' AND
-                                                con.bstate = 1 ';
+                                        vis.idVisita,
+                                        (
+                                            SELECT usu.nombres 
+                                            FROM usuarios usu 
+                                            WHERE usu.idUsuario = vis.idUsuarioSV
+                                        )AS NombreVisitado,
+                                        (
+                                            SELECT usu.apellidos 
+                                            FROM usuarios usu 
+                                            WHERE usu.idUsuario = vis.idUsuarioSV
+                                        )AS ApellidosVisitado,
+                                        (
+                                            SELECT usu.nombres 
+                                            FROM usuarios usu 
+                                            WHERE usu.idUsuario = vis.idUsuarioSV
+                                        )AS NombreVisitado,
+                                        (
+                                            SELECT usu.apellidos 
+                                            FROM usuarios usu 
+                                            WHERE usu.idUsuario = vis.idUsuarioSV
+                                        )AS ApellidosVisitado,
+                                        vis.fecha,
+                                        vis.estatus,
+                                        vis.comentarios_Visitador
+                                    FROM visitas vis WHERE vis.idContacto = '.$idContactos;
                 /*</Query> */
                 $JSON_RESULT['querySelect']           = $querySelect;
+
                 $this->open();            
                     if ($resultQuery = mysqli_query($this->Connection, $querySelect)) {
                         if ($resultQuery->num_rows > 0) {
                             /*<Captura>*/
-                                while ($Rol = $resultQuery->fetch_array(MYSQLI_ASSOC)) {
+                                while ($Rol = $resultQuery->fetch_array(MYSQLI_ASSOC)) 
+                                {                                 
+
+                                    /*<CAPTURAS DE EVIDENCIAS>*/   
+                                        $querySelectEvidencia =  'SELECT * FROM evidecias WHERE idVisita = '.$Rol['idVisita'];
+
+                                        $JSON_RESULT['querySelectEvidencia-'.$Rol['idVisita']]           = $querySelectEvidencia;
+                                        $Rol['evidencias']                                               = [];
+
+                                        $this->open();            
+                                            if ($resultQueryEvidencia  = mysqli_query($this->Connection, $querySelectEvidencia)) {
+                                                if ($resultQueryEvidencia->num_rows > 0) {
+                                                    /*<Captura>*/
+                                                        while ($Evidencias = $resultQueryEvidencia->fetch_array(MYSQLI_ASSOC)) {
+                                                            array_push($Rol['evidencias'], $Evidencias);
+                                                            
+                                                        }
+                                                        /*</Captura>*/
+                                                }else{ $Rol['evidencias'] = [];}
+                                                /*<Respuesta>*/
+                                                    $JSON_RESULT['message'] = "Good";   
+                                                /*</Respuesta>*/
+                                            } else {
+                                                /*<Respuesta>*/
+                                                    $JSON_RESULT['message']         = "Bad evidencias";
+                                                    $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
+                                                /*</Respuesta>*/
+                                            }        
+                                        $this->closet();
+                                    /*</CAPTURAS DE EVIDENCIAS>*/
                                     array_push($JSON_RESULT['information'], $Rol);
                                 }
                             /*</Captura>*/
-                        }else{
-                            $JSON_RESULT['information']     = [];
-                        }
+                        }else{$JSON_RESULT['information']     = [];}
                         /*<Respuesta>*/
                             $JSON_RESULT['message'] = "Good";   
                         /*</Respuesta>*/
                     } else {
                         /*<Respuesta>*/
                             $JSON_RESULT['message']         = "Bad";
-                            $JSON_RESULT['querySelect']     = $querySelect;
                             $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
                         /*</Respuesta>*/
                     }        
                 $this->closet();
+                
                 return $JSON_RESULT;
             }
         /*<Method selectFullVisitas>*/
@@ -174,7 +188,6 @@ namespace  d2dSocioWeb\Modules\ModuleCampaign\Model\Campanas;
                         session_start();
                         $DATE                       = date('Y-m-d h:i:s');
                         $idUser                     = $_SESSION["idUser-door2door"];
-                        $newPassword = password_hash($password, PASSWORD_DEFAULT);
                     /*<datos>*/
                     $JSON_RESULT                    = [];
                     $JSON_RESULT['information']     = [];
@@ -213,17 +226,47 @@ namespace  d2dSocioWeb\Modules\ModuleCampaign\Model\Campanas;
                                                     1
                                                 );';
                     /*</Query>*/
+                    
+                    $JSON_RESULT['queryInsert'] = $queryInsert;
+
                     $this->open();        
                         if ( mysqli_query( $this->Connection, $queryInsert)) {
                             $JSON_RESULT['message']     = "Good";
-                            $JSON_RESULT['queryInsert'] = $queryInsert;
-                            $this->tracking($idUser,'usuarios','door2door','INSERT','');
                         } else {
                             $JSON_RESULT['message']     = "Bad";
-                            $JSON_RESULT['queryInsert'] = $queryInsert;
                             $JSON_RESULT['error']       = "Error: <br>" . mysqli_error($this->Connection);
                         }        
                     $this->closet();
+
+                    if( $JSON_RESULT['message']  == "Good" ){
+                        
+                        $querySelect = 'SELECT * FROM campana ORDER BY 	idCampana DESC LIMIT 1';
+                        
+                        $JSON_RESULT['querySelect']     = $querySelect;
+
+                        $this->open();            
+                            if ($resultQuery = mysqli_query($this->Connection, $querySelect)) {
+                                if ($resultQuery->num_rows > 0) {
+                                    /*<Captura>*/
+                                        while ($Rol = $resultQuery->fetch_array(MYSQLI_ASSOC)) {
+                                            array_push($JSON_RESULT['information'], $Rol);
+                                        }
+                                    /*</Captura>*/
+                                }else{
+                                    $JSON_RESULT['information']     = [];
+                                }
+                                /*<Respuesta>*/
+                                    $JSON_RESULT['message'] = "Good";   
+                                /*</Respuesta>*/
+                            } else {
+                                /*<Respuesta>*/
+                                    $JSON_RESULT['message']         = "Bad";
+                                    $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
+                                /*</Respuesta>*/
+                            }        
+                        $this->closet();
+
+                    }
                     return $JSON_RESULT;               
                 }else{
                     $JSON_RESULT['message']  = 'fail variable';            

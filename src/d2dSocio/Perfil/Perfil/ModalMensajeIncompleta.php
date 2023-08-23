@@ -10,10 +10,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" style="color:#000;">Mensaje</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title" style="color:#000;">Mensaje</h5>                
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -26,10 +23,18 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <center>
-                            <h4 id="message-incompleta-door2door" style="color:#000;"></h4>
+                            <h4  style="color:#000;"></h4>
                         </center>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="exampleFormControlTextarea1">Comentario</label>
+                            <textarea disabled class="form-control" id="show-comentario-incompleto-door2door" name="show-comentario-incompleto-door2doo" placeholder="Descripción" rows="4"></textarea>
+                        </div>
+                    </div>
+                </div>     
             </div>
             <div class="modal-footer">
                 <center>

@@ -21,7 +21,7 @@ const Actualizar = async() => {
                 if(result.message == 'Good'){
 
                     $('#message-succes-door2door').html("");
-                    $('#message-succes-door2door').html('CREACIÓN EXITOSA');
+                    $('#message-succes-door2door').html('CREACIÓN ÉXITOSA');
                     $('#modal-message-succes-door2door').modal('show'); 
 
                     $('#create-razonsocial-door2door').removeClass("is-invalid");

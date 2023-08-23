@@ -14,14 +14,15 @@
       </form>
        
         <div class="row">
-          <div class="col-sm-12 text-center"><h5 class="">Plantilla</h5></div>
+          <div class="col-sm-12 text-center"><h5>Plantilla</h5></div>
         </div><br>
         <div class="row">
           <div class="col-sm-12 text-center">
-            <button class="btn btn-primary" 
+            <a  class="btn btn-primary btn-block" 
+                href="/d2dSocioWeb/Modules/ModuleCampaign/api/platillaContactos.csv" 
                 id="button-plantilla-door2door"  
-                style="width:100px">Descargar
-            </button>
+                  >Descargar
+            </a>
           </div>
         </div><br>
 

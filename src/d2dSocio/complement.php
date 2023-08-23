@@ -38,3 +38,18 @@ $.widget.bridge('uibutton', $.ui.button)
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.js"></script>
 <link rel="icon" type="image/x-icon" href="/d2dSocio/Modules/ModulesImage/door2door.png">
 
+<script>
+    history.forward();    
+    window.location.hash="no-back-button";
+    window.location.hash="Again-No-back-button";//esta linea es necesaria para chrome
+    window.onhashchange=function(){
+       // window.location.hash="no-back-button";
+        window.location.hash="Again-No-back-button";
+    }
+    
+    window.addEventListener('popstate', function(event) {
+	    history.pushState(null, null, window.location.pathname);
+	    history.pushState(null, null, window.location.pathname);
+	}, false);
+
+</script>

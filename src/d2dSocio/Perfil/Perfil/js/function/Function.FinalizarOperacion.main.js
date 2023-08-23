@@ -9,9 +9,9 @@ const Crear = async() => {
         then( (result) => {  console.log("############");  console.log(result)     
             if(result){
                 if(result.message == 'Good'){
-                    $('#message-succes-door2door').html("");
-                    $('#message-succes-door2door').html('OPERACION EXITOSA');
-                    $('#modal-message-succes-door2door').modal('show'); 
+                    $('#message-finalizado-door2door').html("");
+                    $('#message-finalizado-door2door').html('¡OPERACIÓN EXITOSA!<br>SE ESTÁ PROCESADO SU SOLICITUD, FAVOR DE ESPERAR LA RESPUESTA');
+                    $('#modal-message-finalizado-door2door').modal('show'); 
                 }else{
                     $('#message-error-door2door').html("");
                     $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');

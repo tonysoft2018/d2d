@@ -72,7 +72,7 @@
             <div class="global-container">
                 <div class="card login-form">
                     <div class="card-body">
-                        <h3 class="card-title text-center">Iniciar sesión</h3>
+                        <h3 class="card-title text-center">Nuevo Usuario</h3>
                         <div class="card-text">                           
                             <form id="form-create-member-door2door" enctype="multipart/form-data">
                              
@@ -86,13 +86,13 @@
                                 <div class="form-group">
                                     <center>
                                         <label for="exampleInputEmail1">Contraseña</label>
-                                        <input type="text" class="form-control  text-center" placeholder="Contraseña" id="create-contrasena-door2door"  name="create-contrasena-door2door" aria-describedby="emailHelp">
+                                        <input type="password" class="form-control  text-center" placeholder="Contraseña" id="create-contrasena-door2door"  name="create-contrasena-door2door" aria-describedby="emailHelp">
                                     </center>
                                 </div>
                                 <div class="form-group">
                                     <center>
                                         <label for="exampleInputEmail1">repetir contraseña</label>
-                                        <input type="text" class="form-control  text-center" placeholder="repetir contraseña" id="create-repetircontrasena-door2door"  name="create-repetircontrasena-door2door" aria-describedby="emailHelp">
+                                        <input type="password" class="form-control  text-center" placeholder="repetir contraseña" id="create-repetircontrasena-door2door"  name="create-repetircontrasena-door2door" aria-describedby="emailHelp">
                                     </center>
                                     
                                 </div>
@@ -269,11 +269,8 @@
 
                                                             $('#create-contrasena-door2door').val('');
                                                             $('#create-repetircontrasena-door2door').val('');
-
-                                                            $('#message-newmember-door2door').html('');
-                                                            $('#message-newmember-door2door').html('USUARIO CREADO CON EXITO');
-                                                            $('#modal-newmember-door2door').modal('show');                                             
-
+                                           
+                                                            window.location.href = "/d2dSocio/Perfil/Perfil/";
                                                         }
                                                             else if (result.message == 'USER IN USE')
                                                         {

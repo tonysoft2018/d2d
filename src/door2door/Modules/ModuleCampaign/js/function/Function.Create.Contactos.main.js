@@ -32,7 +32,14 @@
             let nointerior              =   $('#create-contactos-nointerior-door2door').val().replace(/['"`]/, '');
             let codigopostal            =   $('#create-contactos-codigopostal-door2door').val().replace(/['"`]/, '');
             let colonia                 =   $('#create-contactos-colonia-door2door').val().replace(/['"`]/, '');
+            let instrucciones           =   $('#create-contactos-instrucciones-door2door').val().replace(/['"`]/, '');
+            let email                   =   $('#create-contactos-email-door2door').val().replace(/['"`]/, '');
             let idCampana               =   $('#update-id-door2door').val()
+
+
+            let idPais                  =   $('#create-contactos-pais-door2door').val()
+            let idEstados               =   $('#create-contactos-estado-door2door').val()
+            let idMunicipio             =   $('#create-contactos-municipio-door2door').val()
 
             /*<Eliminamos caracteres extraños>*/
                 $('#create-contactos-nombre-door2door').val(nombre);
@@ -42,12 +49,29 @@
                 $('#create-contactos-nointerior-door2door').val(nointerior);
                 $('#create-contactos-codigopostal-door2door').val(codigopostal);
                 $('#create-contactos-colonia-door2door').val(colonia);
+                $('#create-contactos-email-door2door').val(email);
+                $('#create-contactos-instrucciones-door2door').val(instrucciones);
             /*<Eliminamos caracteres extraños>*/
+
         /*</Captura>*/
         
        
         
-        if(nombre != '' && idCampana > 0){
+        if(
+            nombre          != ''   &&            
+            calle           != ''   &&  
+            colonia         != ''   &&  
+            noexterior      != ''   &&  
+            codigopostal    != ''   &&  
+        
+            telefono        != ''   &&  
+                    
+            idCampana       > 0     && 
+            idPais          > 0     && 
+            idEstados       > 0     && 
+            idMunicipio     > 0      
+
+        ){
             /*<Var>*/
                 let Accoun = 0;
                 let ResultName= '';
@@ -69,84 +93,131 @@
                     PlataformaForm.append("create-contactos-municipio-door2door",municipio);  
                     
 
-                     let colonia =  $('#create-contactos-colonia-door2door').val();
+                    let colonia =  $('#create-contactos-colonia-door2door').val();
                     PlataformaForm.append("create-contactos-colonia-door2door",colonia);   
-                    console.log("#>");
+                    console.log("###>>");
                     const ResultCreateAPI= CreateAPI( PlataformaForm ).
-                    then((result) => {    console.log(result)          
+                    then((result) =>  
+                    {   console.log(result);
                         if(result.message == 'Good'){ 
+
                             /*<CARGAR HIDE>*/
                                 $('#id-main').removeClass('opacidad');
                                 $('#body-main-div').removeClass('body-main');
                                 $('#body-main-div').hide();
                             /*</CARGAR HIDE>*/
+                           
                             /*<Respuesta>*/
                                 $('#message-succes-door2door').html("");
-                                $('#message-succes-door2door').html('CREACIÓN EXITOSA');
+                                $('#message-succes-door2door').html('CREACIÓN EXITOSA<br>');
                                 $('#modal-message-succes-door2door').modal('show'); 
                                 
-                                $('#modal-create-door2door').modal('hide'); 
-                                
-                                $('#create-nombre-door2door').val('');
-                                $('#create-descripcion-door2door').val('');
-                                $('#create-descripcionrecoleccion-contrasena-door2door').val('');
-                               
+                                $('#modal-contactos-crear-door2door').modal('hide');                               
                             /*</Respuesta>*/   
 
+                                $('#create-contactos-nombre-door2door').removeClass('is-invalid');
+                                $('#create-contactos-calle-door2door').removeClass('is-invalid'); 
+                                $('#create-contactos-colonia-door2door').removeClass('is-invalid');
+                                $('#create-contactos-noexterior-door2door').removeClass('is-invalid');
+                                $('#create-contactos-codigopostal-door2door').removeClass('is-invalid');
+                                $('#create-contactos-telefono-door2door').removeClass('is-invalid'); 
+                                $('#create-contactos-pais-door2door').removeClass('is-invalid');
+                                $('#create-contactos-estado-door2door').removeClass('is-invalid');
+                                $('#create-contactos-municipio-door2door').removeClass('is-invalid');
+                            
                             /*<Consultar toda la iformacion>*/ 
                               
-                                let idCampana = $('#update-id-door2door').val();
-                                const functionSFA = SelectFull(idCampana).
-                                then( (result) => {       console.log(result)
+                                let idCampana       = $('#update-id-door2door').val();
+                               
+                                const functionSFA   = SelectFull(idCampana).
+                                then( (result) => {       
                                     if(result){                                                                    
                                         if(result.message == 'Good'){
                                             /*<Consulta exitosa>*/
-                                                let ArraysRoles = [];
-                                                ArraysRoles = result.information;                                 
-                                                const functionS = functionShow(ArraysRoles);  
+                                                let ArraysRoles     = [];
+                                                ArraysRoles         = result.information;                                 
+                                                const functionS     = functionShow(ArraysRoles);  
 
                                                 $('#create-contactos-nombre-door2door').val('');
                                                 $('#create-contactos-calle-door2door').val('');
-                                                $('#create-contactos-telefono-door2door').val('');
+                                                $('#create-contactos-colonia-door2door').val('');
                                                 $('#create-contactos-noexterior-door2door').val('');
                                                 $('#create-contactos-nointerior-door2door').val('');
                                                 $('#create-contactos-codigopostal-door2door').val('');
-                                                $('#create-contactos-colonia-door2door').val('');
-                                                $('#create-contactos-deuda-door2door').val('');
+                                                $('#create-contactos-entreCalle-door2door').val('');
+                                                
+                                                $('#create-contactos-instrucciones-door2door').val('');
+                                                $('#create-contactos-telefono-door2door').val('');
+                                                $('#create-contactos-email-door2door').val('');
                                             /*<Consulta exitosa>*/                        
                                         }else{
-                                            /*<Error de query>*/ 
-                                                $('#message-error-door2door').html("");
-                                                $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-                                                $('#modal-message-error-door2door').modal('show');
-                                            /*</Error de query>*/   
+                                            /*<warning de query>*/ 
+                                                $('#message-warning-door2door').html("");
+                                                $('#message-warning-door2door').html('¡warning AL RECARGAR LA PAGUINA!');
+                                                $('#modal-message-warning-door2door').modal('show');
+                                            /*</warning de query>*/   
                                         }       
                                     }                           
                                 }).catch( (err) => {                                         
-                                    /*<Error desconocido>*/
-                                        $('#message-error-door2door').html("");
-                                        $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-                                        $('#modal-message-error-door2door').modal('show');
-                                    /*<Error desconocido>*/
+                                    /*<warning desconocido>*/
+                                        $('#message-warning-door2door').html("");
+                                        $('#message-warning-door2door').html('¡warning AL RECARGAR LA PAGUINA!');
+                                        $('#modal-message-warning-door2door').modal('show');
+                                    /*<warning desconocido>*/
                                 });
                             /*<Consultar toda la iformacion>*/                                                            
                         }else{ 
                             /*<Respuesta>*/
-                                $('#message-error-door2door').html('');
-                                $('#message-error-door2door').html('¡INTÉNTELO MÁS TARDE! ERROR AL CREAR.');
-                                $('#modal-message-error-door2door').modal('show');
+                                $('#message-warning-door2door').html('');
+                                $('#message-warning-door2door').html('¡CONTACTO REPETIDO O GEOLOCALIZACIÓN NO ENCONTRADA');
+                                $('#modal-message-warning-door2door').modal('show');
                             /*</Respuesta>*/
+                            /*<CARGAR HIDE>*/
+                                $('#id-main').removeClass('opacidad');
+                                $('#body-main-div').removeClass('body-main');
+                                $('#body-main-div').hide();
+                            /*</CARGAR HIDE>*/
                         }                           
                     }).catch( (err) => { 
                         /*<Respuesta>*/
-                            $('#message-error-door2door').html('');
-                            $('#message-error-door2door').html('¡INTÉNTELO MÁS TARDE! ERROR AL CREAR.');
-                            $('#modal-message-error-door2door').modal('show');
+                            $('#message-warning-door2door').html('');
+                            $('#message-warning-door2door').html('¡INTÉNTELO MÁS TARDE! warning AL CREAR.');
+                            $('#modal-message-warning-door2door').modal('show');
                         /*</Respuesta>*/
+                        /*<CARGAR HIDE>*/
+                            $('#id-main').removeClass('opacidad');
+                            $('#body-main-div').removeClass('body-main');
+                            $('#body-main-div').hide();
+                        /*</CARGAR HIDE>*/
                     });
                 
             /*</Validar>*/
         }else{
+
+            /*<CARGAR HIDE>*/
+                $('#id-main').removeClass('opacidad');
+                $('#body-main-div').removeClass('body-main');
+                $('#body-main-div').hide();
+            /*</CARGAR HIDE>*/
+            
+            if( nombre          == '' ){$('#create-contactos-nombre-door2door').addClass('is-invalid');         }
+            if( calle           == '' ){$('#create-contactos-calle-door2door').addClass('is-invalid');          }
+            if( colonia         == '' ){$('#create-contactos-colonia-door2door').addClass('is-invalid');        }
+            if( noexterior      == '' ){$('#create-contactos-noexterior-door2door').addClass('is-invalid');     }
+            if( codigopostal    == '' ){$('#create-contactos-codigopostal-door2door').addClass('is-invalid');   }
+            if( telefono        == '' ){$('#create-contactos-telefono-door2door').addClass('is-invalid');       }
+
+            if( idPais          > 0    || 
+                idPais          != '' ){$('#create-contactos-pais-door2door').addClass('is-invalid');           }
+
+            if( idEstados       > 0    || 
+                idEstados       != '' ){$('#create-contactos-estado-door2door').addClass('is-invalid');         }
+
+            if( idMunicipio     > 0    ||
+                idMunicipio     != '' ){$('#create-contactos-municipio-door2door').addClass('is-invalid');      }
+
+
+            
             /*<Respuesta >*/
                 $('#message-warning-door2door').html('');
                 $('#message-warning-door2door').html('FAVOR DE INTRODUCIR LOS CAMPOS OBLIGATORIOS');
@@ -154,7 +225,6 @@
             /*</Respuesta>*/
 
             /*<Respuesta>*/
-                $('#nombre-create-door2door').addClass("is-invalid");   
             /*</Respuesta>*/             
         }                
     }

@@ -11,7 +11,7 @@
 
 
 /*<Function of Creation>*/            
-    const CreateAPI = async(  PlataformaForm) => {    console.log("asdf")
+    const CreateAPI = async(  PlataformaForm) => {   
         let TockenOfdoor2doordoor2door = $('#tocken-door2doors-01198756765345431234534').val();
         PlataformaForm.append("TockenOfdoor2doordoor2door",TockenOfdoor2doordoor2door);               
         const Request = await $.ajax({

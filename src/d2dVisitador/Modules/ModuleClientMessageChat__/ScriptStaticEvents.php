@@ -314,7 +314,7 @@
                                         $('#modal-create-grupo-door2door').modal('hide');       
                                         $('#modal-create-door2door').modal('hide');       
                                         $('#message-succes-door2door').html("");
-                                        $('#message-succes-door2door').html('GRUPO CREADO CON EXITOSO');
+                                        $('#message-succes-door2door').html('GRUPO CREADO CON ÉXITOSO');
                                         $('#modal-message-succes-door2door').modal('show');   
                                     
                                         /*<Consultar toda la iformacion>*/ 

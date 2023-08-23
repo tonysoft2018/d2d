@@ -17,7 +17,7 @@
             <button type="button" id="button-abrir"       class="btn btn-primary btn-block"  >Abrir</button>                                     
           </div>   
           <div class="col-sm-3">   
-            <button type="button" id="button-contactos"    class="btn btn-primary btn-block"  >Contactos</button>                                     
+            <button type="button"     class="btn btn-primary btn-block button-contactos"  >Contactos</button>                                     
           </div>       
           <div class="col-sm-3" >   
             <button type="button"    class="btn btn-secondary btn-block" data-dismiss="modal"  >Regresar</button>
@@ -29,10 +29,10 @@
             <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal"  >Regresar</button>
           </div>           
           <div class="col-sm-3">      
-            <button type="button" id="button-pdf"      class="btn btn-primary btn-block"    >PDF</button>                                     
+            <button type="button"   class="btn btn-primary btn-block button-contactos"  >Contactos</button>                              
           </div>
           <div class="col-sm-3">  
-            <button type="button" id="button-excel"       class="btn btn-primary btn-block"  >EXCEL</button>                                     
+                                  
           </div>    
         
         </div><br> 
@@ -127,25 +127,7 @@
 
               
 
-              <div class="table-responsive" id="lista-visitas">
-                  <table class="table  hover stripe row-borde" id="table-visitas-door2door" >
-                      <thead class="thead-morado" >
-                          <tr>
-                              <th>Nombre</th>
-                              <th>Telefono</th>    
-                              <th>Fecha visita</th>     
-                              <th>Estatus</th>   
-                              <th>Accion</th>      
-                              <th></th>
-                          </tr>
-                      </thead>
-
-                      <tbody id="table-visitas-door2door-informacion">
-                      </tbody> 
-
-                                              
-                  </table>
-              </div>
+              
                <!-- -->   
             </form>
           </div>

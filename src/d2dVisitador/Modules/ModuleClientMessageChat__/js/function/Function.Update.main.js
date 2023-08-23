@@ -52,7 +52,7 @@
                             if(result.message == 'Good'){
                                 /*<Respuesta>*/
                                     $('#message-succes-door2door').html("");
-                                    $('#message-succes-door2door').html('ACTUALIZACIÓN EXITOSA');
+                                    $('#message-succes-door2door').html('ACTUALIZACIÓN ÉXITOSA');
                                     $('#modal-message-succes-door2door').modal('show');      
                                     
                                     $('#update-nombre-door2door').removeClass("is-invalid");                                    

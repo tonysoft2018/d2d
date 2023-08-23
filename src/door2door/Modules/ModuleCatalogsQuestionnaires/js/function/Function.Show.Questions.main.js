@@ -54,26 +54,27 @@
                                 </select> `;   
                     }
                     record =  `
-                            <tr>
-                                <td style="width:50px;vertical-align:middle;" >                    ${i+1}</td>
-                                <td style="width:400px;vertical-align:middle;" class="text-justify">
-                                    <textarea type="text"   id="TextarePregunta-${i}" 
-                                                            onchange="TextarePregunta(${i});"  
-                                                            class="form-control" 
-                                                                >${Information[i].pregunta}
-                                    </textarea>
-                                </td>  
-                                <td style="width:200px;"> 
-                                    ${option}                                    
-                                </td>
-                                <td style="width:50px;"> 
-                                    <img        class="cursor" 
-                                                title="Eliminar" 
-                                                onclick="ButtonDeletePregunta(${i});" 
-                                                src="/door2door/Modules/ModulesImage/basura.png" 
-                                                style="width:30px;height:30px" >
-                                </td>
-                            </tr> `;  
+                    <tr>
+                        <td style="width:50px;vertical-align:middle;" >                    ${i+1}</td>
+                        <td style="width:400px;vertical-align:middle;" class="text-justify">
+                            <textarea type="text"   id="TextarePregunta-${i}" 
+                                                    onchange="TextarePregunta(${i});"  
+                                                    class="form-control" 
+                                                        >${Information[i].pregunta}
+                            </textarea>
+                        </td>  
+                        <td style="width:200px;"> 
+                            ${option}                                    
+                        </td>
+                        <td style="width:50px;"> 
+                            <img        class="cursor" 
+                                        title="Eliminar" 
+                                        onclick="ButtonDeletePregunta(${i});" 
+                                        src="/door2door/Modules/ModulesImage/basura.png" 
+                                        style="width:30px;height:30px" >
+                        </td>
+                    </tr> `;  
+                    
                     TableBody +=  record;
                 }
                 localStorage.setItem('JSON_PREGUNTAS', JSON.stringify(Information));

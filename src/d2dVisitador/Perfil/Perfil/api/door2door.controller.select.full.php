@@ -7,7 +7,7 @@
 
 /*<Import>*/   
     use d2dVisitador\Modules\ModulePugins\GeneradorTocken\GeneradorTocken as GeneradorTocken_selecrFull;
-    use d2dVisitador\Modules\ModuleSettingsCompanies\Model\SettingsCompanies\SettingsCompanies as SettingsCompanies_selecrFull;
+    //use d2dVisitador\Modules\ModuleSettingsCompanies\Model\SettingsCompanies\SettingsCompanies as SettingsCompanies_selecrFull;
 /*<Import>*/ 
 /*<Instaciacion de objetos>*/                
     $ObjectToken = new GeneradorTocken_selecrFull();
@@ -26,7 +26,7 @@
         /*<Controlador>*/   
             try{
                 /*<Instaciacion de objetos>*/                
-                    $ObjectRoles = new SettingsCompanies_selecrFull();
+                    $ObjectRoles = new Perfil();
                 /*</Instaciacion de objetos>*/      
                 /*</Proceso>*/  
                     $JSON_RESULT = $ObjectRoles->selectFull();

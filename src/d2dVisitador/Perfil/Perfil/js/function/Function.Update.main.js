@@ -19,7 +19,7 @@ const Actualizar = async() => {
         then( (result) => {  console.log(result)   
             if(result){
                 if(result.message == 'Good'){
-
+                    
                     $('#message-succes-door2door').html("");
                     $('#message-succes-door2door').html('CREACIÓN EXITOSA');
                     $('#modal-message-succes-door2door').modal('show'); 

@@ -10,10 +10,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" style="color:#000;">Mensaje</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title" style="color:#000;">Mensaje</h5>                
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -33,9 +30,11 @@
             </div>
             <div class="modal-footer">
                 <center>
-                    <button type="button" class="btn btn-secondary" style="width:200px" data-dismiss="modal">
-                        Regresar
-                    </button>
+                    <a type="button" 
+                                class="btn btn-primary btn-block"  
+                                href="/d2dVisitador/closeSession/controller/closeSession.php"
+                                
+                                >Salir</a>  
                 </center>
             </div>
         </div>

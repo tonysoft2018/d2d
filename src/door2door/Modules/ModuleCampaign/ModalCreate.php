@@ -30,7 +30,7 @@
                   </div>
                   <input type="date" disabled id="create-fecha-door2door" style="background:#D1F0F5;"  name="create-fecha-door2door" placeholder="fehca" class="form-control" style="background:#D1F0F5;"   >
                 </div>
-              </div><br>   
+              </div><br>       
               <div class="row"> 
                 <div class="col-sm-12"> 
                   <div class="row">
@@ -39,10 +39,10 @@
                     </div>
                   </div>
                   <select class="custom-select" id="create-usuario-door2door" name="create-usuario-door2door" style="background:#D1F0F5;" >
-                    
+              
                   </select>
                 </div>
-              </div> <br>              
+              </div> <br>          
               <!-- -->   
               <div class="row">
                 <div class="col-sm-12">                  

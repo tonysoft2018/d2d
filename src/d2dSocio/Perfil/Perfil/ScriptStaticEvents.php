@@ -1,36 +1,65 @@
-<script >
-        /*<OPTENER GEOLOCALIZACION>*/ 
-            /*<VARIABLES>*/                 
-                let option = {
-                    EnableHighAccuracy:true,
-                    Timeout:500,
-                    MaximunAge:0
-                }
-            /*</VARIABLES>*/  
+<script async src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDwQClTGJJEBxBdoDdpvZqj410LlfAb8FM&callback=initMap&'; ></script>
+    
+<script>               
+                
+    /*<VARIABLES>*/
+        let map;
+        let Arreglo     = JSON.parse(localStorage.getItem('JSON_LOCALIZACION'));
+        let centerll    = {
+                                lat: Arreglo.lat, 
+                                lng: Arreglo.lng
+                        };
+    /*</VARIABLES>*/
 
-            /*<GEOLOCALIZACION>*/
-                if(navigator.geolocation){               
-                        navigator.geolocation.getCurrentPosition(success, error,  option);
-                }else{ console.log("Inservible"); }  
-            /*</GEOLOCALIZACION>*/        
+    /*<MAP>*/                    
+        function   initMap(){
+            /*<EVENTOS>*/
+                /*<MOSTRAR MAPA>*/                        
+                    setTimeout(() => 
+                    {
+                        $('.face-segunda-direccion').on('click', () => 
+                        {
+                            setTimeout(() => 
+                            {                 
+                                     
+                                let ArregloDirecion     = JSON.parse(localStorage.getItem('JSON_DIRCCION_VISITANTE'));              
+                                /*<VARIABLES>*/
+                                    let latitud         = parseFloat(ArregloDirecion.lat);
+                                    let logitud         = parseFloat(ArregloDirecion.lng);                                       
+                                /*</VARIABLES>*/                          
+                        
+                                /*<LIMPIEZA>*/
+                                map = new google.maps.Map(document.getElementById('map'), {
+                                        center: {lat: latitud, lng: logitud},
+                                        zoom: 15,
+                                        streetViewControl: false,               
+                                        mapTypeControl: false,
+                                        fullscreenControl: false,                         
+                                            
+                                });    
+                                  
 
-            /*<SUCCESS>*/
-                function success(geolocationPosition){
-                    let coords = geolocationPosition.coords;     
-                    localStorage.setItem('JSON_LOCALIZACION', JSON.stringify({lat: coords.latitude, lng: coords.longitude}));
-                    console.log({lat: coords.latitude, lng: coords.longitude})
-                }
-            /*</SUCCESS>*/
+                                    let  marker1 = new google.maps.Marker({
+                                            position: {lat: latitud, lng: logitud},
+                                            map:map,
+                                            title: "Visita"                                     
+                                    });                                         
+                                /*<LIMPIEZA>*/
 
-            /*<ERROR>*/
-                function error(error){      
-                    localStorage.setItem('JSON_LOCALIZACION', JSON.stringify({lat:9, lng:9}));     
-                    console.log(error)
-                }
-            /*</ERROR>*/
-        /*<OPTENER GEOLOCALIZACION>*/      
+                               
+
+                                $('.evento-regresar-mapa-sugerencias').on('click', () => {
+                                    marker1.setMap(null);
+                                })
+                            }, 1500);
+                            
+                        });
+                    }, 1000);
+                /*</MOSTRAR MAPA>*/
+            /*</EVENTOS>*/
+        }
+    /*</MAP>*/   
 </script>
-
 <script type="module">
 
     /*<import librarys>*/ 
@@ -43,6 +72,7 @@
         import FinalizarOperacion                   from './js/function/Function.FinalizarOperacion.main.js'; 
         import TipoVehiculo                         from './js/function/Function.TipoVehiculo.main.js'; 
         import Contrato                             from './js/API/API.Contrato.main.js'; 
+        import functionCreateFaseSecundario         from './js/API/API.Create.main.js'; 
     /*<import librarys>*/ 
 
     $(document).ready(() => {  
@@ -110,7 +140,8 @@
                                 ArraysPaises = result.information;   
 
                                 let Option = ``;
-                                let Options = `<option value="0"  selected > -- SELEECCIONAR -- </option> `;;
+                                let Options = '';
+                                Options += `<option value="0"   > -- SELECCIONAR -- </option> `;
                                 for(let i = 0; i<ArraysPaises.length; i++ ){
                                     Option = '<option value="'+ArraysPaises[i].idPais+'"  >'+ArraysPaises[i].nombre+'</option>';
                                     Options += Option;             
@@ -121,17 +152,17 @@
                             /*<Consulta exitosa>*/                        
                         }else{
                            /*<Error de query>*/ 
-                                $('#message-error-door2door').html("");
-                                $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-                                $('#modal-message-error-door2door').modal('show');
+                                $('#message-warning-door2door').html("");
+                                $('#message-warning-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
+                                $('#modal-message-warning-door2door').modal('show');
                             /*</Error de query>*/  
                         }       
                     }                           
                 }).catch( (err) => { 
                     /*<Error de query>*/ 
-                        $('#message-error-door2door').html("");
-                        $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-                        $('#modal-message-error-door2door').modal('show');
+                        $('#message-warning-door2door').html("");
+                        $('#message-warning-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
+                        $('#modal-message-warning-door2door').modal('show');
                     /*</Error de query>*/  
                 });
             /*<Consultar pais>*/ 
@@ -148,7 +179,7 @@
                                 /*<Consulta exitosa>*/
                                     let ArraysEstados = [];
                                     ArraysEstados = result.information;           
-                                    let campos  =  `<option value="0"  selected > -- SELEECCIONAR -- </option> `;
+                                    let campos  =  `<option value="0"   > -- SELECCIONAR -- </option> `;
                                     for(let i = 0; i<ArraysEstados.length; i++){
                                         if(idPais == ArraysEstados[i].idPais){
                                             campos +=   `<option value="${ArraysEstados[i].idEstado}"   > ${ArraysEstados[i].nombre} </option> `;      
@@ -159,17 +190,17 @@
                                 /*<Consulta exitosa>*/                        
                             }else{
                             /*<Error de query>*/ 
-                                    $('#message-error-door2door').html("");
-                                    $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-                                    $('#modal-message-error-door2door').modal('show');
+                                    $('#message-warning-door2door').html("");
+                                    $('#message-warning-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
+                                    $('#modal-message-warning-door2door').modal('show');
                                 /*</Error de query>*/  
                             }       
                         }                           
                     }).catch( (err) => { 
                         /*<Error de query>*/ 
-                            $('#message-error-door2door').html("");
-                            $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-                            $('#modal-message-error-door2door').modal('show');
+                            $('#message-warning-door2door').html("");
+                            $('#message-warning-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
+                            $('#modal-message-warning-door2door').modal('show');
                         /*</Error de query>*/  
                     });    
                 }); 
@@ -187,7 +218,7 @@
                                 /*<Consulta exitosa>*/
                                     let ArraysMunicipios = [];
                                     ArraysMunicipios = result.information;           
-                                    let campos  =  `<option value="0"  selected > -- SELEECCIONAR -- </option> `;
+                                    let campos  =  `<option value="0"   > -- SELECCIONAR -- </option> `;
                                     for(let i = 0; i<ArraysMunicipios.length; i++){
                                         if(idEstado == ArraysMunicipios[i].idEstado){
                                             campos +=   `<option value="${ArraysMunicipios[i].idMunicipio}"   > ${ArraysMunicipios[i].nombre} </option> `;    
@@ -198,17 +229,17 @@
                                 /*<Consulta exitosa>*/                        
                             }else{
                             /*<Error de query>*/ 
-                                    $('#message-error-door2door').html("");
-                                    $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-                                    $('#modal-message-error-door2door').modal('show');
+                                    $('#message-warning-door2door').html("");
+                                    $('#message-warning-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
+                                    $('#modal-message-warning-door2door').modal('show');
                                 /*</Error de query>*/  
                             }       
                         }                           
                     }).catch( (err) => { 
                         /*<Error de query>*/ 
-                            $('#message-error-door2door').html("");
-                            $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-                            $('#modal-message-error-door2door').modal('show');
+                            $('#message-warning-door2door').html("");
+                            $('#message-warning-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
+                            $('#modal-message-warning-door2door').modal('show');
                         /*</Error de query>*/  
                     });
                   
@@ -243,7 +274,7 @@
                 /*</Evento >*/
 
                 /*<Evento >*/
-                    $('#button-Continuar-face-segunda-door2door').on('click', () =>{ const Result = FACE_SECUNDARIA();       }); 
+                    $('#button-Continuar-face-segunda-door2door').on('click', () =>{ const Result = FACE_SECUNDARIA();       });  
 
                     $('#button-regresar-face-segunda-door2door').on('click', () =>{ 
                         
@@ -261,9 +292,7 @@
 
                 /*<Evento >*/
                     $('#button-Continuar-face-tercera-door2door').on('click', () =>{ 
-                        $('#message-succes-door2door').html("");
-                        $('#message-succes-door2door').html('OPERACION EXITOSA');
-                        $('#modal-message-succes-door2door').modal('show');   
+                        
 
                         $('#form-face-primera-door2door').hide();
                         $('#form-face-segunda-door2door').hide();
@@ -495,7 +524,23 @@
                 /*</Eliminar imagen bancaria>*/
 
                 /*<Evento Boton finalizar >*/
-                    $('#button-finalizar-door2door').on('click', () => { const Result = FinalizarOperacion();} )
+                    $('#button-finalizar-door2door').on('click', () => { 
+                        let Preguntas     = JSON.parse( localStorage.getItem('JSON_CUESTIONARIO'));
+                        let contador = 0;
+                        for(let i = 0; i< Preguntas.length; i++){
+                            if( Preguntas[i].respuesta == ''){
+                                contador++;
+                            }
+                        }
+                        if(contador == 0){
+                            const Result  = FinalizarOperacion();
+                        }else{
+                            $('#message-warning-door2door').html("");
+                            $('#message-warning-door2door').html('¡FAVOR DE CONTESTAR LAS PREGUNTAS!');
+                            $('#modal-message-warning-door2door').modal('show');
+                        }
+                        
+                    });
         /*</Main Module Roles>*/                                 
     });
 
@@ -507,9 +552,10 @@
             then( (result) => { console.log(result)
                 if(result){
                     if(result.message == 'Good'){
+                        let comentarioSolicitud = result.information_USUARIO[0].comentarioSolicitud;
                         /*<ESTATUS>*/
                             $('#create-calle-door2door').                       val(result.information_USUARIO[0].calle);
-                            $('#create-nointerior-door2door').           val(result.information_USUARIO[0].noInterior);
+                            $('#create-nointerior-door2door').                  val(result.information_USUARIO[0].noInterior);
                             $('#create-noexterior-door2door').                  val(result.information_USUARIO[0].noExterior);
                             $('#create-codigopostal-door2door').                val(result.information_USUARIO[0].codigoPostal);
                             $('#create-colonia-door2door').                     val(result.information_USUARIO[0].colonia);
@@ -527,7 +573,7 @@
                                                 ArraysPaises = result1.information;   
                                                 
                                                 let Option = ``;
-                                                let Options = ``;
+                                                let Options = `<option value="0"   > -- SELECCIONAR -- </option> `;
 
                                                
                                                 for(let i = 0; i<ArraysPaises.length; i++ ){
@@ -546,17 +592,17 @@
                                             /*<Consulta exitosa>*/                        
                                         }else{
                                         /*<Error de query>*/ 
-                                                $('#message-error-door2door').html("");
-                                                $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-                                                $('#modal-message-error-door2door').modal('show');
+                                                $('#message-warning-door2door').html("");
+                                                $('#message-warning-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
+                                                $('#modal-message-warning-door2door').modal('show');
                                             /*</Error de query>*/  
                                         }       
                                     }                           
                                 }).catch( (err) => { 
                                     /*<Error de query>*/ 
-                                        $('#message-error-door2door').html("");
-                                        $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-                                        $('#modal-message-error-door2door').modal('show');
+                                        $('#message-warning-door2door').html("");
+                                        $('#message-warning-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
+                                        $('#modal-message-warning-door2door').modal('show');
                                     /*</Error de query>*/  
                                 });
 
@@ -587,17 +633,17 @@
                                             /*<Consulta exitosa>*/                        
                                         }else{
                                         /*<Error de query>*/ 
-                                                $('#message-error-door2door').html("");
-                                                $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-                                                $('#modal-message-error-door2door').modal('show');
+                                                $('#message-warning-door2door').html("");
+                                                $('#message-warning-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
+                                                $('#modal-message-warning-door2door').modal('show');
                                             /*</Error de query>*/  
                                         }       
                                     }                           
                                 }).catch( (err) => { 
                                     /*<Error de query>*/ 
-                                        $('#message-error-door2door').html("");
-                                        $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-                                        $('#modal-message-error-door2door').modal('show');
+                                        $('#message-warning-door2door').html("");
+                                        $('#message-warning-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
+                                        $('#modal-message-warning-door2door').modal('show');
                                     /*</Error de query>*/  
                                 });   
 
@@ -628,17 +674,17 @@
                                             /*<Consulta exitosa>*/                        
                                         }else{
                                         /*<Error de query>*/ 
-                                                $('#message-error-door2door').html("");
-                                                $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-                                                $('#modal-message-error-door2door').modal('show');
+                                                $('#message-warning-door2door').html("");
+                                                $('#message-warning-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
+                                                $('#modal-message-warning-door2door').modal('show');
                                             /*</Error de query>*/  
                                         }       
                                     }                           
                                 }).catch( (err) => { 
                                     /*<Error de query>*/ 
-                                        $('#message-error-door2door').html("");
-                                        $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-                                        $('#modal-message-error-door2door').modal('show');
+                                        $('#message-warning-door2door').html("");
+                                        $('#message-warning-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
+                                        $('#modal-message-warning-door2door').modal('show');
                                     /*</Error de query>*/  
                                 });
                                 
@@ -666,17 +712,17 @@
                                             /*<Consulta exitosa>*/                        
                                         }else{
                                         /*<Error de query>*/ 
-                                                $('#message-error-door2door').html("");
-                                                $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-                                                $('#modal-message-error-door2door').modal('show');
+                                                $('#message-warning-door2door').html("");
+                                                $('#message-warning-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
+                                                $('#modal-message-warning-door2door').modal('show');
                                             /*</Error de query>*/  
                                         }       
                                     }                           
                                 }).catch( (err) => { 
                                     /*<Error de query>*/ 
-                                        $('#message-error-door2door').html("");
-                                        $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-                                        $('#modal-message-error-door2door').modal('show');
+                                        $('#message-warning-door2door').html("");
+                                        $('#message-warning-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
+                                        $('#modal-message-warning-door2door').modal('show');
                                     /*</Error de query>*/  
                                 });
 
@@ -690,17 +736,91 @@
                                 let TableBody= ''; 
                                 localStorage.setItem('JSON_CUESTIONARIO', JSON.stringify(Preguntas));     
                                 for(let i = 0; i< Preguntas.length; i++){
-                                    record = `  <div class="row">
+                                    if(Preguntas[i].tipoPregunta == "CERRADA"){
+                                        if(Preguntas[i].respuesta == 'SI'){ console.log(Preguntas[i].respuesta)
+                                            record = `  <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <label for="">${Preguntas[i].pregunta}</label><br>
+                                                                <div class="row">
+                                                                    <div class="col-6">
+                                                                        <div class="form-check">
+                                                                            <label class="form-check-label">
+                                                                                <input type="radio"  onclick="guadarRespuestaCerrada(${i},'SI');"  class="form-check-input" name="optradio-${i}" checked>Si
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-6">
+                                                                        <div class="form-check">
+                                                                            <label class="form-check-label">
+                                                                                <input type="" onclick="guadarRespuestaCerrada(${i},'NO');"class="form-check-input" name="optradio-${i}" radio>No
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div> `;console.log(record)
+
+                                        }if(Preguntas[i].respuesta == 'NO'){
+                                            record = `  <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <label for="">${Preguntas[i].pregunta}</label><br>
+                                                                <div class="row">
+                                                                    <div class="col-6">
+                                                                        <div class="form-check">
+                                                                            <label class="form-check-label">
+                                                                                <input type="radio"  onclick="guadarRespuestaCerrada(${i},'SI');"  class="form-check-input" name="optradio-${i}">Si
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-6">
+                                                                        <div class="form-check">
+                                                                            <label class="form-check-label">
+                                                                                <input type="radio"  onclick="guadarRespuestaCerrada(${i},'NO');"class="form-check-input" name="optradio-${i}" checked>No
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div> `;
+                                        }else{
+                                            record = `  <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <label for="">${Preguntas[i].pregunta}</label><br>
+                                                                <div class="row">
+                                                                    <div class="col-6">
+                                                                        <div class="form-check">
+                                                                            <label class="form-check-label">
+                                                                                <input type="radio"  onclick="guadarRespuestaCerrada(${i},'SI');"  class="form-check-input" name="optradio-${i}">Si
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-6">
+                                                                        <div class="form-check">
+                                                                            <label class="form-check-label">
+                                                                                <input type="radio"  onclick="guadarRespuestaCerrada(${i},'NO');"class="form-check-input" name="optradio-${i}">No
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div> `;
+                                        }
+                                       
+
+                                    }else{
+                                        record = `  <div class="row">
                                                     <div class="col-sm-12">
                                                         <div class="form-group">
-                                                            <label for="">${Preguntas[0].pregunta}</label>
+                                                            <label for="">${Preguntas[i].pregunta}</label>
                                                             <textarea   class="form-control" 
                                                                         onkeyup="GuadarRespuesta(${i});"  
                                                                         id="create-respuesta-door2door-${i}" 
-                                                                        value="" placeholder="Respuesta" rows="2">${Preguntas[0].respuesta}</textarea>
+                                                                        value="" placeholder="Respuesta" rows="2">${Preguntas[i].respuesta}</textarea>
                                                         </div>
                                                     </div>
                                                 </div>   `;
+                                    }
                                     TableBody += record;
                                 }
                                 $('#Cuesntionario-mostrar').html(TableBody);
@@ -745,13 +865,13 @@
                             }else  if(Arrays.estatus == 'CONFIRMADA') {
 
                                 $('#message-confirmada-door2door').html("");
-                                $('#message-confirmada-door2door').html('¡SOLICITUD CONFIRMADA!');
+                                $('#message-confirmada-door2door').html('¡SU SOLICITUD ESTÁ SIENDO PROCESADA, FAVOR DE ESPERAR LA RESPUESTA!');
                                 $('#modal-message-confirmada-door2door').modal('show');
                                 
                             }else  if(Arrays.estatus == 'CONTRATO') {
-                                $('#Contrato-mostar').html( '<div class="embed-responsive embed-responsive-21by9" > '
-                                                                +'<iframe class="embed-responsive-item" src="'+ result.information_CONTRATO[0].contrato+'" ></iframe>'
-                                                            +'</div>'    );     
+                                $('#Contrato-mostar').html( '<div class="row" > <div class="col-12" >'
+                                                                +'	<a type="button"  class="btn btn-primary btn-block"  href="https://d2d.mx/'+ result.information_CONTRATO[0].contrato+'" download="Contrato.pdf" >Descargar Contrato</a>'
+                                                            +'</div></div>'     );     
                                 $('#message-contrato-door2door').html("");
                                 $('#message-contrato-door2door').html('¡CONTRATO!');
                                 $('#modal-message-contrato-door2door').modal('show');
@@ -761,14 +881,16 @@
                                 $('#message-rechazada-door2door').html("");
                                 $('#message-rechazada-door2door').html('¡LAMENTAMOS INFORMARLE QUE SU SOLICITUD FUE RECHAZADA COMENTARIOS REALIZADOS POR EL ADMINISTRADOR!');
                                 $('#modal-message-rechazada-door2door').modal('show');
+                                $('#show-comentario-rechazado-door2door').val(comentarioSolicitud);
                                 
                             }else  if(Arrays.estatus == 'INCOMPLETA') {
 
                                 $('#message-incompleta-door2door').html("");
                                 $('#message-incompleta-door2door').html('¡LAMENTAMOS INFORMARLE QUE SU SOLICITUD  ESTA INCOMPLETA, POR FAVOR COMPLETE LA INFORMACIÓN!');
                                 $('#modal-message-incompleta-door2door').modal('show');
+                                $('#show-comentario-incompleto-door2door').val(comentarioSolicitud);
                             }
-                        /*</ESTATUS>*/
+                        /*</ESTATUS>*/ 
                     }
                 }
             }).catch( (err)=> {
@@ -793,7 +915,7 @@
             then( (result) => {
                 $('#modal-imagen-perfil-door2door').modal('hide');
             }). 
-            carch( (err) => {
+            catch( (err) => {
                 
             });
         }
@@ -819,82 +941,95 @@
                     $('#message-warning-door2door').html('¡FAVOR DE INTRODUCIR LA CALLE!');
                     $('#modal-message-warning-door2door').modal('show');                   
                 }else{
-                    /*<VALIDACION NoInterior >*/
-                        if(NoInterior == ''){ 
+                    /*<VALIDACION  NoExterior >*/
+                        if(NoExterior == ''){
                             $('#message-warning-door2door').html("");
-                            $('#message-warning-door2door').html('¡FAVOR DE INTRODUCIR EL NUMERÓ INTERIOR!');
+                            $('#message-warning-door2door').html('¡FAVOR DE INTRODUCIR EL NUMERÓ  EXTERIOR!');
                             $('#modal-message-warning-door2door').modal('show');
-                           
                         }else{
-                            /*<VALIDACION  NoExterior >*/
-                                if(NoExterior == ''){
+                            /*<VALIDACION  CodigoPostal>*/
+                                if(CodigoPostal == ''){
                                     $('#message-warning-door2door').html("");
-                                    $('#message-warning-door2door').html('¡FAVOR DE INTRODUCIR EL NUMERÓ  EXTERIOR!');
+                                    $('#message-warning-door2door').html('¡FAVOR DE INTRODUCIR EL CODIGO POSTAL!');
                                     $('#modal-message-warning-door2door').modal('show');
                                 }else{
-                                    /*<VALIDACION  CodigoPostal>*/
-                                        if(CodigoPostal == ''){
+                                    /*<VALIDACION  Colonia>*/
+                                        if(Colonia == ''){
                                             $('#message-warning-door2door').html("");
-                                            $('#message-warning-door2door').html('¡FAVOR DE INTRODUCIR EL CODIGO POSTAL!');
+                                            $('#message-warning-door2door').html('¡FAVOR DE INTRODUCIR LA COLONIA!');
                                             $('#modal-message-warning-door2door').modal('show');
                                         }else{
-                                            /*<VALIDACION  Colonia>*/
-                                                if(Colonia == ''){
+                                            /*<VALIDACION  Pais>*/
+                                                if(Pais <= 0){
                                                     $('#message-warning-door2door').html("");
-                                                    $('#message-warning-door2door').html('¡FAVOR DE INTRODUCIR LA COLONIA!');
+                                                    $('#message-warning-door2door').html('¡FAVOR DE SELECCIONAR EL PAIS!');
                                                     $('#modal-message-warning-door2door').modal('show');
                                                 }else{
                                                     /*<VALIDACION  Pais>*/
-                                                        if(Pais <= 0){
+                                                        if(Estado <= 0){
                                                             $('#message-warning-door2door').html("");
-                                                            $('#message-warning-door2door').html('¡FAVOR DE SELECCIONAR EL PAIS!');
+                                                            $('#message-warning-door2door').html('¡FAVOR DE SELECCIONAR EL Estados!');
                                                             $('#modal-message-warning-door2door').modal('show');
                                                         }else{
-                                                            /*<VALIDACION  Pais>*/
-                                                                if(Estado <= 0){
+                                                            /*<VALIDACION  Munisipio>*/
+                                                                if(Munisipio <= 0){
                                                                     $('#message-warning-door2door').html("");
-                                                                    $('#message-warning-door2door').html('¡FAVOR DE SELECCIONAR EL Estados!');
+                                                                    $('#message-warning-door2door').html('¡FAVOR DE SELECCIONAR EL Munisipio!');
                                                                     $('#modal-message-warning-door2door').modal('show');
                                                                 }else{
-                                                                    /*<VALIDACION  Munisipio>*/
-                                                                        if(Munisipio <= 0){
-                                                                            $('#message-warning-door2door').html("");
-                                                                            $('#message-warning-door2door').html('¡FAVOR DE SELECCIONAR EL Munisipio!');
-                                                                            $('#modal-message-warning-door2door').modal('show');
-                                                                        }else{
-                                                                            let informationForm = new FormData(document.getElementById("form-face-segunda-door2door")); 
-                                                                            let IdUsuario       = JSON.parse(localStorage.getItem('JSON_INFORMACION'));
+                                                                    let informationForm = new FormData(document.getElementById("form-face-segunda-door2door")); 
+                                                                        let IdUsuario       = JSON.parse(localStorage.getItem('JSON_INFORMACION'));
 
-                                                                            informationForm.append('face-de-creacion','FACE_SECUNDARIA');
-                                                                            informationForm.append('idUsuario',     IdUsuario.idUsuario);
-                                                                            
-                                                                            const Result = functionCreate(informationForm). 
-                                                                            then( (result) => { console.log(result)
-                                                                                if(result){
-                                                                                    if(result == 'Good'){
-                                                                                    
-                                                                                    }
-                                                                                }
+                                                                        informationForm.append('face-de-creacion',  'FACE_SECUNDARIA');
+                                                                        informationForm.append('idUsuario',         IdUsuario.idUsuario);
+                                                                        
+                                                                        const Result = functionCreateFaseSecundario(informationForm).
+                                                                        
+                                                                        then((result) => {
+                                                                            console.log(result);
+                                                                            if(result){
+                                                                                if(result.message == 'Good'){ 
+                                                                                    localStorage.setItem('JSON_DIRCCION_VISITANTE', JSON.stringify(
+                                                                                        {
+                                                                                            lat: result.RESPUESTA_FACE_SECUNDARIA.lat, 
+                                                                                            lng: result.RESPUESTA_FACE_SECUNDARIA.lng
+                                                                                        }
+                                                                                    ));
 
-                                                                            }). 
-                                                                            catch( (err) => {
-                                                                                console.log(err)
-                                                                            });
-            
-                                                                        }
-                                                                    /*</VALIDACION  Munisipio>*/
+
+                                                                                    $('#form-face-primera-door2door').hide();
+                                                                                    $('#form-face-segunda-door2door').hide();
+
+                                                                                    $('#form-face-tercera-door2door').show();
+
+                                                                                    $('#form-face-cuarta-door2door').hide();
+                                                                                    $('#form-face-quinta-door2door').hide();                    
+                                                                                    $('#form-face-sexta-door2door').hide();
+                                                                                    $('#form-face-septima-door2door').hide();
+                                                                                    $('#form-face-octavo-door2door').hide();
+
+                                                                                   
+
+                                                                                }else if(result.message == 'LOCALIZACION NO ENCONTRADA'){
+                                                                                    $('#message-warning-door2door').html("");
+                                                                                    $('#message-warning-door2door').html('¡LOCALIZACIÓN NO ENCONTRADA!');
+                                                                                    $('#modal-message-warning-door2door').modal('show');
+                                                                                }                                                 
+                                                                            }
+                                                                        });
+    
                                                                 }
-                                                            /*</VALIDACION  Pais>*/
+                                                            /*</VALIDACION  Munisipio>*/
                                                         }
                                                     /*</VALIDACION  Pais>*/
                                                 }
-                                            /*</VALIDACION  Colonia>*/
+                                            /*</VALIDACION  Pais>*/
                                         }
-                                    /*</VALIDACION  CodigoPostal>*/
+                                    /*</VALIDACION  Colonia>*/
                                 }
-                            /*</VALIDACION NoExterior >*/
+                            /*</VALIDACION  CodigoPostal>*/
                         }
-                    /*</VALIDACION NoInterior >*/
+                    /*</VALIDACION NoExterior >*/ 
                 }
             /*</VALIDACION CALLE >*/
     
@@ -919,7 +1054,7 @@
                 }
 
             }). 
-            carch( (err) => {
+            catch( (err) => {
                 
             });
         }
@@ -942,7 +1077,7 @@
                 }
 
             }). 
-            carch( (err) => {
+            catch( (err) => {
                 
             });
         }
@@ -965,7 +1100,7 @@
                 }
 
             }). 
-            carch( (err) => {
+            catch( (err) => {
                 
             });
         }
@@ -988,7 +1123,7 @@
                 }
 
             }). 
-            carch( (err) => {
+            catch( (err) => {
                 
             });
         }
@@ -1010,7 +1145,7 @@
                     }
                 }
             }). 
-            carch( (err) => {
+            catch( (err) => {
                 
             });
         }
@@ -1029,7 +1164,7 @@
                     }
                 }
             }). 
-            carch( (err) => {
+            catch( (err) => {
                 
             });
         }
@@ -1051,7 +1186,7 @@
                     }
                 }
             }). 
-            carch( (err) => {
+            catch( (err) => {
                 
             });
             
@@ -1072,7 +1207,7 @@
                 }
 
             }). 
-            carch( (err) => {
+            catch( (err) => {
                 
             });
             
@@ -1128,6 +1263,13 @@
         const GuadarRespuesta   = (selecionado) => {
             let Preguntas     = JSON.parse( localStorage.getItem('JSON_CUESTIONARIO'));
             let Respuesta   = $('#create-respuesta-door2door-'+selecionado).val();
+            Preguntas[selecionado].respuesta = Respuesta;
+            localStorage.setItem('JSON_CUESTIONARIO', JSON.stringify(Preguntas));  
+        }
+
+        const guadarRespuestaCerrada = (selecionado,Respuesta) =>{
+            console.log(Respuesta)
+            let Preguntas     = JSON.parse( localStorage.getItem('JSON_CUESTIONARIO'));          
             Preguntas[selecionado].respuesta = Respuesta;
             localStorage.setItem('JSON_CUESTIONARIO', JSON.stringify(Preguntas));  
         }

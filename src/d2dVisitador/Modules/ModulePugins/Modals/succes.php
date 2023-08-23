@@ -31,13 +31,18 @@
                         </center>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-12">
+                        <button type="button" 
+                                class="btn btn-secondary btn-block"  
+                                data-dismiss="modal">
+                            Continuar
+                        </button>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
-                <center>
-                    <button type="button" class="btn btn-secondary" style="width:200px" data-dismiss="modal">
-                        Regresar
-                    </button>
-                </center>
+              
             </div>
         </div>
     </div>

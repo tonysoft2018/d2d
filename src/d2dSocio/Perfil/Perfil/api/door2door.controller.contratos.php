@@ -7,7 +7,7 @@
 
 /*<Import>*/   
     use  d2dSocio\Modules\ModulePugins\GeneradorTocken\GeneradorTocken                                   as GeneradorTocken_selecrFull;
-    use  d2dSocio\Perfil\Perfil\Model\Perfil\Perfil                                                     as Services_create;
+    //use  d2dSocio\Perfil\Perfil\Model\Perfil\Perfil                                                     as Services_create;
 /*<Import>*/ 
 /*<Instaciacion de objetos>*/                
     $ObjectToken = new GeneradorTocken_selecrFull();
@@ -26,7 +26,7 @@
         /*<Controlador>*/   
             try{
                 /*<Instaciacion de objetos>*/                
-                    $ObjectRoles = new Services_create();
+                    $ObjectRoles = new Perfil();
                 /*</Instaciacion de objetos>*/      
                 /*</Proceso>*/  
                     $JSON_RESULT = $ObjectRoles->Contrato();

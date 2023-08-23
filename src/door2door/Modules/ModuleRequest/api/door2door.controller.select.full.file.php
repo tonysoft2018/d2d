@@ -31,7 +31,9 @@
                 /*</Proceso>*/  
                     $JSON_RESULT = $ObjectRoles->selectFullFile(
                         $_POST['folio'],
-                        $_POST['idSolicitud']
+                        $_POST['idSolicitud'],
+                        $_POST['idUsuario'],
+                        $_POST['tipoSocio']
                     );
                 /*</Proceso>*/  
                 /*<Respuesta>*/  

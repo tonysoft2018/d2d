@@ -10,7 +10,7 @@
       </div>
       <div class="modal-body">
         <form id="form-cargar-contactos-door2door">
-          <input type="hidden" value="" id="cargar-contactos-id-door2door" name="cargar-contactos-id-door2door">
+          <input type="hidden" id="cargar-contactos-id-door2door" name="cargar-contactos-id-door2door"  value="">
           <div class="row">
             <div class="col-sm-12">                  
               <div class="row">
@@ -18,20 +18,25 @@
                     <label>Cargar contactos</label>
                 </div>
               </div>
-              <input type="file"  id="create-cargar-plantilla-door2door" style="background:#D1F0F5;"  name="create-cargar-plantilla-door2door" placeholder="plantilla" class="form-control" style="background:#D1F0F5;"   >
+              <div class="row">
+                <div class="col-sm-12">
+                  <input  type="file"  
+                          id="create-cargar-plantilla-door2door"                        
+                          name="create-cargar-plantilla-door2door"
+                          class="form-contro"  >
+                </div>
+              </div>
             </div>
           </div><br>  
       </form>
        
         <div class="row">
-            <div class="col-sm-3"></div>
-            <div class="col-sm-5">              
-                <button class="btn btn-primary" 
+            <div class="col-sm-12">              
+                <button class="btn btn-primary btn-block" 
                         id="button-cargar-contactos-subir-contactos-door2door"  
-                        style="width:200px">Cargar</button>
-            </div>
-            
-            <div class="col-sm-3"></div>
+                       >Cargar</button>
+            </div>           
+           
         </div>     
       </div>
       <br>

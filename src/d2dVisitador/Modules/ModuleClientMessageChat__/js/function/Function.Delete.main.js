@@ -27,7 +27,7 @@
                     if(result.message == 'Good'){
                         /*<Respuesta>*/
                             $('#message-succes-door2door').html("");
-                            $('#message-succes-door2door').html('PROCESO EXITOSO');
+                            $('#message-succes-door2door').html('PROCESO ÉXITOSO');
                             $('#modal-message-succes-door2door').modal('show'); 
                             $('#modal-delete-door2door').modal('hide'); 
                         /*</Respuesta>*/     
@@ -36,11 +36,11 @@
                             then( (result) => {       console.log(result);
                                 if(result){                                                                    
                                     if(result.message == 'Good'){
-                                        /*<Consulta exitosa>*/
+                                        /*<Consulta ÉXITOsa>*/
                                             let ArraysRoles = [];
                                             ArraysRoles = result.information;                               
                                             const functionS = functionShow(ArraysRoles);       
-                                        /*<Consulta exitosa>*/                        
+                                        /*<Consulta ÉXITOsa>*/                        
                                     }else{
                                         /*<Error de query>*/ 
                                             $('#message-error-door2door').html("");

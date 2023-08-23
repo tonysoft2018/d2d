@@ -196,20 +196,20 @@ namespace door2door\Modules\ModuleSettingsCompanies\Model\SettingsCompanies;
                 /*</Query> */
 
                 $this::open();            
-                if ($resultQuery = mysqli_query($this->Connection, $querySelect)) {
-                    /*<Captura>*/
-                        while ($Rol = $resultQuery->fetch_array(MYSQLI_ASSOC)) {
-                            $JSON_RESULT['idEmpresa']  = $Rol['idEmpresa'];
-                            return $JSON_RESULT;
-                        }
-                    /*</Captura>*/
-                } else {
-                    /*<Respuesta>*/
-                        $JSON_RESULT['message']         = "Bad";
-                        $JSON_RESULT['querySelect']     = $querySelect;
-                        $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
-                    /*</Respuesta>*/
-                }        
+                    if ($resultQuery = mysqli_query($this->Connection, $querySelect)) {
+                        /*<Captura>*/
+                            while ($Rol = $resultQuery->fetch_array(MYSQLI_ASSOC)) {
+                                $JSON_RESULT['idEmpresa']  = $Rol['idEmpresa'];
+                                return $JSON_RESULT;
+                            }
+                        /*</Captura>*/
+                    } else {
+                        /*<Respuesta>*/
+                            $JSON_RESULT['message']         = "Bad";
+                            $JSON_RESULT['querySelect']     = $querySelect;
+                            $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
+                        /*</Respuesta>*/
+                    }        
                 $this::closet();
                 return $JSON_RESULT; 
             }

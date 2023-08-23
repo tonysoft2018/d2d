@@ -59,7 +59,7 @@
                             if(result.message == 'Good'){ 
                                 /*<Respuesta>*/
                                     $('#message-succes-door2door').html("");
-                                    $('#message-succes-door2door').html('CREACIÓN EXITOSA');
+                                    $('#message-succes-door2door').html('CREACIÓN ÉXITOSA');
                                     $('#modal-message-succes-door2door').modal('show');                                   
                                     
                                     $('#create-nombre-door2door').val('');

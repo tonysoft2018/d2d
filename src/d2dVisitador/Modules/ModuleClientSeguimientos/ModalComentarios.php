@@ -18,7 +18,7 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-sm-12">
+                    <div class="col-sm-12" id="comentarios-de-visitas">
                        
                     </div>
                 </div><br>

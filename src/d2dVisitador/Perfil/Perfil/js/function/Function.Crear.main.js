@@ -2,7 +2,11 @@ import CrearAPI       from '../API/API.Create.main.js';
 
 // ActualizarUsuarioAPI Usuario            
 const Crear = async(informationForm) => { 
-
+    /*<CARGAR HIDE>*/
+        $('#id-main').addClass('opacidad');
+        $('#body-main-div').addClass('body-main');
+        $('#body-main-div').show();
+    /*</CARGAR HIDE>*/  
     
     const FuCrear = await CrearAPI( informationForm ).
     then( (result) => {  console.log("############");  console.log(result)     
@@ -15,6 +19,14 @@ const Crear = async(informationForm) => {
                 }
                 else if(result.FACE == 'FACE_SECUNDARIA')
                 {
+                    localStorage.setItem('JSON_DIRCCION_VISITANTE', JSON.stringify(
+                        {
+                            lat: result.RESPUESTA_FACE_SECUNDARIA.lat, 
+                            lng: result.RESPUESTA_FACE_SECUNDARIA.lng
+                        }
+                    ));
+
+
                     $('#form-face-primera-door2door').hide();
                     $('#form-face-segunda-door2door').hide();
 
@@ -52,34 +64,57 @@ const Crear = async(informationForm) => {
                     $('#update-imagen-bancaria-door2door').html('<img src="'+result.DIRECCION+'" style="width:200px;height:200px;" class=" ">');
                     $('#modal-imagen-bancaria-door2door').modal('hide');
                 }
+                /*<CARGAR HIDE>*/
+                    $('#id-main').removeClass('opacidad');
+                    $('#body-main-div').removeClass('body-main');
+                    $('#body-main-div').hide();
+                /*</CARGAR HIDE>*/  
                 
                 
-                $('#message-succes-door2door').html("");
-                $('#message-succes-door2door').html('OPERACION EXITOSA');
-                $('#modal-message-succes-door2door').modal('show');   
             
                  return  'Good';
                 
+            }else if(result.message == 'LOCALIZACION NO ENCONTRADA'){
+                /*<CARGAR HIDE>*/
+                    $('#id-main').removeClass('opacidad');
+                    $('#body-main-div').removeClass('body-main');
+                    $('#body-main-div').hide();
+                /*</CARGAR HIDE>*/  
+                $('#message-warning-door2door').html("");
+                $('#message-warning-door2door').html('¡LOCALIZACIÓN NO ENCONTRADA!');
+                $('#modal-message-warning-door2door').modal('show');
+
+            
             }else{
 
-                $('#message-error-door2door').html("");
-                $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-                $('#modal-message-error-door2door').modal('show');
+                /*<CARGAR HIDE>*/
+                    $('#id-main').removeClass('opacidad');
+                    $('#body-main-div').removeClass('body-main');
+                    $('#body-main-div').hide();
+                /*</CARGAR HIDE>*/  
+                $('#message-warning-door2door').html("");
+                $('#message-warning-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
+                $('#modal-message-warning-door2door').modal('show');
                 return  'bad';
             }
         }else{
-
-            $('#message-error-door2door').html("");
-            $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-            $('#modal-message-error-door2door').modal('show');
+            /*<CARGAR HIDE>*/
+                $('#id-main').removeClass('opacidad');
+                $('#body-main-div').removeClass('body-main');
+                $('#body-main-div').hide();
+            /*</CARGAR HIDE>*/  
+            $('#message-warning-door2door').html("");
+            $('#message-warning-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
+            $('#modal-message-warning-door2door').modal('show');
             return  'bad';
             
-        }                           
+        }        
+
     }).catch( (err) => { 
 
-        $('#message-error-door2door').html("");
-        $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-        $('#modal-message-error-door2door').modal('show');
+        $('#message-warning-door2door').html("");
+        $('#message-warning-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
+        $('#modal-message-warning-door2door').modal('show');
         return  'bad';
 
     });

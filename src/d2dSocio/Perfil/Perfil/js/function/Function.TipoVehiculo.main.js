@@ -23,7 +23,7 @@ const Crear = async() => {
                     $('#form-face-octavo-door2door').show();
 
                     $('#message-succes-door2door').html("");
-                    $('#message-succes-door2door').html('OPERACION EXITOSA');
+                    $('#message-succes-door2door').html('OPERACIÓN EXITOSA');
                     $('#modal-message-succes-door2door').modal('show'); 
                 }else{
                     $('#message-error-door2door').html("");

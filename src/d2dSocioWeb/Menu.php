@@ -78,7 +78,7 @@
                   <a href="#" class="nav-link">
                       <img  title="Editar registro"   src="/d2dSocioWeb/Modules/ModulesImage/capañas.png" style="width:30px;height:30px">
                       <p style="font-size:19;color:#fff;">
-                        Camapaña
+                         Campaña
                       </p>
                       <i class="right fas fa-angle-left"></i> 
                   </a>

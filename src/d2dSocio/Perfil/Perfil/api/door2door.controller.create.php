@@ -6,7 +6,7 @@
 
 /*<Import>*/   
     use  d2dSocio\Modules\ModulePugins\GeneradorTocken\GeneradorTocken                                   as GeneradorTocken_create;
-    use  d2dSocio\Perfil\Perfil\Model\Perfil\Perfil                                                     as Services_create;
+    //use  d2dSocio\Perfil\Perfil\Model\Perfil\Perfil                                                     as Services_create;
 /*<Import>*/   
 
 /*<Instaciacion de objetos>*/                
@@ -28,7 +28,7 @@ if( /*isset($_POST['TockenOfdoor2doordoor2door']) && (
         /*<Controlador>*/      
             try{
                 /*<Instaciacion de objetos>*/                
-                    $Object = new Services_create();
+                    $Object = new Perfil();
 
                     $ID_USUARIO                     = $_POST['idUsuario'];
                     $NOMBRE                         = '';

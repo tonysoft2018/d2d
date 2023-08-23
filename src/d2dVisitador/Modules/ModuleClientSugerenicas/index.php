@@ -26,7 +26,7 @@
     <html lang="en">
         <!-- -->
             <head>
-                <title> door2door | Sugerenicas </title>
+                <title> door2door | Posibles visitas </title>
                 <?php include_once('../../head.php'); ?>     
             </head>
         <!-- -->
@@ -71,12 +71,12 @@
                                 <div class="container">
                                     <div class="row mb-2">
                                     <div class="col-sm-6">
-                                        <h1 class="m-0"> Sugerenicas</h1>
+                                        <h1 class="m-0"> Posibles visitas</h1>
                                     </div><!-- /.col -->
                                     <div class="col-sm-6">
                                         <ol class="breadcrumb float-sm-right">
-                                        <li class="breadcrumb-item"><a href="/d2dVisitador/Modules/Welcome/">Inicio</a></li>
-                                        <i class="breadcrumb-item "> Sugerenicas </li>
+                                        <li class="breadcrumb-item"><a href="/d2dVisitador/Modules/ModulePerfil/">Inicio</a></li>
+                                        <i class="breadcrumb-item "> Posibles visitas </li>
                                         </ol>
                                     </div><!-- /.col -->
                                     </div><!-- /.row -->
@@ -88,22 +88,6 @@
                         <!-- Main content -->
                         <section class="content" style="color:#fffff;">
                             <div class="container-fluid">
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-sm-2">
-                                        </div>
-                                        <div class="col-sm-8"></div>
-                                        <div class="col-sm-2">
-                                            <a  type="button" 
-                                                style="margin:5px;"
-                                                href="/d2dVisitador/Modules/Welcome/"
-                                                class="btn btn-secondary btn-block" 
-                                                >
-                                            Regresar
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>  <br>
                                 <div class="container">
                                 <div class="row">  
                                         <div class="col-12" id="Information-main">  
@@ -119,10 +103,11 @@
 
                 <!-- Modales -->
                     <?php include_once('ModalContactoSelecionado.php');                 ?> 
-                    <?php include_once('ModalSeleccionar.php');                         ?> 
+                    
                     <?php include_once('ModalCreate.php');                              ?> 
                     <?php include_once('ModalDelete.php');                              ?> 
                     <?php include_once('ModalShow.php');                                ?> 
+                    <?php include_once('ModalSeleccionar.php');                         ?> 
                   
                 <!-- Modales -->
                 

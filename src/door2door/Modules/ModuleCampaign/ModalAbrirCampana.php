@@ -15,7 +15,7 @@
         <div class="row">
             <div class="col-sm-4"></div>
             <div class="col-sm-4">              
-              <img class="img-fluid"  src="<?= $URL?>/door2door/Modules/ModulesImage/pregunta.png" style="width:150px;height:150px;"  ><br> 
+              <img class="img-fluid"  src="<?= $URL?>/d2dSocioWeb/Modules/ModulesImage/pregunta.png" style="width:150px;height:150px;"  ><br> 
 
             </div>
             <div class="col-sm-4"></div>

@@ -2,32 +2,67 @@
    
     /*<Events  Button Update # 2 >*/
         const ButtonUpdate  = ( 
-                                    idUsuario, 
                                     idSolicitud, 
                                     folio, 
                                     fecha, 
-                                    nombres, 
-                                    apellido, 
-                                    tipoPerfil, 
-                                    estatus, 
+                                    estatus,
+                                    idUsuario, 
                                     usuario, 
-                                    imagen,
-                                    TipoDeVehiculo,
-                                    numeroCuenta
-                            ) => {
+                                    imagen, 
+                                    nombres, 
+                                    apellidos, 
+                                    tipoPerfil, 
+                                    email,
 
+
+                                    colonia,
+                                    calle,
+                                    noExterior,
+                                    noInterior,
+                                    codigoPostal,
+                                    Municipio,
+                                    Estado,
+                                    Pais,
+
+                                    banco,
+                                    numeroCuenta,
+                                    nombrePropietario,
+
+                                    TipoDeVehiculo,
+                                    latitud,
+                                    longitud
+                            ) => {
+            //console.log("#####################");
+            //console.log(idUsuario);
             $('#update-idUsuario-door2door').val(idUsuario);
             $('#update-id-door2door').val(idSolicitud);
             $('#update-folio-door2door').val(folio);
+            $('#update-Estatus-door2door').val(estatus);
+
             $('#update-usuario-door2door').val(usuario);
             $('#update-nombre-door2door').val(nombres);
-            $('#update-apellido-door2door').val(apellido);
+            $('#update-apellido-door2door').val(apellidos);
             $('#update-tiposocio-door2door').val(tipoPerfil);
-            $('#update-estatus-door2door').val(estatus);
+            $('#update-correo-door2door').val(email);
+
+            $('#update-latitud-door2door').val(latitud);
+            $('#update-longitud-door2door').val(longitud);
+            $('#update-calle-door2door').val(calle);
+            $('#update-noExterior-door2door').val(noExterior);
+            $('#update-noInterior-door2door').val(noInterior);
+            $('#update-codigoPostal-door2door').val(codigoPostal);
+            $('#update-colonia-door2door').val(colonia);
+            $('#update-Municipio-door2door').val(Municipio);
+            $('#update-Estado-door2door').val(Estado);
+            $('#update-Pais-door2door').val(Pais);
+            
             $('#update-Tipo-vehículo-door2door').val(TipoDeVehiculo);
+
+            $('#update-banco-door2door').val(banco);
+            $('#update-nombreDelPropietario-door2door').val(nombrePropietario);
             $('#update-numeroCLABE-door2door').val(numeroCuenta);
            
-            $('#Fotografia-frente').html('<img  style="width:200px;height:200px" class="img-fluid" src="'+imagen+'">');
+            $('#Fotografia-frente').html('<img  style="width:300px;height:300px" class="img-circle elevation-2" src="'+imagen+'">');
 
             switch(estatus){
                 case 'PENDIENTE':{
@@ -115,8 +150,9 @@
                 }
             }
             
+            
 
-            $('#modal-update-door2door').modal('show');
+            $('#modal-datos-personales-door2door').modal('show');
         }
     /*<Events  Button Update # 2 >*/
 

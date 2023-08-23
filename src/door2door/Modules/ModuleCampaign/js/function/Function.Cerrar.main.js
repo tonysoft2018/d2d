@@ -58,11 +58,11 @@
                                             $('#body-main-div').removeClass('body-main');
                                             $('#body-main-div').hide();
                                         /*</CARGAR HIDE>*/
-                                        /*<Error de query>*/ 
-                                            $('#message-error-door2door').html("");
-                                            $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-                                            $('#modal-message-error-door2door').modal('show');
-                                        /*</Error de query>*/  
+                                        /*<warning de query>*/ 
+                                            $('#message-warning-door2door').html("");
+                                            $('#message-warning-door2door').html('¡warning AL RECARGAR LA PAGUINA!');
+                                            $('#modal-message-warning-door2door').modal('show');
+                                        /*</warning de query>*/  
                                     }       
                                 }else{
 
@@ -73,11 +73,11 @@
                                     $('#body-main-div').removeClass('body-main');
                                     $('#body-main-div').hide();
                                 /*</CARGAR HIDE>*/
-                                /*<Error de query>*/ 
-                                    $('#message-error-door2door').html("");
-                                    $('#message-error-door2door').html('¡ERROR AL RECARGAR LA PAGUINA!');
-                                    $('#modal-message-error-door2door').modal('show');
-                                /*</Error de query>*/ 
+                                /*<warning de query>*/ 
+                                    $('#message-warning-door2door').html("");
+                                    $('#message-warning-door2door').html('¡warning AL RECARGAR LA PAGUINA!');
+                                    $('#modal-message-warning-door2door').modal('show');
+                                /*</warning de query>*/ 
                             });
                         /*<Consultar toda la iformacion>*/  
 
@@ -88,22 +88,22 @@
                             $('#body-main-div').hide();
                         /*</CARGAR HIDE>*/
                         /*<Respuesta>*/
-                            $('#message-error-door2door').html('');
-                            $('#message-error-door2door').html('¡INTÉNTELO MÁS TARDE!  ERROR AL ELIMINAR');
-                            $('#modal-message-error-door2door').modal('show');
+                            $('#message-warning-door2door').html('');
+                            $('#message-warning-door2door').html('¡INTÉNTELO MÁS TARDE!  warning AL ELIMINAR');
+                            $('#modal-message-warning-door2door').modal('show');
                         /*</Respuesta>*/ 
 
                     }
-                }).catch((error) => {
+                }).catch((warning) => {
                     /*<CARGAR HIDE>*/
                         $('#id-main').removeClass('opacidad');
                         $('#body-main-div').removeClass('body-main');
                         $('#body-main-div').hide();
                     /*</CARGAR HIDE>*/
                     /*<Respuesta>*/
-                        $('#message-error-door2door').html('');
-                        $('#message-error-door2door').html('¡INTÉNTELO MÁS TARDE!');
-                        $('#modal-message-error-door2door').modal('show');
+                        $('#message-warning-door2door').html('');
+                        $('#message-warning-door2door').html('¡INTÉNTELO MÁS TARDE!');
+                        $('#modal-message-warning-door2door').modal('show');
                     /*</Respuesta>*/ 
                 });
             /*</pausar>*/         
@@ -114,9 +114,9 @@
                 $('#body-main-div').hide();
             /*</CARGAR HIDE>*/
             /*<Respuesta>*/
-                $('#message-error-door2door').html('');
-                $('#message-error-door2door').html('¡INTÉNTELO MÁS TARDE!');
-                $('#modal-message-error-door2door').modal('show');
+                $('#message-warning-door2door').html('');
+                $('#message-warning-door2door').html('¡INTÉNTELO MÁS TARDE!');
+                $('#modal-message-warning-door2door').modal('show');
             /*</Respuesta>*/ 
         }
     }

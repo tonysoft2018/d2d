@@ -30,7 +30,8 @@
                 /*</Proceso>*/  
                     $JSON_RESULT = $ObjectRoles->finalizar(
                         $_POST['idVisitas'],
-                        $_POST['comentarios']
+                        $_POST['comentarios'],
+                        $_POST['idContacto']
                     );
                 /*</Proceso>*/  
                 /*<Respuesta>*/  

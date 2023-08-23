@@ -41,6 +41,7 @@
                                 $NOMBRE_MUNICIPIO               = $Object->selectIdMunicipio( 
                                                                     $_POST['create-contactos-municipio-door2door']
                                                                 );
+                                                                
                                 $NOMBRE_ESTADO                  = $Object->selectIdEstado( 
                                                                     $_POST['create-contactos-estado-door2door']
                                                                 );
@@ -65,6 +66,7 @@
                                 /*</VALIDACION DE FUNCION NOMBRE_ESTADO>*/
 
                             /*</VARIABLE>*/
+
                             $RESPUESTA_GEOLOCALIZACION_UNO = $Object->getGeocodeData(
                                 $_POST['create-contactos-noexterior-door2door'],
                                 $_POST['create-contactos-calle-door2door'],
@@ -80,17 +82,22 @@
                   $JSON_RESULT = $Object->create(    
                                                                         $_POST['create-contactos-nombre-door2door'],
                                                                         $_POST['create-contactos-calle-door2door'],
-                                                                        $_POST['create-contactos-telefono-door2door'],
+                                                                       
                                                                         $_POST['create-contactos-noexterior-door2door'],
                                                                         $_POST['create-contactos-nointerior-door2door'],
                                                                         $_POST['create-contactos-codigopostal-door2door'],
+
                                                                         $_POST['create-contactos-colonia-door2door'],
                                                                         $_POST['create-contactos-pais-door2door'],
                                                                         $_POST['create-contactos-estado-door2door'],
                                                                         $_POST['create-contactos-municipio-door2door'],
-                                                                        $_POST['create-contactos-deuda-door2door'],
-                                                                        $_POST['idCampana'],
+
+                                                                        $_POST['create-contactos-entreCalle-door2door'],
+                                                                        $_POST['create-contactos-instrucciones-door2door'],
+                                                                        $_POST['create-contactos-telefono-door2door'],
                                                                         $_POST['create-contactos-email-door2door'],
+                                                                       
+                                                                        $_POST['idCampana'],                                                                        
                                                                         $ARREGLO_LAT,
                                                                         $ARREGLO_LGN
                                                                     );

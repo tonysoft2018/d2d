@@ -33,12 +33,20 @@
                         </center>
                     </div>
                 </div>
-            </div>
-            <center>
-                        <button type="button" id="seleccionar-continuar" class="btn btn-primary" >
-                            Continualr
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button type="button" 
+                                id="seleccionar-continuar" 
+                                class="btn btn-primary btn-block" >
+                            Continuar
                         </button>
-                    </center>
+                    </div>
+                </div>
+            </div>
+            
+           
+            
+                
             <div class="modal-footer">
           
                    

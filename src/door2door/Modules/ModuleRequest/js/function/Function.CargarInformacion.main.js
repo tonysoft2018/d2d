@@ -6,15 +6,15 @@ const Cargando = async() => {
     setTimeout( () => { 
         let folio       = $('#update-folio-door2door').val();
         let idSolicitud = $('#update-id-door2door').val();
-        console.log(folio)
-        const FunCargandoAPI = CargandoAPI(folio, idSolicitud).
-        then( (result)=> {  console.log(result)
+        let idUsuario   = $('#update-idUsuario-door2door').val();
+        let tipoSocio   = $('#update-tiposocio-door2door').val();
+        console.log("################################");
+        console.log(idUsuario);
+        const FunCargandoAPI = CargandoAPI(folio, idSolicitud, idUsuario, tipoSocio).
+        then( (result)=> { console.log(result);
             if(result){
                 if(result.message = 'Good'){
                     let Arrays  = result.information;
-                    let ArraysComentarios   = result.informationComentarios;
-                    let ArraysPreguntas     = result.informationCuesntionarios;
-                    let Contador = 0;
                     if(Arrays.length > 0){                        
                         for(let i = 0; i < Arrays.length ; i++ ){
                             if(Arrays[i].tipoArchivo == "INE FRENTE"){
@@ -55,56 +55,112 @@ const Cargando = async() => {
                         $('#Tarjeta-circulacion').html(Imagen);                       
                         $('#Tarjeta-bancaria').html(Imagen);
                     }
+                    if( result.information_CUESNTIONARIOS.length > 0 )
+                    {
+                        let Preguntas = result.information_CUESNTIONARIOS[0].PREGUNTAS;
+                        let record = '';
+                        let TableBody= ''; 
+                        localStorage.setItem('JSON_CUESTIONARIO', JSON.stringify(Preguntas));   
 
-                    if(ArraysComentarios.length > 0 ){
-                        let Campo = '';
-                        for(let i = 0; i < ArraysComentarios.length ; i++ ){
-                            Campo +=  ` 
-                                       <div class="row">
+                        for(let i = 0; i< Preguntas.length; i++)
+                        {
+                            if(Preguntas[i].tipoPregunta == "CERRADA"){
+                                if(Preguntas[i].respuesta == 'SI'){ 
+                                    record = `  <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <label for="">${Preguntas[i].pregunta}</label><br>
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                <div class="form-check">
+                                                                    <label class="form-check-label">
+                                                                        <input type="radio" disabled  onclick="guadarRespuestaCerrada(${i},'SI');"  class="form-check-input" name="optradio-${i}" checked>Si
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="form-check">
+                                                                    <label class="form-check-label">
+                                                                        <input type="" disabled onclick="guadarRespuestaCerrada(${i},'NO');"class="form-check-input" name="optradio-${i}" radio>No
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div> `
+
+                                }if(Preguntas[i].respuesta == 'NO'){
+                                    record = `  <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <label for="">${Preguntas[i].pregunta}</label><br>
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                <div class="form-check">
+                                                                    <label class="form-check-label">
+                                                                        <input type="radio" disabled  onclick="guadarRespuestaCerrada(${i},'SI');"  class="form-check-input" name="optradio-${i}">Si
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="form-check">
+                                                                    <label class="form-check-label">
+                                                                        <input type="radio" disabled  onclick="guadarRespuestaCerrada(${i},'NO');"class="form-check-input" name="optradio-${i}" checked>No
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div> `;
+                                }else{
+                                    record = `  <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <label for="">${Preguntas[i].pregunta}</label><br>
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                <div class="form-check">
+                                                                    <label class="form-check-label">
+                                                                        <input type="radio" disabled onclick="guadarRespuestaCerrada(${i},'SI');"  class="form-check-input" name="optradio-${i}">Si
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="form-check">
+                                                                    <label class="form-check-label">
+                                                                        <input type="radio" disabled onclick="guadarRespuestaCerrada(${i},'NO');"class="form-check-input" name="optradio-${i}">No
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div> `;
+                                }
+                                
+
+                            }else{
+                                record = `  <div class="row">
                                             <div class="col-sm-12">
-                                                <h5>Comentario  # ${i+1} </h5>
-                                                <textarea class="form-control" disabled  style="background:#BAE4ED;" placeholder="Comentario" rows="4">${ArraysComentarios[i].comentario}
-                                                </textarea> 
+                                                <div class="form-group">
+                                                    <label for="">${Preguntas[i].pregunta}</label>
+                                                    <textarea   class="form-control" 
+                                                                onkeyup="GuadarRespuesta(${i});"  
+                                                                id="create-respuesta-door2door-${i}"  disabled
+                                                                value="" placeholder="Respuesta" rows="2">${Preguntas[i].respuesta}</textarea>
+                                                </div>
                                             </div>
-                                        </div><br>
-                                    `; 
+                                        </div>   `;
+                            }
+                            
+                            TableBody += record;
                         }
-                        $('#lista-de-comentarios').html(Campo);
-                        $('#lista-de-comentarios').show();
-                        $('#lista-de-comentarios-titulo').show()
-                    }else{
-                        $('#lista-de-comentarios-titulo').hide()
-                        $('#lista-de-comentarios').hide()
-                    }
-
-                    if(ArraysPreguntas.length > 0 ){
-                        let Campo = '';
-                        for(let i = 0; i < ArraysPreguntas.length ; i++ ){
-                            Campo +=  ` 
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <h4>Pregunta  # ${i+1}  ${ArraysPreguntas[i].Pregunta} </h4>
-                                                <textarea class="form-control" disabled  style="background:#BAE4ED;" placeholder="Comentario" rows="4">
-                                                     ${ArraysPreguntas[i].respuesta}
-                                                </textarea> 
-                                            </div>
-                                        </div><br>
-                                    `; 
-                        }
-                        $('#lista-de-comentarios').html(Campo);
-                    }
-
-                    
+                        $('#Cuesntionario-mostrar').html(TableBody);
+                    }  
                 }else{
-                   
-
-                    
                 }
             }
         }).catch( (error) => {
             console.log(error)
         });
-    }, 300);  
+    }, 500);  
 }
 /*<export>*/
     export default Cargando;

@@ -32,7 +32,7 @@
                     let FECHA           = Information[i].fecha.split(' ');
                     let IdMostrar       = '';
                     let style           = '';
-                    let Rechazado       = '';
+                    let Abrir           = '';
                     let Pausado         = '';
                     let Reanudar        = '';
                     let Cerrar        = '';
@@ -66,10 +66,15 @@
                                             style="width:35px;height:35px" >   `; 
                         /*</Cerrar>*/
                     }else if(Information[i].estatus == 'BORRADOR'     ){
-                        Cancelar =  `<img  class="cursor" 
+                        Cancelar    =  `<img  class="cursor" 
                                             title="Cerrar" 
                                             onclick="ButtonCancelar(${Information[i].idCampana});" 
                                             src="/d2dSocioWeb/Modules/ModulesImage/cancelacion.png" 
+                                            style="width:25px;height:25px" >   `; 
+                        Abrir       =  `<img  class="cursor" 
+                                            title="Abrir" 
+                                            onclick="ButtonAbrir(${Information[i].idCampana});" 
+                                            src="/d2dSocioWeb/Modules/ModulesImage/abrir.png" 
                                             style="width:25px;height:25px" >   `; 
                     }
                     
@@ -114,6 +119,9 @@
                                                ${Cerrar} 
                                             </div>
                                             <div class="col-sm-2">
+                                                ${Abrir} 
+                                            </div>
+                                            <div class="col-sm-2">
                                                 ${Cancelar} 
                                             </div>
                                         </div>
@@ -126,80 +134,7 @@
                 $('#table-main-door2door-informacion').html(TableBody);
                 
                
-                setTimeout( () => {
-                    $('.mostrar-visitas-deudores').on('click', () => {
-                        let estatus =  $('#update-estatus-door2door').val();
-
-                        if( estatus  != 'BORRADOR' && estatus  !=  'RECHAZADA' ){
-                            let idCampana =  $('#update-id-door2door').val();
-                            console.log(idCampana);
-                            const ResultSFV =  SelectFullVisitas(idCampana). 
-                            then( (result) => { console.log(result);
-                                if(result){
-                                    if(result.message == 'Good'){
-
-                                        let Arrays = result.information;
-                                        let record = '';
-                                        let TableBody ='';
-                                        $('#table-visitas-door2door-informacion').html('');
-                                        $('#table-visitas-door2door').dataTable().fnDestroy();
-                                        
-
-                                        if(Arrays.length > 0){
-                                            for(let i = 0; i <Arrays.length; i++) {
-
-                                                let FECHA = Arrays[i].fecha.split(' ');
-                                                record =  `
-                                                            <tr>
-                                                                <td style="width:50px;vertical-align:middle;" class="text-justify">${Arrays[i].nombre}</td>
-                                                                <td style="width:50px;vertical-align:middle;" class="text-justify">${Arrays[i].telefono}</td>
-                                                                <td style="width:50px;vertical-align:middle;" class="text-justify">${Formato(FECHA[0])}</td>
-                                                                <td style="width:50px;vertical-align:middle;" class="text-justify">${Arrays[i].estatus}</td>
-                                                                <td>
-                                                                
-                                                                    <div class="row">
-                                                                        <div classs="col-sm-6">
-                                                                            <img    class="cursor "   
-                                                                                    title="Mostrar "       
-                                                                                    onclick="ButtonDetalleVisita( 
-                                                                                            '${Arrays[i].SocioVisitador}', 
-                                                                                            '${Arrays[i].calle}', 
-                                                                                            '${Arrays[i].codigoPostal}', 
-                                                                                            '${Arrays[i].colonia}', 
-                                                                                            '${Arrays[i].deuda}', 
-                                                                                            '${Arrays[i].estatus}', 
-                                                                                            '${Arrays[i].fecha}', 
-                                                                                            '${Arrays[i].noExterior}', 
-                                                                                            '${Arrays[i].noInterior}', 
-                                                                                            '${Arrays[i].nombre}',
-                                                                                            '${Arrays[i].telefono}',
-                                                                                            '${Arrays[i].email}'
-                                                                                    );"                                                                                   
-                                                                                    src="/d2dSocioWeb/Modules/ModulesImage/mostrar.png"   
-                                                                                    style="width:30px;height:30px" > 
-                                                                        </div>
-                                                                        <div class="col-sm-6">
-                                                                            
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                    `
-                                                TableBody +=  record;
-                                            }
-                                            $('#table-visitas-door2door-informacion').html(TableBody);
-                                            $('#table-visitas-door2door').dataTable(DataTableV);
-                                        }
-                                        $('#table-visitas-door2door-informacion').html(TableBody);
-                                        $('#table-visitas-door2door').dataTable(DataTableV);
-                                        
-                                    }
-                                }
-                            
-                            });
-                        }
-                    });
-                },500);
+               
               
                     
             }     

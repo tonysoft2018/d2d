@@ -27,7 +27,7 @@
                     if(result.message == 'Good'){
                         /*<Respuesta>*/
                             $('#message-succes-door2door').html("");
-                            $('#message-succes-door2door').html('PROCESO EXITOSO');
+                            $('#message-succes-door2door').html('PROCESO ÉXITOSO');
                             $('#modal-message-succes-door2door').modal('show'); 
                             $('#modal-delete-door2door').modal('hide'); 
                         /*</Respuesta>*/     

@@ -275,7 +275,7 @@
                                         $('#mensaje-enviar-mensaje-nuevo').val('');      
                                         $('#modal-create-door2door').modal('hide');       
                                         $('#message-succes-door2door').html("");
-                                        $('#message-succes-door2door').html('MENSAJE ENVIADO CON EXITOSO');
+                                        $('#message-succes-door2door').html('MENSAJE ENVIADO CON ÉXITOSO');
                                         $('#modal-message-succes-door2door').modal('show');                           
                                      /*<Actualizar mensajes>*/
                                 }

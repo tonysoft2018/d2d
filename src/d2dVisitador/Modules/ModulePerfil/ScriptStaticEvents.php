@@ -95,7 +95,7 @@
                                 if(result){
                                     if(result.message == 'Good'){
                                         $('#message-succes-door2door').html("");
-                                        $('#message-succes-door2door').html('OPERACION REALIZADA CON EXITO');
+                                        $('#message-succes-door2door').html('OPERACIÓN REALIZADA CON ÉXITO');
                                         $('#modal-message-succes-door2door').modal('show'); 
 
                                         $('#update-users-new-contrasena-door2door').val('');
@@ -146,7 +146,7 @@
                         if(result){
                             if(result.message == 'Good'){
                                 $('#message-succes-door2door').html("");
-                                $('#message-succes-door2door').html('OPERACION REALIZADA CON EXITO');
+                                $('#message-succes-door2door').html('OPERACIÓN REALIZADA CON ÉXITO');
                                 $('#modal-message-succes-door2door').modal('show'); 
 
                                 $('#update-users-new-contrasena-door2door').val('');
@@ -187,7 +187,7 @@
                     if(result){
                         if(result.message == 'Good'){
                             $('#message-succes-door2door').html("");
-                            $('#message-succes-door2door').html('OPERACION REALIZADA CON EXITO');
+                            $('#message-succes-door2door').html('OPERACIÓN REALIZADA CON ÉXITO');
                             $('#modal-message-succes-door2door').modal('show');                            
                             $('#modal-imagen-door2door').modal('hide');   
                             $('#imagen-epmresa').html('<img  class="img-circle elevation-2" src="'+result.imagen+'" style="width:200px;height:200px"  >');

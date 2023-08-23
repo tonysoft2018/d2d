@@ -29,7 +29,7 @@
                     $ObjectRoles = new Usuarios_create();
                 /*</Instaciacion de objetos>*/      
                 /*</Proceso>*/  
-                    $JSON_RESULT = $ObjectRoles->selectFullVisitas($_POST['idCampana']);
+                    $JSON_RESULT = $ObjectRoles->selectFullVisitas($_POST['idContactos']);
                 /*</Proceso>*/  
                 /*<Respuesta>*/  
                     echo json_encode($JSON_RESULT);

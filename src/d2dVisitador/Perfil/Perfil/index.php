@@ -26,6 +26,26 @@
             <head style="color:FFFFFF;">
                 <title> D2D | Perfil</title>
                 <?php include_once('../../head.php'); ?>     
+
+
+                
+                <style>
+                    /* Start: Google Maps Responsive */
+                    .map-responsive {
+                        overflow:hidden;
+                        padding-bottom:150%; /*Reduce este valor si el mapa fuera muy alto, por ejemplo 250px, puedes usar porcentajes, 50%*/
+                        position:relative;
+                       
+                    }
+                    .map-responsive iframe{
+                        left:0;
+                        top:0;
+                        height:150%;
+                        width: 90%;
+                        position:absolute;
+                    }
+                    /* End: Google Maps Responsive */
+                </style>  
             </head>
         <!-- -->
         <!-- -->
@@ -79,7 +99,16 @@
                                                 <!--######################   [ foto de perfil ]   ######################### -->
                                                     <form id="form-face-primera-door2door" enctype="multipart/form-data">               
                                                         <input type="hidden" id="create-id-face-primera-door2door" name="create-id-door2door"  value="0">  
-
+                                                        <div class="row" style="margin:5px;">
+                                                            <div class="col-sm-12 text-center">     
+                                                                <h3>1-  Suba su imagen de perfil  <h3>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">                
+                                                            <div class="col-sm-12" >
+                                                                <h6 style="text-align:center;">Presione la imagen para subir la foto</h6>
+                                                            </div>
+                                                        </div>
                                                         <div  style="text-align:center;">
                                                             <div class="row">                
                                                                 <div class="col-sm-12" id="button-Cargar-imegen-perfil-door2door" >
@@ -111,6 +140,11 @@
 
                                                         <div id="face-segunda" style="text-align:center;">
                                                             <div class="row" style="margin:5px;">
+                                                                <div class="col-sm-12 text-center">     
+                                                                    <h3>2- Proporcione su domicilio  <h3>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row" style="margin:5px;">
                                                                 <div class="col-sm-12">                  
                                                                     <div class="row">
                                                                         <div class="col-sm-12  h6" >
@@ -118,16 +152,6 @@
                                                                         </div>
                                                                     </div>
                                                                     <input type="text"  style="text-align:center;"  style="text-align:center"  id="create-calle-door2door" name="create-calle-door2door" placeholder="Calle" class="form-control"    >
-                                                                </div>
-                                                            </div>
-                                                            <div class="row" style="margin:5px;">
-                                                                <div class="col-sm-12">                  
-                                                                    <div class="row">
-                                                                        <div class="col-sm-12  h6" >
-                                                                            <label style="color:#000000;text-align:center;">No Interior</label>
-                                                                        </div>
-                                                                    </div>
-                                                                    <input type="text"  style="text-align:center;" id="create-nointerior-door2door"  name="create-nointerior-door2door" placeholder="No Interior" class="form-control"    >
                                                                 </div>
                                                             </div>
                                                             <div class="row" style="margin:5px;">
@@ -144,7 +168,18 @@
                                                                 <div class="col-sm-12">                  
                                                                     <div class="row">
                                                                         <div class="col-sm-12  h6" >
-                                                                            <label style="color:#000000;text-align:center;">Codigo postal</label>
+                                                                            <label style="color:#000000;text-align:center;">No Interior</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <input type="text"  style="text-align:center;" id="create-nointerior-door2door"  name="create-nointerior-door2door" placeholder="No Interior" class="form-control"    >
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="row" style="margin:5px;">
+                                                                <div class="col-sm-12">                  
+                                                                    <div class="row">
+                                                                        <div class="col-sm-12  h6" >
+                                                                            <label style="color:#000000;text-align:center;">Código  postal</label>
                                                                         </div>
                                                                     </div>
                                                                     <input type="text"  style="text-align:center;" id="create-codigopostal-door2door"  name="create-codigopostal-door2door" placeholder=Codigo postal" class="form-control"    >
@@ -164,7 +199,7 @@
                                                                 <div class="col-sm-12"> 
                                                                     <div class="row">
                                                                         <div class="col-sm-12  h6" >
-                                                                            <label style="color:#000000;text-align:center;">  Pais</label>
+                                                                            <label style="color:#000000;text-align:center;">  País</label>
                                                                         </div>
                                                                     </div>
                                                                     <select class="custom-select" style="border-radius:15px;" id="create-pais-door2door" name="create-pais-door2door"  >
@@ -195,10 +230,10 @@
                                                             </div>
                                                             <div class="row"  style="margin:5px;">
                                                                 <div class="col-4">   
-                                                                    <button type="button" class="btn btn-secondary  btn-block"   id="button-regresar-face-segunda-door2door" >Regresar</button>    
+                                                                    <button type="button" class="btn btn-secondary  btn-block "   id="button-regresar-face-segunda-door2door" >Regresar</button>    
                                                                 </div>
                                                                 <div class="col-4">   
-                                                                    <button type="button" class="btn btn-success  btn-block"   id="button-Continuar-face-segunda-door2door" >Continuar</button>    
+                                                                    <button type="button" class="btn btn-success  btn-block face-segunda-direccion"   id="button-Continuar-face-segunda-door2door" >Continuar</button>    
                                                                 </div>
                                                                 <div class="col-4">   
                                                                     <a type="button" 
@@ -214,16 +249,25 @@
 
                                                 <!--#####################   [ Captura de las cordenadas de localizacion]  # -->
                                                     <form id="form-face-tercera-door2door" enctype="multipart/form-data"   style="display:none"> 
+                                                        <div class="row" style="margin:5px;">
+                                                            <div class="col-sm-12 text-center">     
+                                                                <h3>3- ¿Este es su domicilio?  <h3>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">                
+                                                            <div class="col-sm-12" >
+                                                                <h6 style="text-align:center;">En caso de ser correcto solo presioné continuar, si no es correcto regresar y actualice el domicilio</h6>
+                                                            </div>
+                                                        </div>
                                                         <div id="face-tercera" style="text-align:center;">
-                                                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d21265.941286572448!2d-103.35347754116373!3d20.676795448761414!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8428b1faa928f63f%3A0x25dcb2cdab10691a!2sCatedral%20de%20Guadalajara!5e0!3m2!1ses!2smx!4v1677476123618!5m2!1ses!2smx" width="100%" height="720" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-
+                                                            <div id="map" class="map-responsive"  style="border-radius: 15px;" ></div>
                                                         </div> <br>
                                                         <div class="row">
                                                             <div class="col-4">   
-                                                                <button type="button" class="btn btn-secondary  btn-block"   id="button-regresar-face-tercera-door2door" >Regresar</button>    
+                                                                <button type="button" class="btn btn-secondary  btn-block evento-regresar-mapa-sugerencias"   id="button-regresar-face-tercera-door2door" >Regresar</button>    
                                                             </div>
                                                             <div class="col-4">   
-                                                                <button type="button" class="btn btn-success  btn-block"   id="button-Continuar-face-tercera-door2door" >Continuar</button>    
+                                                                <button type="button" class="btn btn-success  btn-block "   id="button-Continuar-face-tercera-door2door" >Continuar</button>    
                                                             </div>
                                                             <div class="col-4">   
                                                                 <a type="button" 
@@ -237,10 +281,15 @@
 
                                                 <!--######################   [ foto de Comprobante ]   #################### -->
                                                     <form id="form-face-cuarta-door2door" enctype="multipart/form-data"  style="display:none;"> 
-                                                        <div id="face-cuarta" style="text-align:center;">
+                                                        <div class="row" style="margin:5px;">
+                                                            <div class="col-sm-12 text-center">     
+                                                                <h3>4- Suba un comprobante de domicilio no mayor a tres meses   <h3>
+                                                            </div>
+                                                        </div> 
+                                                    <div id="face-cuarta" style="text-align:center;">
                                                             <div class="row">                
                                                                 <div class="col-sm-12" id="update-imagen-door2door">                  
-                                                                <h1 style="color:000000;">Comprobante de domicilio</h1>
+                                                                <h6 style="color:000000;">Presione la imagen para subir la foto</h6>
                                                                 </div>
                                                             </div><br> 
 
@@ -272,11 +321,16 @@
                                                 <!--####################################################################### -->
 
                                                 <!--######################   [ foto de INE Frente ]   ##################### -->
-                                                    <form id="form-face-quinta-door2door" enctype="multipart/form-data"style="display:none"> 
+                                                    <form id="form-face-quinta-door2door" enctype="multipart/form-data"style="display:none">
+                                                        <div class="row" style="margin:5px;">
+                                                            <div class="col-sm-12 text-center">     
+                                                                <h3>5- Suba una foto del  INE por el frente y vigente  <h3>
+                                                            </div>
+                                                        </div>  
                                                         <div id="face-quinta" style="text-align:center;">
                                                             <div class="row">                
                                                                 <div class="col-sm-12" id="">                  
-                                                                <h1 style="color:000000;">Foto de  INE frente</h1>
+                                                                <h6 style="color:000000;">Presione la imagen para subir la foto</h6>
                                                                 </div>
                                                             </div><br> 
                                                             <div class="row"> 
@@ -293,7 +347,7 @@
                                                         </div><br>
                                                         <div class="row">
                                                             <div class="col-4">   
-                                                                <button type="button" class="btn btn-secondary  btn-block"   id="button-regresar-face-quinta-door2door" >Rergresar</button>    
+                                                                <button type="button" class="btn btn-secondary  btn-block"   id="button-regresar-face-quinta-door2door" >Regresar</button>    
                                                             </div>
                                                             <div class="col-4">   
                                                                 <button type="button" class="btn btn-success  btn-block"   id="button-Continuar-face-quinta-door2door" >Continuar</button>    
@@ -310,10 +364,15 @@
 
                                                 <!--######################   [ foto de INE Atras ]   ###################### -->
                                                     <form id="form-face-sexta-door2door" enctype="multipart/form-data"style="display:none"> 
+                                                        <div class="row" style="margin:5px;">
+                                                            <div class="col-sm-12 text-center">     
+                                                                <h3>6- Suba una foto del  INE por la parte de atras y vigente  <h3>
+                                                            </div>
+                                                        </div>  
                                                         <div id="face-sexta" style="text-align:center;">
                                                             <div class="row">                
                                                                 <div class="col-sm-12" id="">                  
-                                                                <h1 style="color:000000;">Foto INE atras</h1>
+                                                                <h6 style="color:000000;">Presione la imagen para subir la foto</h6>
                                                                 </div>
                                                             </div><br> 
                                                             <div class="row">      
@@ -327,7 +386,7 @@
                                                         </div><br>
                                                         <div class="row">
                                                             <div class="col-4">   
-                                                                <button type="button" class="btn btn-secondary  btn-block"   id="button-regresar-face-sexta-door2door" >Rergresar</button>    
+                                                                <button type="button" class="btn btn-secondary  btn-block"   id="button-regresar-face-sexta-door2door" >Regresar</button>    
                                                             </div>
                                                             <div class="col-4">   
                                                                 <button type="button" class="btn btn-primary  btn-block"   id="button-Continuar-face-sexta-door2door" >Continuar</button>    
@@ -344,23 +403,29 @@
 
                                                 <!--######################   [ foto de trajeta de cirulacion ]   #########  -->
                                                     <form id="form-face-septima-door2door" enctype="multipart/form-data"style="display:none"> 
+                                                        <div class="row" style="margin:5px;">
+                                                            <div class="col-sm-12 text-center">     
+                                                                <h3>7- Suba una foto de la tarjeta de circulación  y vigente  <h3>
+                                                            </div>
+                                                        </div>  
                                                         <div id="face-septima" style="text-align:center;">
-                                                            <div class="row">                
-                                                                <div class="col-sm-12" id="">                  
-                                                                <h1 style="color:000000;">Foto de tarjeta de circulacion</h1>
-                                                                </div>
-                                                            </div><br> 
+                                                            
                                                             <div class="row"> 
                                                                 <div class="col-sm-12"> 
                                                                     <div class="row">
                                                                         <div class="col-sm-12  h6" >
-                                                                            <label style="color:#000000;text-align:center;" >Tipo de Vehiculo</label>
+                                                                            <label style="color:#000000;text-align:center;" >Tipo de vehículo</label>
                                                                         </div>
                                                                     </div>
                                                                     <select class="custom-select" id="create-tipoVehiculo-door2door" name="create-estado-door2door"  >
                                                                     </select>
                                                                 </div>                                                
                                                             </div><br>
+                                                            <div class="row">                
+                                                                <div class="col-sm-12" id="">                  
+                                                                <h6 style="color:000000;">Presione la imagen para subir la foto</h6>
+                                                                </div>
+                                                            </div><br> 
                                                             <div class="row">    
                                                                 <div class="col-sm-12"   id="button-Cargar-imegen-TarejetCF-door2door" >              
                                                                     <div  id="update-imagen-TarejetCF-door2door">                  
@@ -375,7 +440,7 @@
                                                         </div><br>
                                                         <div class="row">                                                        
                                                             <div class="col-4">   
-                                                                <button type="button" class="btn btn-primary  btn-block"   id="button-regresar-face-septima-door2door" >Rergresar</button>    
+                                                                <button type="button" class="btn btn-primary  btn-block"   id="button-regresar-face-septima-door2door" >Regresar</button>    
                                                             </div>
                                                             <div class="col-4">   
                                                                 <button type="button" class="btn btn-success  btn-block"   id="button-Continuar-face-septima-door2door" >Continuar</button>    
@@ -391,13 +456,13 @@
                                                 <!--#####################################################################   -->
 
                                                 <!--######################   [ foto de trajeta de Bancaria ]   #########     -->
-                                                    <form id="form-face-octavo-door2door" enctype="multipart/form-data"style="display:none"> 
-                                                        <div id="face-octavo" style="text-align:center;">
-                                                            <div class="row">                
-                                                                <div class="col-sm-12">                  
-                                                                <h1 style="color:000000;" >Foto de tarjeta bancaria</h1>
-                                                                </div>
+                                                    <form id="form-face-octavo-door2door" enctype="multipart/form-data"style="display:none">
+                                                        <div class="row" style="margin:5px;">
+                                                            <div class="col-sm-12 text-center">     
+                                                                <h3>8- ¿Proporcione sus datos bancarios, para poder realizarle los depósitos de sus comisiones?  <h3>
                                                             </div>
+                                                        </div>   
+                                                        <div id="face-octavo" style="text-align:center;">
                                                             <div class="row" style="margin:5px;">
                                                                 <div class="col-sm-12">                  
                                                                     <div class="row">
@@ -422,24 +487,17 @@
                                                                 <div class="col-sm-12">                  
                                                                     <div class="row">
                                                                         <div class="col-sm-12  h6" >
-                                                                            <label style="color:#000000;text-align:center;">Numero de cuenta / CLABE interbancaria</label>
+                                                                            <label style="color:#000000;text-align:center;">Número  de cuenta / CLABE interbancaria</label>
                                                                         </div>
                                                                     </div>
                                                                     <input type="text"  style="text-align:center;"  style="text-numeroCuenta:center"  id="create-numeroCuenta-door2door" name="create-calle-door2door" placeholder="Numero de cuenta / CLABE interbancaria" class="form-control"    >
                                                                 </div>
                                                             </div>
-
-                                                            <div class="row" style="margin:5px;">               
-                                                                <div class="col-sm-12"  id="button-Cargar-imegen-bancaria-door2door" >    
-                                                                    <div class="col-sm-12" id="update-imagen-bancaria-door2door">                  
-                                                                        <img src="/door2door/Modules/ModulesImage/imagen.jpg" style="width:200px;height:200px;" class="">
-                                                                    </div>
-                                                                </div> 
-                                                            </div><br>                                                        
+                                                                                                              
                                                         </div><br>
                                                         <div class="row">                                                                                                            
                                                             <div class="col-4">   
-                                                                <button type="button" class="btn btn-secondary  btn-block"   id="button-regresar-face-octavo-door2door" >Rergresar</button>    
+                                                                <button type="button" class="btn btn-secondary  btn-block"   id="button-regresar-face-octavo-door2door" >Regresar</button>    
                                                             </div>
                                                             <div class="col-4"> 
                                                                 <button type="button" class="btn btn-secondary  btn-block"   id="button-Continuar-face-octavo-door2door" >Continuar</button>    
@@ -458,12 +516,12 @@
 
                                                 <!--######################   [ Cuestionario ]   #########     -->
                                                     <form id="form-face-novena-door2door" enctype="multipart/form-data"style="display:none"> 
+                                                        <div class="row" style="margin:5px;">
+                                                            <div class="col-sm-12 text-center">     
+                                                                <h3>9- Realice este cuestionario  <h3>
+                                                            </div>
+                                                        </div>  
                                                         <div id="face-septima" style="text-align:center;">
-                                                            <div class="row">                
-                                                                <div class="col-sm-12">                  
-                                                                <h1 style="color:000000;" >Cuestionario </h1>
-                                                                </div>
-                                                            </div><br> 
                                                             <div class="row">                
                                                                 <div class="col-sm-12" id="Cuesntionario-mostrar">  
                                                                 </div>
@@ -472,7 +530,7 @@
                                                         </div><br>
                                                         <div class="row">                                                                                                            
                                                             <div class="col-4">   
-                                                                <button type="button" class="btn btn-secondary  btn-block"   id="button-regresar-face-novena-door2door" >Rergresar</button>    
+                                                                <button type="button" class="btn btn-secondary  btn-block"   id="button-regresar-face-novena-door2door" >Regresar</button>    
                                                             </div>
                                                             <div class="col-4"> 
                                                                 <button type="button" class="btn btn-secondary  btn-block"   id="button-finalizar-door2door" >Finalizar</button>    
@@ -516,6 +574,52 @@
                         <!-- /.content -->
                     </div>  
                 </div>          
+                <div    
+                        class="modal fade"  
+                        id="modal-message-finalizado-door2door"  
+                        data-bs-backdrop="static"  
+                        data-bs-keyboard="false" 
+                        tabindex="-1"  
+                        aria-labelledby="staticBackdropLabel"  
+                        aria-hidden="true" 
+                        style="color:#fffff;">
+                    <div class="modal-dialog" 
+                    role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" style="color:#000;">Mensaje</h5>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <center>
+                                            <img class="img-fluid"  src="<?= $URL?>/d2dVisitador/Modules/ModulesImage/exito.png" style="width:150px;height:150px;"  ><br> 
+                                        <center>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <center>
+                                            <h4 id="message-finalizado-door2door" style="color:#000;"></h4>
+                                        </center>
+                                    </div>>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <a  href="/d2dVisitador/closeSession/controller/closeSession.php"
+                                                class="btn btn-secondary btn-block"  >
+                                              
+                                            Finalizar
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                            
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- Script -->
                     <?php include_once('ScriptStaticEvents.php');?>                
                 <!-- footer -->

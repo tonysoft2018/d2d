@@ -28,7 +28,7 @@
 </style>
 <aside class="main-sidebar sidebar-dark-primary elevation-4 " style="border-radius:20px;">
 
-  <a href="/d2dVisitador/Modules/Welcome/">
+  <a href="/d2dVisitador/Modules/ModuleClientSugerenicas/">
     <center>
       <img src="/d2dVisitador/Modules/ModulesImage/D2DLOGO.png" style="width:190px;height:60px;border-radius:10px"  class="" style="opacity: .8">
       <span class="brand-text font-weight-light"></span>
@@ -42,7 +42,7 @@
               <li class="nav-item">
                   <div class=" nav-link">
                      
-                        <a href="" class="d-block" ><h4 style="color:#fff;" >
+                        <a href="/d2dVisitador/Modules/ModulePerfil/" class="d-block" ><h4 style="color:#fff;" >
                           <img src="<?= $_SESSION["imagen-door2door"] ?>"  style="width:33px;height:33px;"  class="img-circle elevation-2" >
                           <p style="font-size:19;color:#fff;">
                             <?php if($_SESSION["name-door2door"] == ''){echo "   ".$_SESSION["user-door2door"];}else{echo "   ".$_SESSION["name-door2door"];}?>
@@ -78,116 +78,68 @@
                   if($_SESSION["estatus-door2door"] == "ACTIVO"){  
               ?>
                     <li class="nav-item">
-                      <a href="#" class="nav-link">
-                          <img  title="Editar registro"   src="/d2dVisitador/Modules/ModulesImage/sugerencias.png" style="width:30px;height:30px">
+                      <a  href="/d2dVisitador/Modules/ModuleClientSugerenicas/"  class="nav-link">
+                          <img  title="Editar registro"  src="/d2dVisitador/Modules/ModulesImage/google-maps.png" style="width:30px;height:30px">
                           <p style="font-size:19;color:#fff;">
-                            Sugerencias
+                            Posibles visitas
                           </p>
                           <i class="right fas fa-angle-left"></i> 
-                      </a>
-                      <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                          <a href="/d2dVisitador/Modules/ModuleClientSugerenicas/" class="nav-link">
-                            <p style="font-size:16;color:#fff;">Sugerencias</p>
-                          </a>
-                        </li>                      
-                      </ul>
+                      </a>                      
                     </li>              
                     <li class="nav-item">
-                      <a href="#" class="nav-link">
-                          <img  title="Editar registro"   src="/d2dVisitador/Modules/ModulesImage/Seguimientos.png" style="width:30px;height:30px">
+                      <a href="/d2dVisitador/Modules/ModuleClientSeguimientos/"  class="nav-link">
+                          <img  title="Editar registro"   src="/d2dVisitador/Modules/ModulesImage/mapa.png" style="width:30px;height:30px">
                           <p style="font-size:19;color:#fff;">
-                          Seguimientos
+                            Vista 
                           </p>
                           <i class="right fas fa-angle-left"></i> 
                       </a>
-                      <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                          <a href="/d2dVisitador/Modules/ModuleClientSeguimientos/" class="nav-link">
-                            <p style="font-size:16;color:#fff;">Seguimientos</p>
-                          </a>
-                        </li>                      
-                      </ul>
                     </li>
                     <li class="nav-item">
-                      <a href="#" class="nav-link">
-                          <img  title="Editar registro"   src="/d2dVisitador/Modules/ModulesImage/comiciones.png" style="width:30px;height:30px">
+                      <a href="/d2dVisitador/Modules/ModuleClientComiciones/"  class="nav-link">
+                          <img  title="Editar registro"    src="/d2dVisitador/Modules/ModulesImage/comiciones.png" style="width:30px;height:30px">
                           <p style="font-size:19;color:#fff;">
                           Comisiones
                           </p>
                           <i class="right fas fa-angle-left"></i> 
                       </a>
-                      <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                          <a href="/d2dVisitador/Modules/ModuleClientComiciones/" class="nav-link">
-                            <p style="font-size:16;color:#fff;">Comisiones</p>
-                          </a>
-                        </li>                      
-                      </ul>
+                     
                     </li>
                     <li class="nav-item">
-                      <a href="#" class="nav-link">
+                      <a href="/d2dVisitador/Modules/ModuleClientMessageChat/" class="nav-link">
                           <img  title="Editar registro"   src="/d2dVisitador/Modules/ModulesImage/sms.png" style="width:30px;height:30px">
                           <p style="font-size:19;color:#fff;">
                             Chat
                           </p>
                           <i class="right fas fa-angle-left"></i> 
-                      </a>
-                      <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                          <a href="/d2dVisitador/Modules/ModuleClientMessageChat/" class="nav-link">
-                            <p style="font-size:16;color:#fff;">Chat</p>
-                          </a>
-                        </li>                      
-                      </ul>
+                      </a>                      
                     </li>
                     <li class="nav-item">
-                      <a href="#" class="nav-link">
+                      <a href="/d2dVisitador/Modules/ModuleClientNotifications/" class="nav-link">
                           <img  title="Editar registro"   src="/d2dVisitador/Modules/ModulesImage/notificaciones.png" style="width:30px;height:30px">
                           <p style="font-size:19;color:#fff;">
-                          Notificaciones
+                            Notificaciones
                           </p>
                           <i class="right fas fa-angle-left"></i> 
-                      </a>
-                      <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                          <a href="/d2dVisitador/Modules/ModuleClientNotifications/" class="nav-link">
-                            <p style="font-size:16;color:#fff;">Notificaciones</p>
-                          </a>
-                        </li>                      
-                      </ul>
+                      </a>                     
                     </li>
                     <li class="nav-item">
-                      <a href="#" class="nav-link">
+                      <a href="/d2dVisitador/Modules/ModuleClientHistorial/"  class="nav-link">
                           <img  title="Editar registro"   src="/d2dVisitador/Modules/ModulesImage/historial.png" style="width:30px;height:30px">
                           <p style="font-size:19;color:#fff;">
-                          Historial
+                            Historial
                           </p>
                           <i class="right fas fa-angle-left"></i> 
-                      </a>
-                      <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                          <a href="/d2dVisitador/Modules/ModuleClientHistorial/" class="nav-link">
-                            <p style="font-size:16;color:#fff;">Historial</p>
-                          </a>
-                        </li>                      
-                      </ul>
+                      </a>                     
                     </li>
                     <li class="nav-item">
-                      <a href="#" class="nav-link">
+                      <a href="/d2dVisitador/Modules/ModuleClientSoporte/" class="nav-link">
                           <img  title="Editar registro"   src="/d2dVisitador/Modules/ModulesImage/soporte.png" style="width:30px;height:30px">
                           <p style="font-size:19;color:#fff;">
-                          Soporte
+                            Soporte
                           </p>
                           <i class="right fas fa-angle-left"></i> 
-                      </a>
-                      <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                          <a href="/d2dVisitador/Modules/ModuleClientSoporte/" class="nav-link">
-                            <p style="font-size:16;color:#fff;">Soporte</p>
-                          </a>
-                        </li>                      
-                      </ul>
+                      </a>                   
                     </li>
               <?php }?>
         </ul> 

@@ -1,6 +1,6 @@
 <?php
 
-namespace d2dVisitador\Perfil\Perfil\Model\Perfil;
+//namespace d2dVisitador\Perfil\Perfil\Model\Perfil;
     /*<Includes>*/
         include_once('../../../Modules/ModulePugins/door2door.Cofiguration.Conection.php');
     /*<Includes>*/
@@ -31,6 +31,8 @@ namespace d2dVisitador\Perfil\Perfil\Model\Perfil;
                 /*</Variables> */
 
                 /*<information_USUARIO> */
+
+
                     /*<Query> */
                         $querySelect = '    SELECT 
                                                         sol.comentario, 
@@ -58,7 +60,18 @@ namespace d2dVisitador\Perfil\Perfil\Model\Perfil;
                                                         usu.idCuestionario,
                                                         usu.idTVehiculo,
                                                         usu.codigoPostal,
-                                                        usu.numeroCuenta
+                                                        usu.numeroCuenta,
+                                                        (
+                                                            IFNULL(
+                                                                (
+                                                                    SELECT sc.comentario 
+                                                                        FROM solicitudComentarios sc
+                                                                        WHERE sc.idSolicitud  = sol.idSolicitud 
+                                                                        ORDER BY  sc.idSComentario DESC LIMIT 1
+                                                                )
+                                                            ,"SIN COMENTARIOS" )
+                                                        )AS comentarioSolicitud,
+                                                        usu.banco
 
                                                         
                                                 FROM usuarios usu, solicitud sol
@@ -68,7 +81,9 @@ namespace d2dVisitador\Perfil\Perfil\Model\Perfil;
                                                         
                                                             LIMIT 1; ';
                     /*</Query> */
-                    
+
+                    $JSON_RESULT['querySelect'] = $querySelect;
+
                     $this::open();            
                         if ($resultQuery = mysqli_query($this->Connection, $querySelect)) {
                             if ($resultQuery->num_rows > 0) {
@@ -145,7 +160,8 @@ namespace d2dVisitador\Perfil\Perfil\Model\Perfil;
                                                                     WHERE  cue.idCuestionario  = (
                                                                                                 IFNULL(
                                                                                                             (
-                                                                                                                SELECT aj.idCuestionariosVisitante  FROM ajusteCuestionario aj
+                                                                                                                SELECT aj.idCuestionariosVisitante  
+                                                                                                                FROM ajusteCuestionario aj
                                                                                                                 ORDER BY  aj.idACuestionarios DESC LIMIT 1
                                                                                                             ),0                                                
                                                                                                         )
@@ -612,43 +628,88 @@ namespace d2dVisitador\Perfil\Perfil\Model\Perfil;
                    
                     $JSON_RESULT['message']         = '';
                     $JSON_RESULT['error']           = '';
+                    $JSON_RESULT['lat']             = 0;
+                    $JSON_RESULT['lng']             = 0;
+                    $NOMBRE_MUNICIPIO               = '';
+                    $NOMBRE_ESTADO                  = '';
                     $DATE                           = date('Y-m-d h:i:s');
+                    $RESULTADO_GEOLOCALIZACION      = [];
 
                    
                 /*</Variables> */
-                /*<Query> */
-                    $queryUpdate = 'UPDATE usuarios SET 
-                                                          calle                 = "'.$CALLE.'",  
-                                                          noInterior            = "'.$NO_INTERIOR.'",  
-                                                          noExterior            = "'.$NO_EXTERIOR.'",  
-                                                          codigoPostal          = "'.$CODIGO_POSTAL.'",  
-                                                          colonia               = "'.$COLONIA.'",  
-                                                          idPaises              = "'.$ID_PAIS.'",  
-                                                          idEstados             = "'.$ID_ESTADO.'",  
-                                                          idMunicipio           = "'.$ID_MINICIPIO.'",
-                                                          fechaModificacion     = "'.$DATE.'",
-                                                          observacion      = " [ UPDATE '.$DATE.' ], [ idUser '.$ID_USUARIO.' ] "
+              
 
-                                                    WHERE idUsuario = '.$ID_USUARIO;
-                    $JSON_RESULT['queryUpdate']     = $queryUpdate;
-                /*</Query> */
-                
-                $this::open();            
-                    if ($resultQuery = mysqli_query($this->Connection, $queryUpdate)) {
-                        $JSON_RESULT['message'] = "Good";   
-                    } else {
-                        /*<Respuesta>*/
-                            $JSON_RESULT['message']         = "Bad";
-                            $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
-                        /*</Respuesta>*/
-                    }        
-                $this::closet();
+                $NOMBRE_MUNICIPIO           = $this->selectIdMunicipio( $ID_MINICIPIO);                
+                $NOMBRE_ESTADO              = $this->selectIdEstado( $ID_ESTADO );
+
+                /*<VALIDACION DE FUNCION NOMBRE_MUNICIPIO>*/
+                    if($NOMBRE_MUNICIPIO['message'] != 'Good'){
+                        $NOMBRE_MUNICIPIO = '';
+                    }else{
+                        $NOMBRE_MUNICIPIO = $NOMBRE_MUNICIPIO['nombre'];
+                        
+                    }
+                /*</VALIDACION DE FUNCION NOMBRE_MUNICIPIO>*/
+
+                /*<VALIDACION DE FUNCION NOMBRE_ESTADO>*/
+                    if($NOMBRE_ESTADO['message'] != 'Good'){
+                        $NOMBRE_ESTADO = '';
+                    }else{
+                        $NOMBRE_ESTADO = $NOMBRE_ESTADO['nombre'];
+                    }
+                /*</VALIDACION DE FUNCION NOMBRE_ESTADO>*/
+
+
+                $RESULTADO_GEOLOCALIZACION = $this->getGeocodeData($NO_EXTERIOR, $CALLE, $NOMBRE_ESTADO, $NOMBRE_ESTADO );
+                $JSON_RESULT['RESULTADO_GEOLOCALIZACION'] = $RESULTADO_GEOLOCALIZACION;
+                if($RESULTADO_GEOLOCALIZACION['message'] == 'Good'){
+
+                    $JSON_RESULT['lat'] = $RESULTADO_GEOLOCALIZACION['lat'];
+                    $JSON_RESULT['lng'] = $RESULTADO_GEOLOCALIZACION['lng'];
+
+                    /*<INSERTAR>*/
+
+                        /*<Query> */
+                            $queryUpdate = 'UPDATE usuarios SET 
+                                                                latitud               = "'.$RESULTADO_GEOLOCALIZACION['lat'].'", 
+                                                                longitud              = "'.$RESULTADO_GEOLOCALIZACION['lng'].'", 
+                                                                calle                 = "'.$CALLE.'",  
+                                                                noInterior            = "'.$NO_INTERIOR.'",  
+                                                                noExterior            = "'.$NO_EXTERIOR.'",  
+                                                                codigoPostal          = "'.$CODIGO_POSTAL.'",  
+                                                                colonia               = "'.$COLONIA.'",  
+                                                                idPaises              = "'.$ID_PAIS.'",  
+                                                                idEstados             = "'.$ID_ESTADO.'",  
+                                                                idMunicipio           = "'.$ID_MINICIPIO.'",
+                                                                fechaModificacion     = "'.$DATE.'",
+                                                                observacion      = " [ UPDATE '.$DATE.' ], [ idUser '.$ID_USUARIO.' ] "
+
+                                                            WHERE idUsuario = '.$ID_USUARIO;
+                            $JSON_RESULT['queryUpdate']     = $queryUpdate;
+                        /*</Query> */
+                        
+                        $this::open();            
+                            if ($resultQuery = mysqli_query($this->Connection, $queryUpdate)) {
+                                $JSON_RESULT['message'] = "Good";   
+                            } else {
+                                /*<Respuesta>*/
+                                    $JSON_RESULT['message']         = "Bad";
+                                    $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
+                                /*</Respuesta>*/
+                            }        
+                        $this::closet();
+                        
+                    /*</INSERTAR>*/
+                }else{
+                    $JSON_RESULT['message'] = 'LOCALIZACION NO ENCONTRADA';
+                }
                 return $JSON_RESULT;
             }
         /*</Method RESPUESTA_FACE_SECUNDARIA>*/
 
         /*<Method RESPUESTA_FACE_TERCEARIA>*/
             public function RESPUESTA_FACE_TERCEARIA($idUsuario){
+
                 /*<Variables> */
                     $JSON_RESULT                    = [];
                     $JSON_RESULT['information']     = [];
@@ -656,8 +717,11 @@ namespace d2dVisitador\Perfil\Perfil\Model\Perfil;
                     $JSON_RESULT['error']           = '';
                     $DATE                           = date('Y-m-d h:i:s');
                 /*</Variables> */
+
                 /*<Query> */
-                    $querySelect = '    SELECT usuario FROM usuarios WHERE idUsuario = '.$idUsuario;
+                    $querySelect = '    SELECT usuario 
+                                        FROM usuarios 
+                                        WHERE idUsuario = '.$idUsuario;
                 /*</Query> */
                 
                 $this::open();            
@@ -1130,7 +1194,7 @@ namespace d2dVisitador\Perfil\Perfil\Model\Perfil;
         /*</Method RESPUESTA_FACE_NOVENA_ONO>*/
 
 
-        /*<Method RESPUESTA_FINALIZAR>*/
+        /*<Method tarjetaBancaria>*/
             public function tarjetaBancaria(
                                             $Banco,
                                             $Nombre,
@@ -1174,7 +1238,212 @@ namespace d2dVisitador\Perfil\Perfil\Model\Perfil;
                 $this::closet();
                 return $JSON_RESULT;
             }
+        /*</Method tarjetaBancaria>*/
+
+
+
+        /*<Method RESPUESTA_FINALIZAR>*/
+            public function Finalizar( $Preguntas ){
+                    
+                /*<Variables> */
+                    $JSON_RESULT                    = [];
+                    $JSON_RESULT['message']         = '';
+                    $JSON_RESULT['error']           = '';
+                
+                    session_start();
+                    $DATE                       = date('Y-m-d h:i:s');
+                    $idUser                     = $_SESSION["idUser-door2door"];
+                /*</Variables>*/
+
+                /*<queryDelete>*/
+                    $querySolicitud = 'UPDATE  solicitud 
+                                                                SET estatus = "CONFIRMADA",
+                                                                    fechaModificacion   = "'.$DATE.'",
+                                                                    observacion         = " [ UPDATE '.$DATE.' ], [ idUser '.$idUsuario.' ] "
+                                                            WHERE 
+                                                                    idUsuario = '.$idUser;
+
+                    $JSON_RESULT['querySolicitud']         = $querySolicitud;
+                /*</queryDelete>*/               
+                
+                $this::open();            
+                    if (mysqli_query($this->Connection, $querySolicitud)) {
+                        $JSON_RESULT['message'] = "Good";   
+                    } else {
+                        /*<Respuesta>*/
+                            $JSON_RESULT['message']         = "Bad";                           
+                            $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
+                        /*</Respuesta>*/
+                    }        
+                $this::closet();
+
+                
+                $JSON_PREGUNTAS                 = $Preguntas;
+                $JSON_RESULT['JSON_PREGUNTAS']  = $JSON_PREGUNTAS;
+
+                /*<VARIABLES>*/
+                    $RESULTADO_ELIMINAR_RESPUESTAS      = [];
+                    $RESULTADO_CREAR_RESPUESTAS_UNO     = [];
+                    $RESULTADO_CREAR_RESPUESTAS_TODOS   = [];
+                    $RESPUESTA_ENVIAR_CORREO            = [];
+                /*</VARIABLES>*/
+                $JSON_RESULT['RESPUESTA_ENVIAR_CORREO'] = [];
+                /*<RESULTADO_ELIMINAR_RESPUESTAS>*/    
+                    /*<RESULTADO_ELIMINAR_RESPUESTAS>*/ 
+                        $RESULTADO_ELIMINAR_RESPUESTAS = $this->RESULTADO_ELIMINAR_RESPUESTAS();
+                    /*</RESULTADO_ELIMINAR_RESPUESTAS>*/ 
+                    if($RESULTADO_ELIMINAR_RESPUESTAS['message'] == 'Good' ){
+                        $JSON_RESULT['RESULTADO_ELIMINAR_RESPUESTAS']  = []; 
+                        $JSON_RESULT['RESULTADO_ELIMINAR_RESPUESTAS']  = $RESULTADO_ELIMINAR_RESPUESTAS;                                                
+                    }else{
+                        array_push($RESULTADO_CREAR_RESPUESTAS_TODOS, $RESULTADO_CREAR_RESPUESTAS_UNO); 
+                        $JSON_RESULT['message']                        = 'RESULTADO_ELIMINAR_RESPUESTAS';
+                        $JSON_RESULT['RESULTADO_ELIMINAR_RESPUESTAS']  = [];        
+                        $JSON_RESULT['RESULTADO_ELIMINAR_RESPUESTAS']  = $RESULTADO_ELIMINAR_RESPUESTAS;   
+                        return $JSON_RESULT;
+                    }
+                /*</RESULTADO_CREAR_RESPUESTAS_UNO>*/  
+
+                /*<JSON_ROLES>*/
+                    for($i = 0; $i < count($JSON_PREGUNTAS); $i++){
+
+                        /*<Declaramos las Variables que vamos a usar >*/
+                            $ID_PREGUNTA    = "";
+                            $RESPUESTA      = "";
+                        /*</Declaramos las Variables que vamos a usar >*/
+
+                        /*<Recorremos el JSON>*/ 
+                            foreach ( $JSON_PREGUNTAS[$i] as $clave => $valor ) {   
+                                /*<Tomamos la Informacion del JSON>*/      
+                                    if(    $clave == 'idPxC' || $clave == 'respuesta'   ){
+                                            if($valor != '' || $valor != null){
+                                                if($clave == 'idPxC'           )     {$ID_PREGUNTA       = $valor;      }   
+                                                if($clave == 'respuesta'       )     {$RESPUESTA         = $valor;      }   
+                                                
+                                            }  
+                                    }      
+                                /*<Tomamos la Informacion del JSON>*/                    
+                            }   
+                        /*<Recorremos el JSON>*/ 
+
+                        /*<RESULTADO_CREAR_RESPUESTAS_UNO>*/    
+                            /*<RESULTADO_CREAR_RESPUESTAS_UNO>*/ 
+                                $RESULTADO_CREAR_RESPUESTAS_UNO = $this->RESULTADO_CREAR_RESPUESTAS_UNO( $ID_PREGUNTA, $RESPUESTA );
+                            /*</RESULTADO_CREAR_RESPUESTAS_UNO>*/ 
+                            if($RESULTADO_CREAR_RESPUESTAS_UNO['message'] == 'Good' ){
+                                array_push($RESULTADO_CREAR_RESPUESTAS_TODOS, $RESULTADO_CREAR_RESPUESTAS_UNO);                                        
+                            }else{
+                                array_push($RESULTADO_CREAR_RESPUESTAS_TODOS, $RESULTADO_CREAR_RESPUESTAS_UNO); 
+                                $JSON_RESULT['message']                           = 'RESULTADO_CREAR_RESPUESTAS_TODOS';
+                                $JSON_RESULT['RESULTADO_CREAR_RESPUESTAS_TODOS']  = [];        
+                                $JSON_RESULT['RESULTADO_CREAR_RESPUESTAS_TODOS']  = $RESULTADO_CREAR_RESPUESTAS_TODOS;   
+                                return $JSON_RESULT;
+                            }
+                        /*</RESULTADO_CREAR_RESPUESTAS_UNO>*/  
+                    }  
+                /*<JSON_ROLES>*/  
+
+                $JSON_RESULT['RESULTADO_CREAR_RESPUESTAS_TODOS'] = $RESULTADO_CREAR_RESPUESTAS_TODOS;
+
+                /*<RESPUESTA_ENVIAR_CORREO>*/    
+                    /*<RESPUESTA_ENVIAR_CORREO>*/ 
+                        $RESPUESTA_ENVIAR_CORREO = $this->RESPUESTA_ENVIAR_CORREO();
+                    /*</RESPUESTA_ENVIAR_CORREO>*/ 
+                    if($RESPUESTA_ENVIAR_CORREO['message'] == 'Good' ){
+                        $JSON_RESULT['RESPUESTA_ENVIAR_CORREO'] = $RESPUESTA_ENVIAR_CORREO;                                    
+                    }else{
+                        $JSON_RESULT['RESPUESTA_ENVIAR_CORREO'] = $RESPUESTA_ENVIAR_CORREO;                              
+                    }
+                /*</RESPUESTA_ENVIAR_CORREO>*/  
+
+             
+
+                $JSON_RESULT['message']  = 'Good';
+                return $JSON_RESULT;
+            }
         /*</Method RESPUESTA_FINALIZAR>*/
+
+        
+        /*<RESULTADO_ELIMINAR_RESPUESTAS>*/
+            public function RESULTADO_ELIMINAR_RESPUESTAS(){
+                /*<Variables> */
+                    $JSON_RESULT                    = [];
+                    $JSON_RESULT['information']     = [];
+                    $JSON_RESULT['message']         = '';
+                    $JSON_RESULT['error']           = '';
+                    session_start();
+                    $idUser                     = $_SESSION["idUser-door2door"];
+                /*</Variables> */
+                /*<Query> */
+                    $queryDelete = 'DELETE FROM usuario_respuesta WHERE idUsuario = '.$idUser.'; ';
+                /*</Query> */
+                $JSON_RESULT['queryDelete']     = $queryDelete;
+                $this->open();            
+                    if ($resultQuery = mysqli_query($this->Connection, $queryDelete)) {                          
+                        /*<Respuesta>*/
+                            $JSON_RESULT['message'] = "Good";   
+                        /*</Respuesta>*/
+                    } else {
+                        /*<Respuesta>*/
+                            $JSON_RESULT['message']         = "Bad";                           
+                            $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
+                        /*</Respuesta>*/
+                    }        
+                $this->closet();
+                return $JSON_RESULT;
+            }
+        /*</RESULTADO_ELIMINAR_RESPUESTAS>*/
+        
+        /*<RESULTADO_CREAR_RESPUESTAS_UNO>*/
+            public function RESULTADO_CREAR_RESPUESTAS_UNO( $ID_PREGUNTA, $RESPUESTA){
+                /*<Variables> */
+                    /*</datos>*/
+                        session_start();
+                        $DATE                       = date('Y-m-d h:i:s');
+                        $idUser                     = $_SESSION["idUser-door2door"];                       
+                    /*<datos>*/
+                    $JSON_RESULT                    = [];
+                    $JSON_RESULT['information']     = [];
+                    $JSON_RESULT['message']         = '';
+                    $JSON_RESULT['error'] = '';
+                /*</Variables> */
+            
+                /*<Query>*/
+                    $queryInsert = 'INSERT INTO usuario_respuesta ( 
+
+                                            idUsuario,  
+                                            idPregunta,   
+                                            respuesta, 
+
+                                            fechaCreacion,  
+                                            fechaModificacion, 
+                                            observacion, 
+                                            bstate 
+                                            )   VALUES  ( 
+
+                                                "'.$idUser.'", 
+                                                "'.$ID_PREGUNTA.'",  
+                                                "'.$RESPUESTA.'",                                         
+
+                                                "'.$DATE.'",
+                                                "'.$DATE.'",
+                                                " [ INSERT '.$DATE.' ], [ idUser '.$idUser.' ] ",
+                                                1
+                                            );';
+                /*</Query>*/
+                $JSON_RESULT['queryInsert'] = $queryInsert;
+                $this->open();        
+                    if ( mysqli_query( $this->Connection, $queryInsert)) {
+                        $JSON_RESULT['message']     = "Good";                           
+                    } else {
+                        $JSON_RESULT['message']     = "Bad";                         
+                        $JSON_RESULT['error']       = "Error: <br>" . mysqli_error($this->Connection);
+                    }        
+                $this->closet();
+                return $JSON_RESULT;               
+            
+            }
+        /*</RESULTADO_CREAR_RESPUESTAS_UNO>*/
 
         /*<Method RESPUESTA_CONTRATO>*/
             public function Contrato(){
@@ -1251,6 +1520,254 @@ namespace d2dVisitador\Perfil\Perfil\Model\Perfil;
                 return $JSON_RESULT;
             }
         /*</Method RESPUESTA_Vehiculo>*/
+
+        /*<Geolocalizacion>*/
+            public function getGeocodeData($nExterior, $calle, $municipio, $estado ){
+
+                /*<VARIABLES>*/
+                    $JSON_RESULT = [];
+                    $JSON_RESULT['message'] = '';
+                    $JSON_RESULT['lat']     = 0;
+                    $JSON_RESULT['lng']     = 0;
+                    $address                = urlencode($nExterior.' '.$calle.' '.$municipio.' '.$estado);
+                    $googleMapUrl           = "https://maps.googleapis.com/maps/api/geocode/json?address=$address&key=AIzaSyDwQClTGJJEBxBdoDdpvZqj410LlfAb8FM&callback=initMap&";
+                /*</VARIABLES>*/
+
+                /*<API>*/
+                    $ch         = curl_init();
+                    curl_setopt($ch, CURLOPT_URL, $googleMapUrl); 
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+                    curl_setopt($ch, CURLOPT_HEADER, 0); 
+                    $Result     = curl_exec($ch); 
+                    curl_close($ch); 
+                /*<API>*/
+
+                /*<PROSESAR INFORMACION>*/
+                    $respuesta = json_decode($Result);
+                    if($respuesta->{'status'}   == 'OK'){
+                        /*<Result>*/
+                            $JSON_RESULT['message'] = 'Good';
+                            //$JSON_RESULT['result']  = $respuesta->{'results'}[0]->{'geometry'};
+                            $JSON_RESULT['lat']     =  $respuesta->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
+                            $JSON_RESULT['lng']     =  $respuesta->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
+                        /*</Result>*/
+                    }else{
+                        /*<Result>*/
+
+                            $JSON_RESULT['nExterior']   = $nExterior;
+                            $JSON_RESULT['calle']       = $calle;
+                            $JSON_RESULT['municipio']   = $municipio;
+                            $JSON_RESULT['nExterior'] = $nExterior;
+                            $JSON_RESULT['message'] = 'bad';
+                            $JSON_RESULT['lat']     = 0;
+                            $JSON_RESULT['lng']     = 0;
+                        /*</Result>*/
+                    }
+                /*</PROSESAR INFORMACION>*/   
+
+                return $JSON_RESULT;
+            }
+        /*</Geolocalizacion>*/
+
+        /*<Method selectIdEstado>*/
+            public function selectIdEstado($idEstado){
+                /*<Variables> */
+                    $JSON_RESULT                    = [];
+                    $JSON_RESULT['id']              = [];
+                    $JSON_RESULT['message']         = '';
+                    $JSON_RESULT['error']           = '';
+                /*</Variables> */
+                /*<Query> */
+                    $querySelect = 'SELECT * FROM Estados WHERE idEstado = '.$idEstado.' AND bstate = 1';
+                /*</Query> */
+                
+                $JSON_RESULT['querySelect']     = $querySelect;
+                $this->open();            
+                    if ($resultQuery = mysqli_query($this->Connection, $querySelect)) {
+                        if ($resultQuery->num_rows > 0) {
+                            /*<Captura>*/
+                                while ($R = $resultQuery->fetch_array(MYSQLI_ASSOC)) {
+                                    $JSON_RESULT['nombre'] = $R['nombre'];
+                                }
+                            /*</Captura>*/
+                        }else{
+                            $JSON_RESULT['nombre'] = '';
+                        }
+                        /*<Respuesta>*/
+                            $JSON_RESULT['message'] = "Good";   
+                        /*</Respuesta>*/
+                    } else {
+                        /*<Respuesta>*/
+                            $JSON_RESULT['message']         = "Bad";
+                            $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
+                        /*</Respuesta>*/
+                    }        
+                $this->closet();
+                return $JSON_RESULT;
+            }
+        /*</Method selectIdEstado>*/
+
+        /*<Method selectIdMunicipio>*/
+            public function selectIdMunicipio($idMunicipio){
+                /*<Variables> */
+                    $JSON_RESULT                    = [];
+                    $JSON_RESULT['id']              = [];
+                    $JSON_RESULT['message']         = '';
+                    $JSON_RESULT['error']           = '';
+                /*</Variables> */
+                /*<Query> */
+                    $querySelect = 'SELECT * FROM Municipios WHERE idMunicipio = '.$idMunicipio.' AND bstate = 1';
+                /*</Query> */
+                
+                $JSON_RESULT['querySelect']     = $querySelect;
+                $this->open();            
+                    if ($resultQuery = mysqli_query($this->Connection, $querySelect)) {
+                        if ($resultQuery->num_rows > 0) {
+                            /*<Captura>*/
+                                while ($R = $resultQuery->fetch_array(MYSQLI_ASSOC)) {
+                                    $JSON_RESULT['nombre'] = $R['nombre'];
+                                }
+                            /*</Captura>*/
+                        }else{
+                            $JSON_RESULT['nombre'] = '';
+                        }
+                        /*<Respuesta>*/
+                            $JSON_RESULT['message'] = "Good";   
+                        /*</Respuesta>*/
+                    } else {
+                        /*<Respuesta>*/
+                            $JSON_RESULT['message']         = "Bad";
+                            $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
+                        /*</Respuesta>*/
+                    }        
+                $this->closet();
+                return $JSON_RESULT;
+            }
+        /*</Method selectIdMunicipio>*/
+
+        /*<RESPUESTA_ENVIAR_CORREO>*/
+            public function RESPUESTA_ENVIAR_CORREO(){
+
+                /*<VARIABLES> */
+                    session_start();
+                    $idUser                     = $_SESSION["idUser-door2door"];
+                    $JSON_RESULT                        = [];
+                    $JSON_RESULT['message']             = '';
+                    $JSON_RESULT['error']               = '';
+                    $JSON_RESULT['consultar_gueway']    = 0;
+
+                    $JSON_RESULT['email']               = '';
+
+                    $EMAIL                             = '';
+
+                    $SERVER     = '';
+                    $USUARIO    = '';
+                    $PASSWORD   = '';
+                    $PUERTO     = '';
+                /*</VARIABLES> */
+
+
+                /*<CONSULTAR USUARIO>*/
+                    /*<Query> */
+                        $querySelect = '    SELECT usu.email        
+                                                FROM usuarios usu
+                                                    WHERE usu.idUsuario   = '.$idUser;
+                    /*</Query> */
+                    $JSON_RESULT['querySelect']     = $querySelect;
+                    $this::open();            
+                        if ($resultQuery = mysqli_query($this->Connection, $querySelect)) {
+                            $JSON_RESULT['message'] = "Good";  
+                            /*<Captura>*/
+                                while ($Rol = $resultQuery->fetch_array(MYSQLI_ASSOC)) {
+                                    $EMAIL  = $Rol['email'];
+                                }
+                            /*</Captura>*/
+                        } else {
+                            /*<Respuesta>*/
+                                $JSON_RESULT['message']         = "Bad";                                
+                                $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
+                            /*</Respuesta>*/
+                        }        
+                    $this::closet();
+                /*</CONSULTAR USUARIO>*/
+
+                $JSON_RESULT['email']               = $EMAIL;
+
+                if($EMAIL != ''){
+                    /*<CONSULTAR INFORMACION>*/
+                        /*<Query> */
+                        $QuerySelect = 'SELECT *  FROM servidorCorreo ORDER BY idSCorreo DESC LIMIT 1';
+                        /*</Query> */
+
+                        $JSON_RESULT['querySelect']     = $QuerySelect;
+
+                        $this::open();            
+                            if ($resultQuery = mysqli_query($this->Connection, $QuerySelect)) {
+                                if ($resultQuery->num_rows > 0) {
+                                    while ($r = $resultQuery->fetch_array(MYSQLI_ASSOC)) {
+                                        $SERVER     = $r['servidor'];
+                                        $USUARIO    = $r['usuarios'];
+                                        $PASSWORD   = $r['contrasena'];
+                                        $PUERTO     = $r['puerto'];
+                                    }                            
+                                }else{
+                                    $JSON_RESULT['message'] = "Bad sin email";       
+                                    return $JSON_RESULT;                     
+                                }
+                            }else{
+                                /*<Respuesta>*/
+                                    $JSON_RESULT['message']         = "Bad";                            
+                                    $JSON_RESULT['Error']           = "Error: <br>" . mysqli_error($this->Connection);
+                                    return $JSON_RESULT;
+                                /*</Respuesta>*/                            
+                            }
+                        $this::closet();
+                    /*</CONSULTAR INFORMACION>*/
+
+                    /*<ENVIAR INFORMACION>*/     
+                        require      'PHPMailerAutoload.php';
+                        $mail = new PHPMailer;      
+                        $mail->isSMTP();  
+
+                        /*<EMAIL>*/              
+                            $mail->Host         = $SERVER; //'smtp.gmail.com';  
+                            $mail->SMTPAuth     = true;                               
+                            $mail->Username     = $USUARIO; //'carlos.andres.g.g.desarrollo@gmail.com';                
+                            $mail->Password     = $PASSWORD; //'noepewmuutuikulw';                           
+                            $mail->SMTPSecure   = 'tls';                           
+                            $mail->Port         = $PUERTO; //587;   
+                        /*<EMAIL>*/                                
+
+                        /*<CONTRUIR CORRO>*/
+                            $mail->setFrom($EMAIL, 'door2door');  
+                            $mail->addAddress($EMAIL);    
+                            $mail->isHTML(true);         
+
+
+                            $mail->Subject = 'CUENTA CONFIRMADA';  
+                            $mail->Body    = '¡CUENTA CONFIRMADA EN DOOR2DOOR!  </b> ';  
+                        /*</CONTRUIR CORRO>*/                   
+
+                        /*<ENVIAR INFORMACION>*/
+                            if(!$mail->send()) {
+                                $JSON_RESULT['email']    = 'Error de correo: ' . $mail->ErrorInfo;
+                                $JSON_RESULT['message']  = 'bad';       
+                            } else {
+                                $JSON_RESULT['email']    = 'GoodEmail';     
+                                $JSON_RESULT['message']  = 'Good';                       
+                            }
+                        /*<ENVIAR INFORMACION>*/
+                    /*</ENVIAR INFORMACION>*/
+                }else{
+                    $JSON_RESULT['message']         = "No hay correo";
+                    $JSON_RESULT['email']               = '';
+                }
+                
+
+                return $JSON_RESULT;
+
+            }
+        /*</RESPUESTA_ENVIAR_CORREO>*/
     
     }
 

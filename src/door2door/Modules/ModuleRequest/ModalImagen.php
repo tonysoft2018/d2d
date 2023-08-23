@@ -10,6 +10,7 @@
       </div>
       <div class="modal-body">
         <form id="form-imagen-door2door">  
+          <input type="hidden" id="dato-imagen-tipo-door2door" name="dato-imagen-tipo-door2door" >
           <div  class="row">     
             <div class="col-sm-10" > </div>
             <div class="col-sm-2" >   

@@ -31,16 +31,17 @@
                         </center>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <a  type="button" 
+                            href="/d2dVisitador/Modules/ModuleClientSugerenicas/"
+                            class="btn btn-secondary btn-block" 
+                            > Continuar </a>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
-                <center>
-                    <a  type="button" 
-                        href="/d2dVisitador/Modules/ModuleClientSugerenicas/"
-                        class="btn btn-secondary btn-block" 
-                        >
-                    Regresar
-                    </a>
-                </center>
+
             </div>
         </div>
     </div>

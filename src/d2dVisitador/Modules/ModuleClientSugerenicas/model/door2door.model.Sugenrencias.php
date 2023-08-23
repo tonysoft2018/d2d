@@ -40,9 +40,17 @@ namespace  d2dVisitador\Modules\ModuleClientSugerenicas\Model\Sugerencias ;
                                                 con.longitud,
 
                                                 con.calle,
+                                                con.codigoPostal,
                                                 con.noInterior,
-                                                con.noExterior,
-
+                                                con.colonia,
+                                                con.estatus,
+                                                con.comentarioAgenda,
+                                                (
+                                                    SELECT es.nombre FROM  Estados es WHERE es.idEstado   = con.idEstado  
+                                                )AS Estado,
+                                                (
+                                                    SELECT men.nombre FROM  Municipios men WHERE men.idMunicipio   = con.idMunicipio  
+                                                )AS Municipio,
                                                 (
                                                     SELECT cam.tipoCampana 
                                                             FROM campana cam 
@@ -55,20 +63,10 @@ namespace  d2dVisitador\Modules\ModuleClientSugerenicas\Model\Sugerencias ;
                                                         cam.estatus     = "ABIERTA"     AND
                                                         con.latitud     != 0            AND
                                                         con.longitud    != 0            AND
-                                                        con.estatus     = "PENDIENTE"   AND 
-                                                        (
-                                                            IFNULL(
-                                                                    (
-                                                                        SELECT vis.idContacto  FROM visitas  vis
-                                                                        WHERE  
-                                                                                vis.idContacto  = con.idContacto    AND
-                                                                                vis.estatus     != "CANCELADA"      AND
-                                                                                vis.estatus     != "ACEPTADOS"      AND  
-                                                                                vis.estatus     != "RECHAZADA"      AND  
-                                                                                vis.estatus     != "PAGADA"       
-                                                                                LIMIT 1
-                                                                    ),0 ) 
-                                                        ) = 0                          AND
+                                                        ( 
+                                                            con.estatus     = "POR HACER"    OR   
+                                                            con.estatus     = "PENDIENTE"
+                                                        )  AND 
                                                         con.bstate      = 1;';
                 /*</Query> */
                 $JSON_RESULT['querySelect']     = $querySelect;

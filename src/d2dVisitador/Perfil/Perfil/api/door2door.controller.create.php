@@ -1,21 +1,21 @@
 <?php
 /*<Include classes>*/
     include_once('../model/door2door.model.perfil.php');
-    include_once('../../../Modules/ModulePugins/door2door.Pugins.GeneratorTocken.php');
+    //include_once('../../../Modules/ModulePugins/door2door.Pugins.GeneratorTocken.php');
 /*</Include classes>*/
 
 /*<Import>*/   
-    use  d2dVisitador\Modules\ModulePugins\GeneradorTocken\GeneradorTocken                                   as GeneradorTocken_create;
-    use  d2dVisitador\Perfil\Perfil\Model\Perfil\Perfil                                                     as Services_create;
+    //use  d2dVisitador\Modules\ModulePugins\GeneradorTocken\GeneradorTocken                                   as GeneradorTocken_create;
+    //use  d2dVisitador\Perfil\Perfil\Model\Perfil\Perfil                                                     as Services_create;
 /*<Import>*/   
 
 /*<Instaciacion de objetos>*/                
-    $ObjectToken = new GeneradorTocken_create();
+   // $ObjectToken = new GeneradorTocken_create();
 /*</Instaciacion de objetos>*/
 
 /*<Variables generales>*/
 $URL  = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]"; 
-$URLtocken = $URL.'-'.$ObjectToken->generatorTocken('tocken-door2doors-01198756765345431234534ASDFSDFSDF-');
+//$URLtocken = $URL.'-'.$ObjectToken->generatorTocken('tocken-door2doors-01198756765345431234534ASDFSDFSDF-');
 /*<Variables generales>*/
 
 /*<Validacion de tocken>*/
@@ -28,7 +28,7 @@ if( /*isset($_POST['TockenOfdoor2doordoor2door']) && (
         /*<Controlador>*/      
             try{
                 /*<Instaciacion de objetos>*/                
-                    $Object = new Services_create();
+                    $Object = new Perfil();
 
                     $ID_USUARIO                     = $_POST['idUsuario'];
                     $NOMBRE                         = '';

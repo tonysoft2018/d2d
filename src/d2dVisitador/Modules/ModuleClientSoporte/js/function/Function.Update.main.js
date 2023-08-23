@@ -52,7 +52,7 @@
                             if(result.message == 'Good'){
                                 /*<Respuesta>*/
                                     $('#message-succes-door2door').html("");
-                                    $('#message-succes-door2door').html('ACTUALIZACIÓN EXITOSA');
+                                    $('#message-succes-door2door').html('ACTUALIZACIÓN ÉXITOSA');
                                     $('#modal-message-succes-door2door').modal('show');      
                                     
                                     $('#update-nombre-door2door').removeClass("is-invalid");                                    
@@ -71,11 +71,11 @@
                                     then( (result) => {      
                                         if(result){                                                                    
                                             if(result.message == 'Good'){
-                                                /*<Consulta exitosa>*/
+                                                /*<Consulta ÉXITOsa>*/
                                                     let ArraysRoles = [];
                                                     ArraysRoles = result.information;                        
                                                     const functionS = functionShow(ArraysRoles);       
-                                                /*<Consulta exitosa>*/                        
+                                                /*<Consulta ÉXITOsa>*/                        
                                             }else{
                                                 /*<Error de query>*/ 
                                                     $('#message-error-door2door').html("");

@@ -17,7 +17,7 @@
             <button type="button" id="button-abrir"       class="btn btn-primary btn-block"  >Abrir</button>                                     
           </div>   
           <div class="col-sm-3">   
-            <button type="button" id="button-contactos"    class="btn btn-primary btn-block"  >Contactos</button>                                     
+            <button type="button"     class="btn btn-primary btn-block button-contactos evento-mostra-contactos"  >Contactos</button>                                     
           </div>       
           <div class="col-sm-3" >   
             <button type="button"    class="btn btn-secondary btn-block" data-dismiss="modal"  >Regresar</button>
@@ -29,10 +29,10 @@
             <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal"  >Regresar</button>
           </div>           
           <div class="col-sm-3">      
-            <button type="button" id="button-pdf"      class="btn btn-primary btn-block"    >PDF</button>                                     
+            <button type="button"   class="btn btn-primary btn-block button-contactos evento-mostra-contactos"  >Contactos</button>                              
           </div>
           <div class="col-sm-3">  
-            <button type="button" id="button-excel"       class="btn btn-primary btn-block"  >EXCEL</button>                                     
+                                  
           </div>    
         
         </div><br> 
@@ -61,19 +61,7 @@
                   </div>
                   <input type="date" disabled id="update-fecha-door2door" style="background:#D1F0F5;"  name="update-fecha-door2door" placeholder="fehca" class="form-control" style="background:#D1F0F5;"   >
                 </div>
-              </div><br>  
-              <div class="row"> 
-                <div class="col-sm-12"> 
-                  <div class="row">
-                    <div class="col-sm-12  h6" >
-                        <label>Usuarios</label>
-                    </div>
-                  </div>
-                  <select class="custom-select" id="update-usuario-door2door" disabled name="update-usuario-door2door" style="background:#D1F0F5;" >
-                    
-                  </select>
-                </div>
-              </div> <br>                     
+              </div><br>                
               <!-- -->   
               <div class="row">
                 <div class="col-sm-12">                  
@@ -139,25 +127,7 @@
 
               
 
-              <div class="table-responsive" id="lista-visitas">
-                  <table class="table  hover stripe row-borde" id="table-visitas-door2door" >
-                      <thead class="thead-morado" >
-                          <tr>
-                              <th>Nombre</th>
-                              <th>Telefono</th>    
-                              <th>Fecha visita</th>     
-                              <th>Estatus</th>   
-                              <th>Accion</th>      
-                              <th></th>
-                          </tr>
-                      </thead>
-
-                      <tbody id="table-visitas-door2door-informacion">
-                      </tbody> 
-
-                                              
-                  </table>
-              </div>
+              
                <!-- -->   
             </form>
           </div>
